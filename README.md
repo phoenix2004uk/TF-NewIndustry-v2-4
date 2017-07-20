@@ -16,7 +16,7 @@ A screenshot has been included of the author granting permission for me to publi
 These patched version is supplied as-is, though updates may be made if required.
 
 
-!!Installation!!
+## Installation
 To reduce risk of errors and conflicts once the original mod is updated, I will only be releasing this on GitHub and not on the
 Steam Workshop. As such, you will need to manually install the updated version of the mod, over the original. I accept no responsability
 if things get screwed up. The patch has been used successfully by SkyeStorme on YouTube with no ill effects.
@@ -26,5 +26,5 @@ in your default Steam or SteamLibrary folder [default: C:\Program Files (x86)\St
 
 Just download and over-write the old mod, it *should* be replaced if and when the Steam Workshop version is updated
 
-!!Problems!!
+## Problems
 If you have any issues or encounter any bugs, please raise an issue on GitHub. I will not be monitoring the Steam Workshop comments section for any problems with this patch

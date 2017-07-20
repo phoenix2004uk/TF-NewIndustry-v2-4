@@ -1,7 +1,7 @@
 ﻿local cfg = require ('industryConfig')
 
 function data()
-	version = '2.4.1-RC1'
+	version = '2.4.1-RC2'
 	info_name = 'New Industry'
 	info_desc = 'New Industry from Rail Road platinum'
 	-- goods

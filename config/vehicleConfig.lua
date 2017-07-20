@@ -33,74 +33,106 @@ local vehiclesDoNotModify = {
 							 _("Studebaker US6 U5"),
 							 _("Studebaker US6 U10"),
 							}
+
 local function inList(list, value)
 	for i = 1, #list do
 		if list[i] == value then return true end
 	end
 	return false
-end
+end --inList
 
-function round(num, idp)
-  local mult = 10^(idp or 0)
-  return math.floor(num * mult + 0.5) / mult
-end
-
-function canCarryAll(capacities, list)
-	counter = 0
-	averageCapacity = 0
-	for i = 1, #capacities do
-		if inList(list, capacities[i].type) then
-			counter = counter + 1
-			averageCapacity = averageCapacity + capacities[i].capacity
-		end
+--[[getVehicleCargoEntry returns the cargo table from any vehicle, regardless of if it uses compartments
+-- optional index to return a specific cargo entry, defaults to the 1st entry
+-- optional compartment to return from a specific ship compartment, defaults to the 1st entry
+-- returns false on failure
+--]]
+function getVehicleCargoEntry(vehicle, index, compartment)
+	index = index or 1
+	compartment = compartment or 1
+	if vehicle.capacities then return vehicle.capacities[index]
+	elseif vehicle.compartments then return vehicle.compartments[compartment][index][1]
+	else return false
 	end
-	if counter == #list and counter == #capacities then return {true, round(averageCapacity / counter)}
-	else return {false, 0} end
 end
 
--- patch by Matthew Guscott, to enable support for ship compartments added in experimental gameplay patch
-function isShipOrTanker(vehicle)
-	foundAll = true
-	for i = 1, #stdShip do
-		found = false
-		for j = 1, #vehicle.compartments[1] do
-			if vehicle.compartments[1][j][1].type == stdShip[i] then
-				found = true
-				break
+--[[getVehicleNumCargoTypes returns the number of cargo entries associated with a vehicle, regardless of if it uses compartments
+-- optional compartment to return from a specific ship compartment, defaults to the 1st entry
+-- returns 0 if vehicle cannot carry cargo
+--]]
+function getVehicleNumCargoTypes(vehicle, compartment)
+	compartment = compartment or 1
+	if vehicle.capacities then return #vehicle.capacities
+	elseif vehicle.compartments then return #vehicle.compartments[compartment]
+	else return 0
+	end
+end
+
+--[[getVehicleNumCompartments returns the number of compartments of the vehicle
+-- returns 0 if no compartments are found
+--]]
+function getVehicleNumCompartments(vehicle)
+	if vehicle.compartments then return #vehicle.compartments
+	else return 0
+	end
+end
+
+--[[getVehicleCargoList returns details of the current cargo allocations of a vehicle as a table with 3 values
+-- [1] number of cargo compartments associated with the vehicle. Returns false on failure
+-- [2] list of new cargo types to add to the vehicle. Returns false on failure
+-- [3] capacity for the new cargo types (based on vessel's current average load). Returns 0 on failure
+--]]
+function getVehicleCargoList(vehicle)
+	local foundAll = true
+	local capCounter = 0
+	local cargoEntry = nil
+	
+	local numCargoEntries = getVehicleNumCargoTypes(vehicle)
+	
+	if numCargoEntries > 0 then
+		for i=1, #stdTransport do
+			if numCargoEntries == #stdTransport[i] then
+				capCounter = 0
+				foundAll = true
+				for j=1, numCargoEntries do
+					cargoEntry = getVehicleCargoEntry(vehicle, j)
+					if inList(stdTransport[i], cargoEntry.type) then
+						capCounter = capCounter + cargoEntry.capacity
+					else
+						foundAll = false
+						break
+					end
+				end
+				if foundAll then
+					return {getVehicleNumCompartments(vehicle), modTransport[i], math.floor(capCounter / #stdTransport[i])}
+				end
 			end
 		end
-		if not found then
-			foundAll = false
-			break
+	end
+	return {false, false, 0}
+end
+
+--[[addVehicleCargoList adds new cargo types to a vehicle with the specified capacity
+--]]
+function addVehicleCargoList(vehicle, newCargoList, newCapacity)
+	for i=1, #newCargoList do
+		if vehicle.capacities then
+			table.insert(vehicle.capacities, {type = newCargoList[i], capacity = newCapacity})
+		elseif vehicle.compartments then
+			for j=1, #vehicle.compartments do
+				table.insert(vehicle.compartments[j], {{type = newCargoList[i], capacity = newCapacity}})
+			end
 		end
 	end
-	if foundAll then return modShip
-	else return modTank
-	end
 end
--- end patch
 
 function modelCallback(fileName, data)
 	if data.metadata.transportVehicle and data.metadata.description and not inList(vehiclesDoNotModify, data.metadata.description.name) then
-		if data.metadata.transportVehicle.capacities then
-			for i = 1, #stdTransport do
-				transp = canCarryAll(data.metadata.transportVehicle.capacities, stdTransport[i])
-				if transp[1] then
-					for j = 1, #modTransport[i] do
-						data.metadata.transportVehicle.capacities[#data.metadata.transportVehicle.capacities + 1] = {type = modTransport[i][j], capacity = transp[2]}
-					end
-					break
-				end
-			end
-		-- patch by Matthew Guscott, to enable support for ship compartments added in experimental gameplay patch
-		elseif data.metadata.transportVehicle.compartments then
-			for c = 1, #data.metadata.transportVehicle.compartments do
-				modCapacityList = isShipOrTanker(data.metadata.transportVehicle)
-				for k = 1, #modCapacityList do
-					data.metadata.transportVehicle.compartments[c][#data.metadata.transportVehicle.compartments[c] + 1] = { { type = modCapacityList[k], capacity = data.metadata.transportVehicle.compartments[c][1][1].capacity } }
-				end
-			end
-		-- end patch
+		local cargoData = getVehicleCargoList(data.metadata.transportVehicle)
+		local numCompartments = cargoData[1]
+		local newCargoList = cargoData[2]
+		local newCargoCapacity = cargoData[3]
+		if newCargoList then
+			addVehicleCargoList(data.metadata.transportVehicle, newCargoList, newCargoCapacity)
 		end
 	end
 	return data

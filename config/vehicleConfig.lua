@@ -58,6 +58,28 @@ function canCarryAll(capacities, list)
 	else return {false, 0} end
 end
 
+-- patch by Matthew Guscott, to enable support for ship compartments added in experimental gameplay patch
+function isShipOrTanker(vehicle)
+	foundAll = true
+	for i = 1, #stdShip do
+		found = false
+		for j = 1, #vehicle.compartments[1] do
+			if vehicle.compartments[1][j][1].type == stdShip[i] then
+				found = true
+				break
+			end
+		end
+		if not found then
+			foundAll = false
+			break
+		end
+	end
+	if foundAll then return modShip
+	else return modTank
+	end
+end
+-- end patch
+
 function modelCallback(fileName, data)
 	if data.metadata.transportVehicle and data.metadata.description and not inList(vehiclesDoNotModify, data.metadata.description.name) then
 		if data.metadata.transportVehicle.capacities then
@@ -70,6 +92,15 @@ function modelCallback(fileName, data)
 					break
 				end
 			end
+		-- patch by Matthew Guscott, to enable support for ship compartments added in experimental gameplay patch
+		elseif data.metadata.transportVehicle.compartments then
+			for c = 1, #data.metadata.transportVehicle.compartments do
+				modCapacityList = isShipOrTanker(data.metadata.transportVehicle)
+				for k = 1, #modCapacityList do
+					data.metadata.transportVehicle.compartments[c][#data.metadata.transportVehicle.compartments[c] + 1] = { { type = modCapacityList[k], capacity = data.metadata.transportVehicle.compartments[c][1][1].capacity } }
+				end
+			end
+		-- end patch
 		end
 	end
 	return data

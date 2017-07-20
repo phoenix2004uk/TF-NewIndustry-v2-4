@@ -25,6 +25,7 @@ function data()
 				{ name = 'Old',			role = 'CO_CREATOR',	text = '3d models',							steamProfile = 'old77754',							tgruID = 668 },
 				{ name = 'Alex',		role = 'CO_CREATOR',	text = '3d models',							steamProfile = 'Alex_BY',		tfnetId = 18703,	tgruID = 1 },
 				{ name = 'Malaxit',		role = 'CO_CREATOR',	text = '3d models',							steamProfile = 'Malaxit',							tgruID = 8368 },
+				{ name = 'Matthew Guscott',	role = 'OTHER',		text = 'experimental patch scripting' }
 			},
 			tfnetId = { 2661 },
 			url = {

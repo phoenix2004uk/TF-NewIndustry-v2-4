@@ -1,0 +1,130 @@
+function data()
+
+local event = {				
+	[0] = { name = "spin", forward = true},
+	[2] = { name = "spin", forward = true},
+	[5] = { name = "dig", forward = true},
+	[6] = { name = "spin", forward = true},
+}
+
+return {
+	boundingInfo = {
+		
+	},
+	collider = {
+		params = {
+			
+		},
+		type = "MESH",
+		
+	},
+	lods = {
+		{
+			animations = {
+		
+				spin = {
+					type = "KEYFRAME",
+					params = {
+						origin = {
+							0, 0, 0, 
+						},
+						keyframes = {
+							{
+								time = 0,
+								rot = { 0, 0, 0 },
+								transl = { 0, 0, 0 }
+							}, {
+								time = 2000,
+								rot = { 0, 0, 0 },
+								transl = { 0, 0 ,0 }
+							}, {
+								time = 7000,
+								rot = { -95, 0, 0 },
+								transl = { 0, 0 ,0 }
+							}, {
+								time = 9000,
+								rot = { -95, 0, 0 },
+								transl = { 0, 0 ,0 }
+							}, {
+								time = 14000,
+								rot = { 0, 0, 0 },
+								transl = { 0, 0 ,0 }
+							}
+						}
+					}
+				},
+			},
+			children = {
+				
+				
+				-- excavator
+				{
+					id = "industry/iron_ore_mine/lod_0_excavator_body.msh",
+					transf = {
+						1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 
+					},
+					type = "MESH",
+					
+				}, 
+				{
+					id = "industry/Cement_factory/lod_0_excavator_gear1_rev.msh",
+					transf = {
+						1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, -6.2836, 8.6962, 1, 
+					},
+					type = "MESH",
+					
+				}, 
+				{
+					id = "industry/iron_ore_mine/lod_0_excavator_gear2.msh",
+					transf = {
+						1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, -4.9724, 8.336, 1, 
+					},
+					type = "MESH",
+					
+				}, 
+				{
+					id = "industry/iron_ore_mine/lod_0_excavator_gear3.msh",
+					transf = {
+						1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 1.288, 6.1371, 1, 
+					},
+					type = "MESH",
+					
+				}, 
+				{
+					id = "industry/Cement_factory/lod_0_excavator_shovel_rev.msh",
+					transf = {
+						1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, -7.7154, 2.2751, 1, 
+					},
+					type = "MESH",
+					
+				}, 
+				{
+					id = "industry/Cement_factory/lod_0_excavator_wheels_rev.msh",
+					transf = {
+						1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 
+					},
+					type = "MESH",
+					
+				}, 
+			},
+			events = {
+				productionHalf = event,
+				productionFull = event
+			},
+			matConfigs = {
+				{
+					0, 
+				}, 
+			},
+			static = false,
+			visibleFrom = 0,
+			visibleTo = 2360,
+			
+		}, 
+	},
+	metadata = {
+		
+	},
+	
+}
+end

@@ -1,0 +1,31 @@
+function data()
+return {
+	boundingInfo = { },
+	collider = { params = { }, type = "MESH" },
+	lods = {
+		{
+			animations = { },
+			children = {
+				{
+					id = "industry/quarry/lod_0_stone_crusher3_crusher.msh",
+					transf = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, -0.6566, 4.4202, 1 },
+					type = "MESH"
+				},
+				{
+					id = "industry/quarry/lod_0_stone_crusher_3.msh",
+					transf = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 },
+					type = "MESH",
+				}
+			},
+			events = {},
+			matConfigs = {
+				{ 0, }
+			},
+			static = false,
+			visibleFrom = 0,
+			visibleTo = 2400
+		}
+	},
+	metadata = { }
+}
+end

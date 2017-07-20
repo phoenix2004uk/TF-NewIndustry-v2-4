@@ -1,0 +1,22 @@
+function data()
+return {
+	lods = {
+		{
+			animations = { },
+			children = {
+				{
+					id = "industry/cargo/cargo_milk_big.msh",
+					transf = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 },
+					type = "MESH"
+				}
+			},
+			events = { },
+			matConfigs = { { 1 } },
+			static = false,
+			visibleFrom = 0,
+			visibleTo = 1000
+		}
+	},
+	metadata = {}
+}
+end

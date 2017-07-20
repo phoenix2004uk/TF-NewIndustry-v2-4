@@ -1,0 +1,25 @@
+function data()
+return {
+	collider = { params = { }, type = "MESH", },
+	lods = {
+		{
+			animations = { },
+			children = {
+				{
+					id = "asset/heap/heap_03.msh",
+					transf = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, -0.4, 1 },
+					type = "MESH",
+				} 
+			},
+			events = { },
+			matConfigs = {
+				{ 3 } 
+			},
+			static = false,
+			visibleFrom = 0,
+			visibleTo = 5200,
+		}
+	},
+	metadata = { }
+}
+end

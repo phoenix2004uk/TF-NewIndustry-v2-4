@@ -1,0 +1,123 @@
+function data()
+return {
+	boundingInfo = {
+		bbMax = { 5.0350117683411, 1.3343449831009, 2.5309290885925 },
+		bbMin = { -5.0350117683411, -1.3343449831009, 0.52256101369858 }
+	},
+	collider = { params = { }, type = "MESH" },
+	lods = {
+		{
+			animations = { },
+			children = {
+				{
+					id = "vehicle/waggon/gondola_1850/lod_0_body.msh",
+					transf = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 },
+					type = "MESH",
+				},
+				{
+					id = "vehicle/waggon/_freight/lod_0_us_cargo_load_small.msh",
+					transf = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 },
+					type = "MESH",
+				},
+				{
+					id = "vehicle/waggon/_freight/lod_0_us_cargo_load_small.msh",
+					transf = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 },
+					type = "MESH",
+				},
+				{
+					id = "vehicle/waggon/_freight/lod_0_us_cargo_load_small.msh",
+					transf = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 },
+					type = "MESH",
+				},
+				{
+					id = "vehicle/waggon/_freight/lod_0_us_cargo_load_small.msh",
+					transf = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 },
+					type = "MESH",
+				},
+				{
+					id = "vehicle/waggon/_freight/lod_0_us_cargo_load_small.msh",
+					transf = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 },
+					type = "MESH",
+				},
+				{
+					id = "vehicle/waggon/_freight/lod_0_us_cargo_load_small.msh",
+					transf = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 },
+					type = "MESH",
+				},
+				{
+					id = "vehicle/waggon/_freight/lod_0_us_cargo_load_small.msh",
+					transf = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 },
+					type = "MESH",
+				},
+				{
+					id = "vehicle/waggon/_freight/lod_0_us_cargo_load_small.msh",
+					transf = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 },
+					type = "MESH",	
+				},
+				{
+					id = "vehicle/waggon/american_1850_lod_0_bogie.grp",
+					transf = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, -2.8796, 0, 0, 1 },
+					type = "GROUP",
+				},
+				{
+					id = "vehicle/waggon/american_1850_lod_0_bogie.grp",
+					transf = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 2.8796, 0, 0, 1 },
+					type = "GROUP",
+				}, 
+			},
+			events = { },
+			matConfigs = {
+				{
+					0, 0, 1, 2, 4, 5, 6, 7, 8, 0, 0 -- 3 Grain
+				} 
+			},
+			static = false,
+			visibleFrom = 0,
+			visibleTo = 960,
+		} 
+	},
+	metadata = {
+		description = {
+			name = _("Gondola"),
+			description = _("Essentially a flatcar equipped with sidewalls to keep products from falling out while in transit.")
+		},
+		railVehicle = {
+			topSpeed = 80,
+			weight = 10,
+			configs = {
+				{
+					axles = { "vehicle/waggon/boxcar_1850/lod_0_w1.msh" }
+				}
+			},
+			soundSet = "waggon_freight_old"
+		},
+		transportVehicle = {
+			carrier = "RAIL",
+			capacities = {
+				{ type = "COAL", capacity = 28, loadIndicator = { type = "LEVEL", params = { id = 2, maxHeight = 0.88 } } },
+				{ type = "IRON_ORE", capacity = 28, loadIndicator = { type = "LEVEL", params = { id = 3, maxHeight = 0.88 } } },
+				{ type = "STONE", capacity = 28, loadIndicator = { type = "LEVEL", params = { id = 4, maxHeight = 0.88 } } },
+				{ type = "SLAG", capacity = 28, loadIndicator = { type = "LEVEL", params = { id = 5, maxHeight = 0.88 } } },
+				-- New
+				{ type = "WASTE", capacity = 28, loadIndicator = { type = "LEVEL", params = { id = 6, maxHeight = 0.88 } } },
+				{ type = "MINERALS", capacity = 28, loadIndicator = { type = "LEVEL", params = { id = 7, maxHeight = 0.88 } } },
+				{ type = "LIMESTONE", capacity = 28, loadIndicator = { type = "LEVEL", params = { id = 8, maxHeight = 0.88 } } },
+				{ type = "FILINGS", capacity = 28, loadIndicator = { type = "LEVEL", params = { id = 9, maxHeight = 0.88 } } },
+				{ type = "BAUXITE", capacity = 28 },
+			},
+			loadSpeed = 1
+		},
+		availability = {
+			yearFrom = 1850,
+			yearTo = 1907
+		},
+		cost = {
+			price = -1
+		},
+		maintenance = {
+			runningCosts = -1,
+			lifespan = 40
+		}
+	}
+}
+end

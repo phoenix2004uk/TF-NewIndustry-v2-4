@@ -1,0 +1,43 @@
+function data()
+return {
+	boundingInfo = { },
+	collider = { params = { }, type = "MESH" },
+	lods = {
+		{
+			animations = { },
+			children = {
+				{
+					id = "asset/industry/pipe_lod_0.msh",
+					transf = { 1.25, 0, 0, 0, 0, 1.25, 0, 0, 0, 0, 1.25, 0, 0, 0, 0.04, 1 	},
+					type = "MESH",
+				},
+			},
+			events = {},
+			matConfigs = {
+				{ 0 }
+			},
+			static = false,
+			visibleFrom = 0,
+			visibleTo = 100
+		},
+		{
+			animations = { },
+			children = {
+				{
+					id = "asset/industry/pipe_lod_0.msh",
+					transf = { 1.25, 0, 0, 0, 0, 1.25, 0, 0, 0, 0, 1.25, 0, 0, 0, 0.04, 1 	},
+					type = "MESH",
+				},
+			},
+			events = {},
+			matConfigs = {
+				{ 0 }
+			},
+			static = false,
+			visibleFrom = 100,
+			visibleTo = 500
+		}
+	},
+	metadata = { }
+}
+end

@@ -1,0 +1,361 @@
+local constructionutil = require "constructionutil"
+local vec3 = require "vec3"
+local transf = require "transf"
+
+local function makeParams()
+	return {
+		{
+			key = "productionLevel",
+			name = _("Industry production level"),
+			values = { _("1") },
+			yearFrom = 1890,
+			yearTo = 0
+		},
+	}
+end
+
+
+function data()
+
+local size = {x = 132, y = 150}
+
+return {
+	boundingInfo = {
+		bbMax = { 64, 90, 30.0 },
+		bbMin = { -68, -60, -0.02 },
+	},
+	type = "INDUSTRY",
+	description = {
+		name = _("Landfill"),
+		description = _(Landfill_desc),
+	},
+	availability = {
+		yearFrom = 1890,
+		yearTo = 0
+	},
+	skipCollision = false,
+	autoRemovable = false,
+	soundConfig = {
+		soundSet = { name = "iron_ore_mine" },
+		effects = {
+			select =  {
+				"selected_industry_iron_ore_mine1.wav",
+				"selected_industry_iron_ore_mine2.wav",
+				"selected_industry_iron_ore_mine3.wav"
+			}
+		}
+	},
+	params = makeParams(),
+	updateFn = function(params)
+		local result = { }
+		local level = (params.productionLevel or 0) + 1
+		local groundFace = { }
+		local terrainFaces = { }	
+		local edges = { }
+		
+		result.cost = _G.WasteCost * (params.productionLevel + 1)
+		result.maintenanceCost = _G.WasteMaintenanceCost * (params.productionLevel + 1)
+		
+		-- Тип выравнивания - Параметр .30 Отвечает за "клеточки" выравнивания. Уменьшение параметра дает более пологий склон. Злоупотреблять не стоит.
+		result.terrainAlignmentLists = { { type = "EQUAL", faces = terrainFaces, slopeLow = .30 } }
+		
+		-- Рисуем дороги
+		-- Выбрали тип дороги
+		result.edgeLists = { { type = "STREET", params = { type = "country_old_small.lua" }, edges = edges, snapNodes = { 0 } }	}
+		-- Даем кординаты дорог и векторы направления
+		edges[#edges + 1] = { { 0.0, -75.0,  0.0 },  { 00.0, 60.0, 0.00 } }
+		edges[#edges + 1] = { { 0.0, -60.0,  0.0 },  { 00.0, 60.0, 0.00 } }
+
+		edges[#edges + 1] = { { 0.0, -60.0,  0.0 },  { 00.0, 30.0, 0.00 } }
+		edges[#edges + 1] = { { 0.0, -30.0,  0.0 },  { 00.0, 30.0, 0.00 } }
+
+		edges[#edges + 1] = { { 0.0,  -30.0,  0.0 },  { -40.0, 20.0, 0.00 } }
+		edges[#edges + 1] = { { -40.0,  -10.0,  0.0 },  { -40.0, 20.0, 0.00 } }
+
+		edges[#edges + 1] = { { -40.0,  -10.0,  0.0 }, { -40.0, 20.0, 0.00 } }
+		edges[#edges + 1] = { {  -60.0,  30.0,  0.0 }, { 0.0, 60.0, 0.00 } }
+
+		edges[#edges + 1] = { { -60.0,  30.0,  0.0 }, { 0.0, 60.0, 0.00 } }
+		edges[#edges + 1] = { {  10.0,  80.0,  0.0 }, { 200.0, 60.0, 0.00 } }
+
+		edges[#edges + 1] = { { 10.0,  80.0,  0.0 }, { 200.0, 70.0, 0.00 } }
+		edges[#edges + 1] = { {  40.0,  10.0,  0.0 }, { -50.0, -50.0, 0.00 } }
+
+		edges[#edges + 1] = { { 0.0,  -30.0,  0.0 },  {  40.0, 40.0, 0.00 } }
+		edges[#edges + 1] = { { 40.0,  10.0,  0.0 }, { 40.0, 40.0, 0.00 } }
+		
+		result.models = { }
+		result.groundFaces = { }
+		result.stocks = { }
+		result.stockRules = { }
+		
+		-- Делаем основную заливку		
+		groundFace = { {-68, -60}, {64, -60}, {64, 90}, {-68, 90} }
+		result.groundFaces[#result.groundFaces + 1] = { face = groundFace, modes = { { type = "FILL", key = "industry_floor" } } }
+		result.groundFaces[#result.groundFaces + 1] = { face = groundFace, modes = { { type = "STROKE_OUTER", key = "industry_floor_paving" } } }
+
+		-- Добавляем персонал		
+		result.personCapacity = { type = "INDUSTRIAL", capacity = math.random(20, 30) }
+
+		-- Добавляем товары
+		if (params.state or 1 == 1) then
+		constructionutil.makeStocks({
+			stocks = {
+				{ cargoType = "WASTE",		type = "RECEIVING", 	x = 37, 	y = -48, 	sizex = 2,	sizey = 2 },
+				{ cargoType = "STEEL",		type = "SENDING", 		x = 9, 		y = -48, 	sizex = 1,	sizey = 2 },
+				{ cargoType = "PLASTIC",	type = "SENDING", 		x = 17, 	y = -48, 	sizex = 1,	sizey = 2 },
+				{ cargoType = "FILINGS",	type = "SENDING", 		x = 25, 	y = -48, 	sizex = 1,	sizey = 2 },
+			},
+			stockRules = {
+				{ input = { { 1, 0, 0, 0 } }, output = { { 0, 0, 0, 0 } }, capacity = math.random(400, 600)},
+				{ input = { { 1, 0, 0, 0 } }, output = { { 0, 1, 0, 0 }, { 0, 0, 1, 0 }, { 0, 0, 0, 1 } }, capacity = math.random(40, 60)},
+	--			{ input = { { 0, 0, 0, 0 } }, output = { { 0, 1, 0, 0 } }, capacity = math.random(40, 60)},
+	--			{ input = { { 0, 0, 0, 0 } }, output = { { 0, 0, 1, 0 } }, capacity = math.random(40, 60)},
+	--			{ input = { { 0, 0, 0, 0 } }, output = { { 0, 0, 0, 1 } }, capacity = math.random(40, 60)},
+			}
+		}, result)
+		end
+		
+		-- Добавляем модельки
+		-- Рабочая площадка
+		result.models[#result.models + 1] = { id = "industry/quarry/crusher_connector.mdl", transf = transf.rotZYXTransl(transf.degToRad(110.0, 0.0, 0.0), vec3.new(-20, 43, 0.0)) }	
+		result.models[#result.models + 1] = { id = "asset/heap/heap_garbage_small.mdl", transf = { 0.5, -0.382683, 0, 0,   0.382683, 0.5, 0, 0,   0, 0, 0.2, 0,   -43, 34.6, 0, 1 } }
+		result.models[#result.models + 1] = { id = "asset/roof/generator3.mdl", transf = transf.rotZYXTransl(transf.degToRad(110.0, 0.0, 0.0), vec3.new(-35, 52, 0)) }
+		result.models[#result.models + 1] = { id = "asset/ground/cableroll.mdl", transf = transf.rotZYXTransl(transf.degToRad(0, 0, 90.0), vec3.new(-32.3, 52.8, 0.9)) }
+		result.models[#result.models + 1] = { id = "asset/ground/cableroll.mdl", transf = transf.rotZYXTransl(transf.degToRad(0, 0, 90.0), vec3.new(-33, 55, 0.9)) }
+		result.models[#result.models + 1] = { id = "industry/cargo/oil_small.mdl", transf = transf.rotZYXTransl(transf.degToRad(110.0, 0.0, 0.0), vec3.new(-38, 53.5, 0)) }
+		-- Ставим экскаватор
+		result.models[#result.models + 1] = { id = "industry/iron_ore_mine/excavator.mdl", transf = transf.rotZYXTransl(transf.degToRad(350.0, 0.0, 0.0), vec3.new(-20, 50.2 , 1.0)) }
+			-- Выровняли общую площадь с костылем
+			terrainFaces[#terrainFaces + 1] = { {-68, -60, 0}, {64, -60, 0}, {64, 90, 0}, {-10.5, 90, 0}, {-10.5, 43, 0}, {-29, 43, 0}, {-29, 60, 0}, {-11, 60, 0}, {-11, 90, 0}, {-68, 90, 0} }
+			-- Подняли площадку под экскаватор
+			terrainFaces[#terrainFaces + 1] = { {-25, 46, 1}, {-15, 46, 1}, {-15, 55, 1}, {-25, 55, 1} }
+			-- Дали координаты под заливку площадки
+			groundFace = { {-55, 5}, {-13, 5}, {-13, 60}, {-40, 60}, {-55, 45}, {-60, 20} }
+				-- Залили по координатам текстуру
+				result.groundFaces[#result.groundFaces + 1] = { face = groundFace, modes = { { type = "FILL", key = "building_paving_fill" } } }
+				-- Добавили окантовку текстуре
+				result.groundFaces[#result.groundFaces + 1] = { face = groundFace, modes = { { type = "STROKE_OUTER", key = "building_paving" } } }
+		result.models[#result.models + 1] = { id = "industry/cargo/waste_small.mdl", transf = transf.rotZYXTransl(transf.degToRad(350.0, 0.0, 0.0), vec3.new(-43, 30.2, 0)) }
+		result.models[#result.models + 1] = { id = "industry/cargo/waste_small.mdl", transf = transf.rotZYXTransl(transf.degToRad(50.0, 0.0, 0.0), vec3.new(-45, 29.7, 0)) }
+		result.models[#result.models + 1] = { id = "asset/crane_old.mdl", transf = transf.rotZYXTransl(transf.degToRad(55.0, 0.0, 0.0), vec3.new(-45, 22.5, 0)) }
+		result.models[#result.models + 1] = { id = "industry/cargo/waste_small.mdl", transf = transf.rotZYXTransl(transf.degToRad(50.0, 0.0, 0.0), vec3.new(-39.8, 29.9, 3)) }
+		result.models[#result.models + 1] = { id = "industry/cargo/waste_big.mdl", transf = transf.rotZYXTransl(transf.degToRad(288.0, 0.0, 0.0), vec3.new(-40, 14.1 , 0)) }
+		result.models[#result.models + 1] = { id = "industry/cargo/waste_big.mdl", transf = transf.rotZYXTransl(transf.degToRad(280.0, 0.0, 0.0), vec3.new(-44, 14.0 , 0)) }
+		result.models[#result.models + 1] = { id = "industry/cargo/waste_big.mdl", transf = transf.rotZYXTransl(transf.degToRad(270.0, 0.0, 0.0), vec3.new(-48, 14.1 , 0)) }
+		-- Пошли кучи
+		result.models[#result.models + 1] = { id = "asset/heap/heap_garbage_big.mdl", transf = { 1, -1, 0, 0,   1, 1, 0, 0,   0, 0, 1, 0,   0, 45, 0, 1 } }
+		result.models[#result.models + 1] = { id = "asset/heap/heap_garbage_mid.mdl", transf = { 1, 0, 0, 0,   0.5, 1, 0, 0,   0, 0, 1, 0,   -12, 52, 0, 1 } }
+		result.models[#result.models + 1] = { id = "asset/heap/heap_garbage_mid.mdl", transf = { 1, 0, 0, 0,   0.3, 1, 0, 0,   0, 0, 1, 0,   -15, 39, 0, 1 } }
+		result.models[#result.models + 1] = { id = "asset/heap/heap_garbage_big.mdl", transf = { 1, 0, 0, 0,   -0.4, 1, 0, 0,   0, 0, 1.2, 0,   20, 55, 0, 1 } }
+		result.models[#result.models + 1] = { id = "asset/heap/heap_garbage_mid.mdl", transf = { 1, 0, 0, 0,   0.001, 1, 0, 0,   0, 0, 1, 0,   4, 59.5, 0, 1 } }
+		--Контейнер
+		result.models[#result.models + 1] = { id = "industry/cargo/tools_big.mdl", transf = transf.rotZYXTransl(transf.degToRad(335.0, 10.0, 20.0), vec3.new(7, 57, 0)) }
+		result.models[#result.models + 1] = { id = "asset/heap/heap_garbage_big.mdl", transf = { 1, -0.2, 0, 0,   0, 1, 0, 0,   0, 0, 0.8, 0,   30, 58, 0, 1 } }
+		result.models[#result.models + 1] = { id = "asset/heap/heap_garbage_small.mdl", transf = { 1, 0, 0, 0,   0.3, 1, 0, 0,   0, 0, 1, 0,   18, 67, 0, 1 } }
+		result.models[#result.models + 1] = { id = "asset/heap/heap_garbage_small.mdl", transf = { 1, 0, 0, 0,   0, 1, 0, 0,   0, 0, 1.2, 0,   20, 65, 0, 1 } }
+		--Катушка
+		result.models[#result.models + 1] = { id = "asset/ground/cableroll.mdl", transf = transf.rotZYXTransl(transf.degToRad(350, 320, 90.0), vec3.new(22, 66, 1.2)) }
+		-- !?лошадь!?
+	--	result.models[#result.models + 1] = { id = "asset/ground/horse.mdl", transf = transf.rotZYXTransl(transf.degToRad(180, 0, 0), vec3.new(-1.3, 46.1, 6.8)) }
+	--	result.models[#result.models + 1] = { id = "asset/ground/horse.mdl", transf = transf.rotZYXTransl(transf.degToRad(180, 100, 0), vec3.new(-3, 46.1, 6.9)) }
+		result.models[#result.models + 1] = { id = "industry/cargo/machines_big.mdl", transf = transf.rotZYXTransl(transf.degToRad(90.0, 60.0, 45.0), vec3.new(7, 40, 0.5)) }
+		result.models[#result.models + 1] = { id = "asset/heap/heap_garbage_big.mdl", transf = { 1, 0.8, 0, 0,   -0.2, 1, 0, 0,   0, 0, 0.8, 0,   35, 40, -0.2, 1 } }
+		result.models[#result.models + 1] = { id = "asset/heap/heap_garbage_big.mdl", transf = { 1, 0, 0, 0,   0, 1, 0, 0,   0, 0, 1, 0,   25, 40, 0, 1 } }
+		result.models[#result.models + 1] = { id = "asset/heap/heap_garbage_mid.mdl", transf = { 1, -0.5, 0, 0,   0.3, 1, 0, 0,   0, 0, 1, 0,   15, 39, 0, 1 } }
+		-- Контейнер с мусором в куче
+		result.models[#result.models + 1] = { id = "asset/ground/container_big_steel.mdl", transf = transf.rotZYXTransl(transf.degToRad(40, 330, 20), vec3.new(15.6, 48, 2.2)) }
+		result.models[#result.models + 1] = { id = "asset/ground/container_hexagon.mdl", transf = transf.rotZYXTransl(transf.degToRad(120, 0, 10), vec3.new(33.5, 48.5, 1)) }
+		-- Молотилка
+		result.models[#result.models + 1] = { id = "industry/quarry/quarry_new.mdl", transf = transf.rotZYXTransl(transf.degToRad(45.0, 0.0, 0.0), vec3.new(13, 27 , 0)) }
+		result.models[#result.models + 1] = { id = "asset/ground/pallet_01.mdl", transf = transf.rotZYXTransl(transf.degToRad(355.0, 0.0, 0.0), vec3.new(21, 27 , 0)) }
+		result.models[#result.models + 1] = { id = "asset/ground/pallet_01.mdl", transf = transf.rotZYXTransl(transf.degToRad(5.0, 0.0, 0.0), vec3.new(21, 27 , 0.2)) }
+		result.models[#result.models + 1] = { id = "asset/ground/pallet_01.mdl", transf = transf.rotZYXTransl(transf.degToRad(6.0, 50.0, 0.0), vec3.new(21.5, 27 , 0.4)) }
+		result.models[#result.models + 1] = { id = "asset/ground/pallet_01.mdl", transf = transf.rotZYXTransl(transf.degToRad(5.0, 0.0, 0.0), vec3.new(21, 27 , 0.4)) }
+		result.models[#result.models + 1] = { id = "asset/ground/pallet_01.mdl", transf = transf.rotZYXTransl(transf.degToRad(20.0, 0.0, 0.0), vec3.new(21, 25.5 , 0.2)) }
+		result.models[#result.models + 1] = { id = "asset/ground/pallet_01.mdl", transf = transf.rotZYXTransl(transf.degToRad(17.0, 0.0, 0.0), vec3.new(21, 25.5 , 0)) }
+		result.models[#result.models + 1] = { id = "asset/ground/pallet_01.mdl", transf = transf.rotZYXTransl(transf.degToRad(25.0, 0.0, 0.0), vec3.new(21, 25.5 , 0.4)) }
+		result.models[#result.models + 1] = { id = "asset/ground/pallet_01.mdl", transf = transf.rotZYXTransl(transf.degToRad(10.0, 0.0, 0.0), vec3.new(23, 27 , 0)) }		
+		result.models[#result.models + 1] = { id = "asset/ground/pallet_01.mdl", transf = transf.rotZYXTransl(transf.degToRad(15.0, 0.0, 0.0), vec3.new(23, 27 , 0.2)) }
+		result.models[#result.models + 1] = { id = "asset/ground/pallet_01.mdl", transf = transf.rotZYXTransl(transf.degToRad(45.0, 0.0, 0.0), vec3.new(23, 27 , 0.4)) }
+		result.models[#result.models + 1] = { id = "asset/ground/pallet_01.mdl", transf = transf.rotZYXTransl(transf.degToRad(45.0, 0.0, 0.0), vec3.new(23, 27 , 0.4)) }
+		result.models[#result.models + 1] = { id = "asset/ground/barrel_steel.mdl", transf = transf.rotZYXTransl(transf.degToRad(280.0, 30.0, 60.0), vec3.new(16.5, 23.9 , 4.3)) }
+		result.models[#result.models + 1] = { id = "asset/ground/barrel_steel.mdl", transf = transf.rotZYXTransl(transf.degToRad(0.0, 0.0, 0.0), vec3.new(21, 20.8 , 0)) }
+		result.models[#result.models + 1] = { id = "asset/ground/barrel_steel.mdl", transf = transf.rotZYXTransl(transf.degToRad(0.0, 0.0, 90.0), vec3.new(21.8, 21.2 , 0.4)) }
+		result.models[#result.models + 1] = { id = "asset/ground/barrel_steel.mdl", transf = transf.rotZYXTransl(transf.degToRad(0.0, 0.0, 0.0), vec3.new(21, 20 , 0)) }
+		result.models[#result.models + 1] = { id = "asset/ground/barrel_steel.mdl", transf = transf.rotZYXTransl(transf.degToRad(0.0, 0.0, 0.0), vec3.new(22.6, 20.6 , 0)) }
+		result.models[#result.models + 1] = { id = "asset/construction_1850.mdl", transf = transf.rotZYXTransl(transf.degToRad(90.0, 0.0, 0.0), vec3.new(16, 15, 0)) }
+		result.models[#result.models + 1] = { id = "asset/ground/wheelbarrow.mdl", transf = transf.rotZYXTransl(transf.degToRad(140.0, 0.0, 0.0), vec3.new(16.6, 23.45, 0)) }
+		result.models[#result.models + 1] = { id = "asset/heap/heap_garbage_small.mdl", transf = { 0.15, 0, 0, 0,   0, 0.15, 0, 0,   0, 0, 0.25, 0,   16.5, 23.5, 0.8, 1 } }
+		result.models[#result.models + 1] = { id = "industry/cargo/waste_big.mdl", transf = transf.rotZYXTransl(transf.degToRad(12.0, 0.0, 0.0), vec3.new(24, 16 , 0)) }
+		result.models[#result.models + 1] = { id = "industry/cargo/waste_small.mdl", transf = transf.rotZYXTransl(transf.degToRad(350.0, 0.0, 0.0), vec3.new(14, 20, 0)) }
+		result.models[#result.models + 1] = { id = "industry/cargo/waste_small.mdl", transf = transf.rotZYXTransl(transf.degToRad(50.0, 0.0, 0.0), vec3.new(16, 20, 0)) }
+		result.models[#result.models + 1] = { id = "industry/cargo/waste_small.mdl", transf = transf.rotZYXTransl(transf.degToRad(0.0, 0.0, 0.0), vec3.new(12.7, 21, 0)) }
+		result.models[#result.models + 1] = { id = "industry/cargo/waste_small.mdl", transf = transf.rotZYXTransl(transf.degToRad(70.0, 0.0, 0.0), vec3.new(14.5, 21.5, 0)) }
+		-- Конец молотилки
+		result.models[#result.models + 1] = { id = "asset/heap/heap_garbage_big.mdl", transf = { 1, -0.8, 0, 0,   0.4, 1, 0, 0,   0, 0, 1, 0,   1, 5, 0, 1 } }
+		result.models[#result.models + 1] = { id = "asset/heap/heap_garbage_mid.mdl", transf = { 1, -0.7, 0, 0,   0.6, 1, 0, 0,   0, 0.5, 1, 0,   -2, 25, 0, 1 } }
+		result.models[#result.models + 1] = { id = "asset/heap/heap_garbage_big.mdl", transf = { 1, 0.8, 0, 0,   -0.4, 1, 0, 0,   0, 0.8, 1.3, 0,   -20, 22, 0, 1 } }
+		result.models[#result.models + 1] = { id = "asset/heap/heap_garbage_big.mdl", transf = { 0.8, 0, 0, 0,   0, 1.4, 0, 0,   0, 0, 1.4, 0,   -8, 45, 0, 1 } }
+		result.models[#result.models + 1] = { id = "asset/heap/heap_garbage_mid.mdl", transf = { 1, 1, 0, 0,   1, -1, 0, 0,   0, 0, 1, 0,   -9, 20, 0, 1 } }
+		result.models[#result.models + 1] = { id = "asset/heap/heap_garbage_big.mdl", transf = { 1, 0, 0, 0,   0, 1, 0, 0,   0, 0, 0.9, 0,   -20, 3, 0, 1 } }
+		result.models[#result.models + 1] = { id = "asset/heap/heap_garbage_big.mdl", transf = { 1, 1.4, 0, 0,   -1, 0.5, 0, 0,   0, 0, 1.4, 0,   -2, 0, 0, 1 } }
+		-- Два контейнера рядом
+		result.models[#result.models + 1] = { id = "industry/cargo/machines_big.mdl", transf = transf.rotZYXTransl(transf.degToRad(50.0, 350.0, 20.0), vec3.new(-9.4, 13.2, 0.6)) }
+		result.models[#result.models + 1] = { id = "industry/cargo/tools_big.mdl", transf = transf.rotZYXTransl(transf.degToRad(145.0, 340.0, 10.0), vec3.new(-14.8, 13.2, 1.2)) }
+		-- Здания
+		result.models[#result.models + 1] = { id = "industry/chemical_plant/building_storage.mdl", transf = transf.rotZYXTransl(transf.degToRad(135.0, 0.0, 0.0), vec3.new(27, -20 , 0)) }
+		result.models[#result.models + 1] = { id = "asset/ground/pipes_large_special_mix_01.mdl", transf = transf.rotZYXTransl(transf.degToRad(135.0, 0.0, 0.0), vec3.new(25.5, -32 , 0)) }
+		result.models[#result.models + 1] = { id = "asset/chimney_ind_03.mdl", transf = { 2, 0, 0, 0,   0, 2, 0, 0,   0, 0, 3, 0,   32, -26, 0, 1 } }
+		result.models[#result.models + 1] = { id = "asset/ground/pipes_large_grounded_5m.mdl", transf = transf.rotZYXTransl(transf.degToRad(135.0, 0.0, 0.0), vec3.new(28.5, -22.5 , 0)) }
+		result.models[#result.models + 1] = { id = "industry/cargo/oil_big.mdl", transf = transf.rotZYXTransl(transf.degToRad(135.0, 0.0, 0.0), vec3.new(15.5, -31.5, 0)) }
+		result.models[#result.models + 1] = { id = "asset/roof/ventilation_end_curved.mdl", transf = transf.rotZYXTransl(transf.degToRad(135.0, 0.0, 0.0), vec3.new(17.6, -22.0, 6)) }
+		result.models[#result.models + 1] = { id = "asset/roof/ventilation_end_curved.mdl", transf = transf.rotZYXTransl(transf.degToRad(135.0, 0.0, 0.0), vec3.new(23.3, -16.3, 6)) }
+		result.models[#result.models + 1] = { id = "asset/roof/ventilation_end_curved.mdl", transf = transf.rotZYXTransl(transf.degToRad(135.0, 0.0, 0.0), vec3.new(29.0, -10.6, 6)) }
+		groundFace = { {0, -56}, {60, -56}, {60, 0}, {35, 0}, {0, -30} }
+		result.groundFaces[#result.groundFaces + 1] = { face = groundFace, modes = { { type = "FILL", key = "building_paving_fill" } } }
+		result.groundFaces[#result.groundFaces + 1] = { face = groundFace, modes = { { type = "STROKE_OUTER", key = "building_paving" } } }
+		-- Блок больших контейнеров
+		result.models[#result.models + 1] = { id = "industry/cargo/waste_big.mdl", transf = transf.rotZYXTransl(transf.degToRad(170, 0, 0), vec3.new(57.0, -52.0, 0)) }
+		result.models[#result.models + 1] = { id = "industry/cargo/waste_big.mdl", transf = transf.rotZYXTransl(transf.degToRad(175, 0, 0), vec3.new(56.8, -48.0, 0)) }
+		result.models[#result.models + 1] = { id = "industry/cargo/waste_big.mdl", transf = transf.rotZYXTransl(transf.degToRad(180, 0, 0), vec3.new(57.0, -44.0, 0)) }
+		result.models[#result.models + 1] = { id = "industry/cargo/waste_big.mdl", transf = transf.rotZYXTransl(transf.degToRad(176, 0, 0), vec3.new(57.1, -40.1, 0)) }
+		result.models[#result.models + 1] = { id = "industry/cargo/waste_big.mdl", transf = transf.rotZYXTransl(transf.degToRad(178, 0, 0), vec3.new(56.9, -36.0, 0)) }
+		result.models[#result.models + 1] = { id = "industry/cargo/waste_big.mdl", transf = transf.rotZYXTransl(transf.degToRad(177, 0, 0), vec3.new(57.2, -32.2, 0)) }
+		result.models[#result.models + 1] = { id = "industry/cargo/waste_big.mdl", transf = transf.rotZYXTransl(transf.degToRad(181, 0, 0), vec3.new(57.1, -28.0, 0)) }
+		result.models[#result.models + 1] = { id = "industry/cargo/waste_big.mdl", transf = transf.rotZYXTransl(transf.degToRad(180, 0, 0), vec3.new(57.0, -24.3, 0)) }
+		result.models[#result.models + 1] = { id = "industry/cargo/waste_big.mdl", transf = transf.rotZYXTransl(transf.degToRad(179, 0, 0), vec3.new(57.0, -20.0, 0)) }
+		result.models[#result.models + 1] = { id = "industry/cargo/waste_big.mdl", transf = transf.rotZYXTransl(transf.degToRad(180, 0, 0), vec3.new(56.8, -16.1, 0)) }
+		result.models[#result.models + 1] = { id = "industry/cargo/waste_big.mdl", transf = transf.rotZYXTransl(transf.degToRad(182, 0, 0), vec3.new(57.0, -11.8, 0)) }
+		result.models[#result.models + 1] = { id = "industry/cargo/waste_big.mdl", transf = transf.rotZYXTransl(transf.degToRad(179, 0, 0), vec3.new(57.2, -8.0, 0)) }
+		result.models[#result.models + 1] = { id = "industry/cargo/waste_big.mdl", transf = transf.rotZYXTransl(transf.degToRad(180, 0, 0), vec3.new(57.0, -4.1, 0)) }
+	--	result.models[#result.models + 1] = { id = "industry/cargo/waste_big.mdl", transf = transf.rotZYXTransl(transf.degToRad(8, 0, 0), vec3.new(42.0, -52.0, 0)) }
+	--	result.models[#result.models + 1] = { id = "industry/cargo/waste_big.mdl", transf = transf.rotZYXTransl(transf.degToRad(5, 0, 0), vec3.new(41.8, -48.0, 0)) }
+	--	result.models[#result.models + 1] = { id = "industry/cargo/waste_big.mdl", transf = transf.rotZYXTransl(transf.degToRad(0, 0, 0), vec3.new(42.0, -44.0, 0)) }
+	--	result.models[#result.models + 1] = { id = "industry/cargo/waste_big.mdl", transf = transf.rotZYXTransl(transf.degToRad(357, 0, 0), vec3.new(42.1, -40.1, 0)) }
+		result.models[#result.models + 1] = { id = "asset/ground/container_waste2.mdl", transf = transf.rotZYXTransl(transf.degToRad(45, 0, 0), vec3.new(34.0, -23.0, 0)) }
+		result.models[#result.models + 1] = { id = "asset/ground/container_waste2.mdl", transf = transf.rotZYXTransl(transf.degToRad(44, 0, 0), vec3.new(36.0, -21.0, 0)) }
+		result.models[#result.models + 1] = { id = "asset/ground/container_waste2.mdl", transf = transf.rotZYXTransl(transf.degToRad(46, 0, 0), vec3.new(38.0, -19.0, 0)) }
+		result.models[#result.models + 1] = { id = "asset/ground/container_waste2.mdl", transf = transf.rotZYXTransl(transf.degToRad(45, 0, 0), vec3.new(40.0, -17.0, 0)) }
+		-- Сторожка
+		result.models[#result.models + 1] = { id = "industry/forest/main_building.mdl", transf = transf.rotZYXTransl(transf.degToRad(180.0, 0.0, 0.0), vec3.new(-8, -53.6 , 0)) }
+		result.models[#result.models + 1] = { id = "railroad/crossing_half_barrier_large.mdl", transf = transf.rotZYXTransl(transf.degToRad(270.0, 0.0, 0.0), vec3.new(-6.8, -59.1 , 0)) }
+		groundFace = { {-11.3, -59}, {0, -59}, {0, -40}, {-11.3, -40} }
+		result.groundFaces[#result.groundFaces + 1] = { face = groundFace, modes = { { type = "FILL", key = "building_paving_fill" } } }
+		result.groundFaces[#result.groundFaces + 1] = { face = groundFace, modes = { { type = "STROKE_OUTER", key = "building_paving" } } }
+		-- Деревья
+		result.models[#result.models + 1] = { id = constructionutil.getTree(params.state, "broadleaf"), transf = transf.rotZYXTransl(transf.degToRad(math.random(0, 360), 0.0, 0.0), vec3.new(math.random(-66, -16), math.random(-58, -28), 0)) }
+		result.models[#result.models + 1] = { id = constructionutil.getTree(params.state, "broadleaf"), transf = transf.rotZYXTransl(transf.degToRad(math.random(0, 360), 0.0, 0.0), vec3.new(math.random(-66, -16), math.random(-58, -28), 0)) }
+		result.models[#result.models + 1] = { id = constructionutil.getTree(params.state, "broadleaf"), transf = transf.rotZYXTransl(transf.degToRad(math.random(0, 360), 0.0, 0.0), vec3.new(math.random(-66, -16), math.random(-58, -28), 0)) }
+		result.models[#result.models + 1] = { id = constructionutil.getTree(params.state, "broadleaf"), transf = transf.rotZYXTransl(transf.degToRad(math.random(0, 360), 0.0, 0.0), vec3.new(math.random(-66, -16), math.random(-58, -28), 0)) }
+		result.models[#result.models + 1] = { id = constructionutil.getTree(params.state, "broadleaf"), transf = transf.rotZYXTransl(transf.degToRad(math.random(0, 360), 0.0, 0.0), vec3.new(math.random(-66, -16), math.random(-58, -28), 0)) }
+		result.models[#result.models + 1] = { id = constructionutil.getTree(params.state, "broadleaf"), transf = transf.rotZYXTransl(transf.degToRad(math.random(0, 360), 0.0, 0.0), vec3.new(math.random(-66, -16), math.random(-58, -28), 0)) }
+		result.models[#result.models + 1] = { id = constructionutil.getTree(params.state, "broadleaf"), transf = transf.rotZYXTransl(transf.degToRad(math.random(0, 360), 0.0, 0.0), vec3.new(math.random(-66, -16), math.random(-58, -28), 0)) }
+		result.models[#result.models + 1] = { id = constructionutil.getTree(params.state, "broadleaf"), transf = transf.rotZYXTransl(transf.degToRad(math.random(0, 360), 0.0, 0.0), vec3.new(math.random(-66, -16), math.random(-58, -28), 0)) }
+		result.models[#result.models + 1] = { id = constructionutil.getTree(params.state, "broadleaf"), transf = transf.rotZYXTransl(transf.degToRad(math.random(0, 360), 0.0, 0.0), vec3.new(math.random(-66, -16), math.random(-58, -28), 0)) }
+		result.models[#result.models + 1] = { id = constructionutil.getTree(params.state, "broadleaf"), transf = transf.rotZYXTransl(transf.degToRad(math.random(0, 360), 0.0, 0.0), vec3.new(math.random(-66, -16), math.random(-58, -28), 0)) }
+		result.models[#result.models + 1] = { id = constructionutil.getTree(params.state, "broadleaf"), transf = transf.rotZYXTransl(transf.degToRad(math.random(0, 360), 0.0, 0.0), vec3.new(math.random(-66, -16), math.random(-58, -28), 0)) }
+		result.models[#result.models + 1] = { id = constructionutil.getTree(params.state, "broadleaf"), transf = transf.rotZYXTransl(transf.degToRad(math.random(0, 360), 0.0, 0.0), vec3.new(math.random(-66, -16), math.random(-58, -28), 0)) }
+		result.models[#result.models + 1] = { id = constructionutil.getTree(params.state, "broadleaf"), transf = transf.rotZYXTransl(transf.degToRad(math.random(0, 360), 0.0, 0.0), vec3.new(math.random(-66, -16), math.random(-58, -28), 0)) }
+		result.models[#result.models + 1] = { id = constructionutil.getTree(params.state, "broadleaf"), transf = transf.rotZYXTransl(transf.degToRad(math.random(0, 360), 0.0, 0.0), vec3.new(math.random(-66, -16), math.random(-58, -28), 0)) }
+		result.models[#result.models + 1] = { id = constructionutil.getTree(params.state, "broadleaf"), transf = transf.rotZYXTransl(transf.degToRad(math.random(0, 360), 0.0, 0.0), vec3.new(math.random(-66, -16), math.random(-58, -28), 0)) }
+		result.models[#result.models + 1] = { id = constructionutil.getTree(params.state, "broadleaf"), transf = transf.rotZYXTransl(transf.degToRad(math.random(0, 360), 0.0, 0.0), vec3.new(math.random(-66, -16), math.random(-58, -28), 0)) }
+		result.models[#result.models + 1] = { id = constructionutil.getTree(params.state, "broadleaf"), transf = transf.rotZYXTransl(transf.degToRad(math.random(0, 360), 0.0, 0.0), vec3.new(math.random(-66, -16), math.random(-58, -28), 0)) }
+		result.models[#result.models + 1] = { id = constructionutil.getTree(params.state, "broadleaf"), transf = transf.rotZYXTransl(transf.degToRad(math.random(0, 360), 0.0, 0.0), vec3.new(math.random(-66, -16), math.random(-58, -28), 0)) }
+		result.models[#result.models + 1] = { id = constructionutil.getTree(params.state, "broadleaf"), transf = transf.rotZYXTransl(transf.degToRad(math.random(0, 360), 0.0, 0.0), vec3.new(math.random(-66, -16), math.random(-58, -28), 0)) }
+		result.models[#result.models + 1] = { id = constructionutil.getTree(params.state, "broadleaf"), transf = transf.rotZYXTransl(transf.degToRad(math.random(0, 360), 0.0, 0.0), vec3.new(math.random(-66, -16), math.random(-58, -28), 0)) }
+		result.models[#result.models + 1] = { id = constructionutil.getTree(params.state, "broadleaf"), transf = transf.rotZYXTransl(transf.degToRad(math.random(0, 360), 0.0, 0.0), vec3.new(math.random(-66, -16), math.random(-58, -28), 0)) }
+		result.models[#result.models + 1] = { id = constructionutil.getTree(params.state, "broadleaf"), transf = transf.rotZYXTransl(transf.degToRad(math.random(0, 360), 0.0, 0.0), vec3.new(math.random(-66, -16), math.random(-58, -28), 0)) }
+		result.models[#result.models + 1] = { id = constructionutil.getTree(params.state, "broadleaf"), transf = transf.rotZYXTransl(transf.degToRad(math.random(0, 360), 0.0, 0.0), vec3.new(math.random(-66, -16), math.random(-58, -28), 0)) }
+		result.models[#result.models + 1] = { id = constructionutil.getTree(params.state, "broadleaf"), transf = transf.rotZYXTransl(transf.degToRad(math.random(0, 360), 0.0, 0.0), vec3.new(math.random(-66, -16), math.random(-58, -28), 0)) }
+		result.models[#result.models + 1] = { id = constructionutil.getTree(params.state, "broadleaf"), transf = transf.rotZYXTransl(transf.degToRad(math.random(0, 360), 0.0, 0.0), vec3.new(math.random(-66, -16), math.random(-58, -28), 0)) }
+		result.models[#result.models + 1] = { id = constructionutil.getTree(params.state, "broadleaf"), transf = transf.rotZYXTransl(transf.degToRad(math.random(0, 360), 0.0, 0.0), vec3.new(math.random(-66, -16), math.random(-58, -28), 0)) }
+		result.models[#result.models + 1] = { id = constructionutil.getTree(params.state, "broadleaf"), transf = transf.rotZYXTransl(transf.degToRad(math.random(0, 360), 0.0, 0.0), vec3.new(math.random(-66, -16), math.random(-58, -28), 0)) }
+		result.models[#result.models + 1] = { id = constructionutil.getTree(params.state, "broadleaf"), transf = transf.rotZYXTransl(transf.degToRad(math.random(0, 360), 0.0, 0.0), vec3.new(math.random(-66, -16), math.random(-58, -28), 0)) }
+		result.models[#result.models + 1] = { id = constructionutil.getTree(params.state, "broadleaf"), transf = transf.rotZYXTransl(transf.degToRad(math.random(0, 360), 0.0, 0.0), vec3.new(math.random(-66, -16), math.random(-58, -28), 0)) }
+		result.models[#result.models + 1] = { id = constructionutil.getTree(params.state, "broadleaf"), transf = transf.rotZYXTransl(transf.degToRad(math.random(0, 360), 0.0, 0.0), vec3.new(math.random(-66, -16), math.random(-58, -28), 0)) }
+		result.models[#result.models + 1] = { id = constructionutil.getTree(params.state, "broadleaf"), transf = transf.rotZYXTransl(transf.degToRad(math.random(0, 360), 0.0, 0.0), vec3.new(math.random(-66, -16), math.random(-58, -28), 0)) }
+		result.models[#result.models + 1] = { id = constructionutil.getTree(params.state, "broadleaf"), transf = transf.rotZYXTransl(transf.degToRad(math.random(0, 360), 0.0, 0.0), vec3.new(math.random(-66, -16), math.random(-58, -28), 0)) }
+		result.models[#result.models + 1] = { id = constructionutil.getTree(params.state, "broadleaf"), transf = transf.rotZYXTransl(transf.degToRad(math.random(0, 360), 0.0, 0.0), vec3.new(math.random(-66, -16), math.random(-58, -28), 0)) }
+		result.models[#result.models + 1] = { id = constructionutil.getTree(params.state, "broadleaf"), transf = transf.rotZYXTransl(transf.degToRad(math.random(0, 360), 0.0, 0.0), vec3.new(math.random(-66, -16), math.random(-58, -28), 0)) }
+		result.models[#result.models + 1] = { id = constructionutil.getTree(params.state, "broadleaf"), transf = transf.rotZYXTransl(transf.degToRad(math.random(0, 360), 0.0, 0.0), vec3.new(math.random(-66, -16), math.random(-58, -28), 0)) }
+		result.models[#result.models + 1] = { id = constructionutil.getTree(params.state, "broadleaf"), transf = transf.rotZYXTransl(transf.degToRad(math.random(0, 360), 0.0, 0.0), vec3.new(math.random(-66, -16), math.random(-58, -28), 0)) }
+		result.models[#result.models + 1] = { id = constructionutil.getTree(params.state, "broadleaf"), transf = transf.rotZYXTransl(transf.degToRad(math.random(0, 360), 0.0, 0.0), vec3.new(math.random(-66, -16), math.random(-58, -28), 0)) }
+		result.models[#result.models + 1] = { id = constructionutil.getTree(params.state, "broadleaf"), transf = transf.rotZYXTransl(transf.degToRad(math.random(0, 360), 0.0, 0.0), vec3.new(math.random(-66, -16), math.random(-58, -28), 0)) }
+		result.models[#result.models + 1] = { id = constructionutil.getTree(params.state, "broadleaf"), transf = transf.rotZYXTransl(transf.degToRad(math.random(0, 360), 0.0, 0.0), vec3.new(math.random(-66, -16), math.random(-58, -28), 0)) }
+		result.models[#result.models + 1] = { id = constructionutil.getTree(params.state, "broadleaf"), transf = transf.rotZYXTransl(transf.degToRad(math.random(0, 360), 0.0, 0.0), vec3.new(math.random(-66, -16), math.random(-58, -28), 0)) }
+		result.models[#result.models + 1] = { id = constructionutil.getTree(params.state, "broadleaf"), transf = transf.rotZYXTransl(transf.degToRad(math.random(0, 360), 0.0, 0.0), vec3.new(math.random(-66, -16), math.random(-58, -28), 0)) }
+		result.models[#result.models + 1] = { id = constructionutil.getTree(params.state, "broadleaf"), transf = transf.rotZYXTransl(transf.degToRad(math.random(0, 360), 0.0, 0.0), vec3.new(math.random(-66, -16), math.random(-58, -28), 0)) }
+		result.models[#result.models + 1] = { id = constructionutil.getTree(params.state, "broadleaf"), transf = transf.rotZYXTransl(transf.degToRad(math.random(0, 360), 0.0, 0.0), vec3.new(math.random(-66, -16), math.random(-58, -28), 0)) }
+		result.models[#result.models + 1] = { id = constructionutil.getTree(params.state, "broadleaf"), transf = transf.rotZYXTransl(transf.degToRad(math.random(0, 360), 0.0, 0.0), vec3.new(math.random(-66, -46), math.random(-28, -10), 0)) }
+		result.models[#result.models + 1] = { id = constructionutil.getTree(params.state, "broadleaf"), transf = transf.rotZYXTransl(transf.degToRad(math.random(0, 360), 0.0, 0.0), vec3.new(math.random(-66, -46), math.random(-28, -12), 0)) }
+		result.models[#result.models + 1] = { id = constructionutil.getTree(params.state, "broadleaf"), transf = transf.rotZYXTransl(transf.degToRad(math.random(0, 360), 0.0, 0.0), vec3.new(math.random(-66, -46), math.random(-28, -12), 0)) }
+		result.models[#result.models + 1] = { id = constructionutil.getTree(params.state, "broadleaf"), transf = transf.rotZYXTransl(transf.degToRad(math.random(0, 360), 0.0, 0.0), vec3.new(math.random(-66, -46), math.random(-28, -12), 0)) }
+		result.models[#result.models + 1] = { id = constructionutil.getTree(params.state, "broadleaf"), transf = transf.rotZYXTransl(transf.degToRad(math.random(0, 360), 0.0, 0.0), vec3.new(math.random(-66, -46), math.random(-28, -12), 0)) }
+		result.models[#result.models + 1] = { id = constructionutil.getTree(params.state, "broadleaf"), transf = transf.rotZYXTransl(transf.degToRad(math.random(0, 360), 0.0, 0.0), vec3.new(math.random(-66, -46), math.random(-28, -12), 0)) }
+		result.models[#result.models + 1] = { id = "asset/rock_4.mdl", transf = transf.rotZYXTransl(transf.degToRad(260, 0, 0), vec3.new(-41.0, -20.0, 0)) }
+		result.models[#result.models + 1] = { id = "asset/rock_5.mdl", transf = transf.rotZYXTransl(transf.degToRad(260, 0, 0), vec3.new(-37.0, -22.0, 0)) }
+		result.models[#result.models + 1] = { id = constructionutil.getTree(params.state, "broadleaf"), transf = transf.rotZYXTransl(transf.degToRad(math.random(0, 360), 0.0, 0.0), vec3.new(-66, -5, 0)) }
+		result.models[#result.models + 1] = { id = constructionutil.getTree(params.state, "broadleaf"), transf = transf.rotZYXTransl(transf.degToRad(math.random(0, 360), 0.0, 0.0), vec3.new(-64, 0, 0)) }
+		result.models[#result.models + 1] = { id = constructionutil.getTree(params.state, "broadleaf"), transf = transf.rotZYXTransl(transf.degToRad(math.random(0, 360), 0.0, 0.0), vec3.new(-60, 0, 0)) }
+		result.models[#result.models + 1] = { id = constructionutil.getTree(params.state, "broadleaf"), transf = transf.rotZYXTransl(transf.degToRad(math.random(0, 360), 0.0, 0.0), vec3.new(-65, 4, 0)) }
+		result.models[#result.models + 1] = { id = constructionutil.getTree(params.state, "broadleaf"), transf = transf.rotZYXTransl(transf.degToRad(math.random(0, 360), 0.0, 0.0), vec3.new(-66, 9, 0)) }
+		result.models[#result.models + 1] = { id = constructionutil.getTree(params.state, "broadleaf"), transf = transf.rotZYXTransl(transf.degToRad(math.random(0, 360), 0.0, 0.0), vec3.new(-67, 13, 0)) }
+		result.models[#result.models + 1] = { id = constructionutil.getTree(params.state, "broadleaf"), transf = transf.rotZYXTransl(transf.degToRad(math.random(0, 360), 0.0, 0.0), vec3.new(-66, 18, 0)) }
+		result.models[#result.models + 1] = { id = constructionutil.getTree(params.state, "broadleaf"), transf = transf.rotZYXTransl(transf.degToRad(math.random(0, 360), 0.0, 0.0), vec3.new(-66, 22, 0)) }
+		result.models[#result.models + 1] = { id = constructionutil.getTree(params.state, "broadleaf"), transf = transf.rotZYXTransl(transf.degToRad(math.random(0, 360), 0.0, 0.0), vec3.new(-66, 27, 0)) }
+		result.models[#result.models + 1] = { id = constructionutil.getTree(params.state, "broadleaf"), transf = transf.rotZYXTransl(transf.degToRad(math.random(0, 360), 0.0, 0.0), vec3.new(-65, 32, 0)) }
+		result.models[#result.models + 1] = { id = constructionutil.getTree(params.state, "broadleaf"), transf = transf.rotZYXTransl(transf.degToRad(math.random(0, 360), 0.0, 0.0), vec3.new(-66, 36, 0)) }
+		result.models[#result.models + 1] = { id = constructionutil.getTree(params.state, "broadleaf"), transf = transf.rotZYXTransl(transf.degToRad(math.random(0, 360), 0.0, 0.0), vec3.new(-67, 41, 0)) }
+		result.models[#result.models + 1] = { id = constructionutil.getTree(params.state, "broadleaf"), transf = transf.rotZYXTransl(transf.degToRad(math.random(0, 360), 0.0, 0.0), vec3.new(-65, 46, 0)) }
+		result.models[#result.models + 1] = { id = constructionutil.getTree(params.state, "broadleaf"), transf = transf.rotZYXTransl(transf.degToRad(math.random(0, 360), 0.0, 0.0), vec3.new(-66, 51, 0)) }
+		result.models[#result.models + 1] = { id = constructionutil.getTree(params.state, "broadleaf"), transf = transf.rotZYXTransl(transf.degToRad(math.random(0, 360), 0.0, 0.0), vec3.new(-66, 56, 0)) }
+		result.models[#result.models + 1] = { id = constructionutil.getTree(params.state, "broadleaf"), transf = transf.rotZYXTransl(transf.degToRad(math.random(0, 360), 0.0, 0.0), vec3.new(-57, 57, 0)) }
+		result.models[#result.models + 1] = { id = constructionutil.getTree(params.state, "broadleaf"), transf = transf.rotZYXTransl(transf.degToRad(math.random(0, 360), 0.0, 0.0), vec3.new(math.random(-66, -46), math.random(64, 88), 0)) }
+		result.models[#result.models + 1] = { id = constructionutil.getTree(params.state, "broadleaf"), transf = transf.rotZYXTransl(transf.degToRad(math.random(0, 360), 0.0, 0.0), vec3.new(math.random(-66, -46), math.random(64, 88), 0)) }
+		result.models[#result.models + 1] = { id = constructionutil.getTree(params.state, "broadleaf"), transf = transf.rotZYXTransl(transf.degToRad(math.random(0, 360), 0.0, 0.0), vec3.new(math.random(-66, -46), math.random(64, 88), 0)) }
+		result.models[#result.models + 1] = { id = constructionutil.getTree(params.state, "broadleaf"), transf = transf.rotZYXTransl(transf.degToRad(math.random(0, 360), 0.0, 0.0), vec3.new(math.random(-66, -46), math.random(64, 88), 0)) }
+		result.models[#result.models + 1] = { id = constructionutil.getTree(params.state, "broadleaf"), transf = transf.rotZYXTransl(transf.degToRad(math.random(0, 360), 0.0, 0.0), vec3.new(math.random(-66, -46), math.random(64, 88), 0)) }
+		result.models[#result.models + 1] = { id = constructionutil.getTree(params.state, "broadleaf"), transf = transf.rotZYXTransl(transf.degToRad(math.random(0, 360), 0.0, 0.0), vec3.new(math.random(-66, -46), math.random(64, 88), 0)) }
+		result.models[#result.models + 1] = { id = constructionutil.getTree(params.state, "broadleaf"), transf = transf.rotZYXTransl(transf.degToRad(math.random(0, 360), 0.0, 0.0), vec3.new(math.random(-66, -46), math.random(64, 88), 0)) }
+		result.models[#result.models + 1] = { id = constructionutil.getTree(params.state, "broadleaf"), transf = transf.rotZYXTransl(transf.degToRad(math.random(0, 360), 0.0, 0.0), vec3.new(math.random(-66, -46), math.random(64, 88), 0)) }
+		result.models[#result.models + 1] = { id = constructionutil.getTree(params.state, "broadleaf"), transf = transf.rotZYXTransl(transf.degToRad(math.random(0, 360), 0.0, 0.0), vec3.new(math.random(-66, -46), math.random(64, 88), 0)) }
+		result.models[#result.models + 1] = { id = constructionutil.getTree(params.state, "broadleaf"), transf = transf.rotZYXTransl(transf.degToRad(math.random(0, 360), 0.0, 0.0), vec3.new(math.random(-66, -46), math.random(64, 88), 0)) }
+		result.models[#result.models + 1] = { id = constructionutil.getTree(params.state, "broadleaf"), transf = transf.rotZYXTransl(transf.degToRad(math.random(0, 360), 0.0, 0.0), vec3.new(math.random(-66, -46), math.random(64, 88), 0)) }
+		result.models[#result.models + 1] = { id = constructionutil.getTree(params.state, "broadleaf"), transf = transf.rotZYXTransl(transf.degToRad(math.random(0, 360), 0.0, 0.0), vec3.new(math.random(-66, -46), math.random(64, 88), 0)) }
+		result.models[#result.models + 1] = { id = constructionutil.getTree(params.state, "broadleaf"), transf = transf.rotZYXTransl(transf.degToRad(math.random(0, 360), 0.0, 0.0), vec3.new(math.random(-66, -46), math.random(64, 88), 0)) }
+		result.models[#result.models + 1] = { id = constructionutil.getTree(params.state, "broadleaf"), transf = transf.rotZYXTransl(transf.degToRad(math.random(0, 360), 0.0, 0.0), vec3.new(math.random(-46, -26), math.random(75, 88), 0)) }
+		result.models[#result.models + 1] = { id = constructionutil.getTree(params.state, "broadleaf"), transf = transf.rotZYXTransl(transf.degToRad(math.random(0, 360), 0.0, 0.0), vec3.new(math.random(-46, -26), math.random(75, 88), 0)) }
+		result.models[#result.models + 1] = { id = constructionutil.getTree(params.state, "broadleaf"), transf = transf.rotZYXTransl(transf.degToRad(math.random(0, 360), 0.0, 0.0), vec3.new(math.random(-46, -26), math.random(75, 88), 0)) }
+		result.models[#result.models + 1] = { id = constructionutil.getTree(params.state, "broadleaf"), transf = transf.rotZYXTransl(transf.degToRad(math.random(0, 360), 0.0, 0.0), vec3.new(math.random(-46, -26), math.random(75, 88), 0)) }
+		result.models[#result.models + 1] = { id = constructionutil.getTree(params.state, "broadleaf"), transf = transf.rotZYXTransl(transf.degToRad(math.random(0, 360), 0.0, 0.0), vec3.new(math.random(-46, -26), math.random(75, 88), 0)) }
+		result.models[#result.models + 1] = { id = constructionutil.getTree(params.state, "broadleaf"), transf = transf.rotZYXTransl(transf.degToRad(math.random(0, 360), 0.0, 0.0), vec3.new(math.random(-46, -26), math.random(75, 88), 0)) }
+		result.models[#result.models + 1] = { id = constructionutil.getTree(params.state, "broadleaf"), transf = transf.rotZYXTransl(transf.degToRad(math.random(0, 360), 0.0, 0.0), vec3.new(math.random(-46, -26), math.random(75, 88), 0)) }
+		result.models[#result.models + 1] = { id = constructionutil.getTree(params.state, "broadleaf"), transf = transf.rotZYXTransl(transf.degToRad(math.random(0, 360), 0.0, 0.0), vec3.new(math.random(-26, -6), math.random(80, 88), 0)) }
+		result.models[#result.models + 1] = { id = constructionutil.getTree(params.state, "broadleaf"), transf = transf.rotZYXTransl(transf.degToRad(math.random(0, 360), 0.0, 0.0), vec3.new(math.random(-26, -6), math.random(80, 88), 0)) }
+		result.models[#result.models + 1] = { id = constructionutil.getTree(params.state, "broadleaf"), transf = transf.rotZYXTransl(transf.degToRad(math.random(0, 360), 0.0, 0.0), vec3.new(math.random(-26, -6), math.random(80, 88), 0)) }
+		result.models[#result.models + 1] = { id = constructionutil.getTree(params.state, "broadleaf"), transf = transf.rotZYXTransl(transf.degToRad(math.random(0, 360), 0.0, 0.0), vec3.new(math.random(-26, -6), math.random(80, 88), 0)) }
+		result.models[#result.models + 1] = { id = constructionutil.getTree(params.state, "broadleaf"), transf = transf.rotZYXTransl(transf.degToRad(math.random(0, 360), 0.0, 0.0), vec3.new(math.random(-26, -6), math.random(80, 88), 0)) }
+		result.models[#result.models + 1] = { id = constructionutil.getTree(params.state, "broadleaf"), transf = transf.rotZYXTransl(transf.degToRad(math.random(0, 360), 0.0, 0.0), vec3.new(math.random(-26, -6), math.random(80, 88), 0)) }
+		result.models[#result.models + 1] = { id = "tree/usa/OcotilloCluster_RT.mdl", transf = transf.rotZYXTransl(transf.degToRad(math.random(0, 360), 0, 0), vec3.new(60.0, 5.0, 0)) }
+		result.models[#result.models + 1] = { id = "tree/usa/OcotilloCluster_RT.mdl", transf = transf.rotZYXTransl(transf.degToRad(math.random(0, 360), 0, 0), vec3.new(47.0, 4.7, 0)) }
+		result.models[#result.models + 1] = { id = "tree/usa/OcotilloCluster_RT.mdl", transf = transf.rotZYXTransl(transf.degToRad(math.random(0, 360), 0, 0), vec3.new(50.0, 7.8, 0)) }
+		result.models[#result.models + 1] = { id = "tree/usa/OcotilloCluster_RT.mdl", transf = transf.rotZYXTransl(transf.degToRad(math.random(0, 360), 0, 0), vec3.new(54.0, 12.0, 0)) }
+		result.models[#result.models + 1] = { id = "tree/usa/OcotilloCluster_RT.mdl", transf = transf.rotZYXTransl(transf.degToRad(math.random(0, 360), 0, 0), vec3.new(50.0, 5.2, 0)) }
+		result.models[#result.models + 1] = { id = "tree/usa/OcotilloCluster_RT.mdl", transf = transf.rotZYXTransl(transf.degToRad(math.random(0, 360), 0, 0), vec3.new(50.0, 10.0, 0)) }
+		result.models[#result.models + 1] = { id = "tree/usa/OcotilloCluster_RT.mdl", transf = transf.rotZYXTransl(transf.degToRad(math.random(0, 360), 0, 0), vec3.new(58.0, 15.0, 0)) }
+		result.models[#result.models + 1] = { id = "tree/usa/OcotilloCluster_RT.mdl", transf = transf.rotZYXTransl(transf.degToRad(math.random(0, 360), 0, 0), vec3.new(53.2, 5.0, 0)) }
+		result.models[#result.models + 1] = { id = "tree/usa/OcotilloCluster_RT.mdl", transf = transf.rotZYXTransl(transf.degToRad(math.random(0, 360), 0, 0), vec3.new(53.0, 8.2, 0)) }
+		result.models[#result.models + 1] = { id = "tree/usa/OcotilloCluster_RT.mdl", transf = transf.rotZYXTransl(transf.degToRad(math.random(0, 360), 0, 0), vec3.new(53.3, 10.0, 0)) }
+		result.models[#result.models + 1] = { id = "tree/whiteoak_rt_2.mdl", transf = transf.rotZYXTransl(transf.degToRad(math.random(0, 360), 0, 0), vec3.new(58.3, 22.3, 0)) }
+		result.models[#result.models + 1] = { id = "tree/whiteoak_rt_1.mdl", transf = transf.rotZYXTransl(transf.degToRad(math.random(0, 360), 0, 0), vec3.new(56.3, 8.0, 0)) }
+		-- Заливка под кучами
+		groundFace = { {0, -30}, {40, 10}, {50, 35}, {55, 60}, {45, 85}, {10, 80.000}, {-40, 60}, {-55, 45}, {-60, 20}, {-45, -10} }
+		result.groundFaces[#result.groundFaces + 1] = { face = groundFace, modes = { { type = "FILL", key = "industry_soil_01" } } }
+		-- Ставим забор, чтобы мусор не стащили	
+		fenceFace = { {-5,-60, 0}, {-68, -60, 0}, {-68, 90, 0}, {64, 90, 0}, {64, -60, 0}, {4, -60, 0}} 
+		constructionutil.makeFence(fenceFace, "station/airport/asset/fence_metal.mdl", 3, false, result.models)
+	return result
+	end
+}
+end

@@ -1,0 +1,262 @@
+local vec3 = require "vec3"
+local transf = require "transf"
+function data()
+
+local cap = 52 -- capacity
+
+return {
+	boundingInfo = {
+		bbMax = { 1.6, 1.25, 2.5 },
+		bbMin = { -7.3, -1.25, -0.0 },
+	},
+	lods = {
+		{
+			animations = { },
+			children = {
+				{
+					id = "vehicle/truck/tractor/Tractor.grp",
+					transf = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 },
+					type = "GROUP",
+				},
+				{
+					id = "vehicle/truck/tractor/Scep.grp",
+					transf = { 0.95, 0, 0, 0, 0, 0.95, 0, 0, 0, 0, 0.95, 0, -5, 0, 0, 1 },
+					type = "GROUP",
+				},
+				{
+					id = "vehicle/truck/tractor/Pricep_gkb817_lod0.grp",
+					transf = { 0.95, 0, 0, 0, 0, 0.95, 0, 0, 0, 0, 0.95, 0, -5, 0, 0, 1 },
+					type = "GROUP",
+				},
+			},
+			events = { },
+			matConfigs = {
+				{ 0, 0, 0 }, 
+			},
+			static = false,
+			visibleFrom = 0,
+			visibleTo = 300,
+		},
+		{
+			animations = { },
+			children = {
+				{
+					id = "vehicle/truck/tractor/Tractor_lod1.grp",
+					transf = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 },
+					type = "GROUP",
+				},
+				{
+					id = "vehicle/truck/tractor/Scep.grp",
+					transf = { 0.95, 0, 0, 0, 0, 0.95, 0, 0, 0, 0, 0.95, 0, -5, 0, 0, 1 },
+					type = "GROUP",
+				},
+				{
+					id = "vehicle/truck/tractor/Pricep_gkb817_lod1.grp",
+					transf = { 0.95, 0, 0, 0, 0, 0.95, 0, 0, 0, 0, 0.95, 0, -5, 0, 0, 1 },
+					type = "GROUP",
+				},
+			},
+			events = { },
+			matConfigs = {
+				{ 0, 0, 0 }, 
+			},
+			static = false,
+			visibleFrom = 300,
+			visibleTo = 700,
+		},
+	},
+	metadata = {
+		availability = {
+			yearFrom = 1948,
+			yearTo = 0,
+		},
+		cost = {
+			price = -1,
+		},
+		description = {
+			name = _(gkb817_info),
+			description = _(gkb817_desk),
+		},
+		maintenance = {
+			lifespan = 45,
+			runningCosts = -1,
+		},
+		roadVehicle = {
+			configs = {
+				{
+					wheels = {
+						"vehicle/truck/tractor/tractor_fr.msh"
+					},
+					axles = {
+						"vehicle/truck/tractor/koleso01.msh",
+						"vehicle/truck/tractor/tractor_bl.msh",
+						"vehicle/truck/tractor/tractor_br.msh",
+						"asset/rock_2_9_lod_0.msh"
+					},
+					fakeBogies = {
+					--[[
+						{ group = 1, offset = 0, position = 1.2 },
+						{ group = 1, offset = 0, position = -0.8 },
+						{ group = 2, offset = 0, position = 4.1 },
+						{ group = 2, offset = 0, position = 1.5 },
+						{ group = 3, offset = 0, position = 1.5 },
+						{ group = 3, offset = 0, position = -1.5 }
+					]]
+					}
+				},
+				{
+					wheels = {
+						"vehicle/truck/tractor/tractor_fr.msh"
+					},
+					axles = {
+						"vehicle/truck/tractor/koleso01.msh",
+						"vehicle/truck/tractor/tractor_bl.msh",
+						"vehicle/truck/tractor/tractor_br.msh",
+						"asset/rock_2_9_lod_0.msh"
+					},
+					fakeBogies = { }
+				}
+			},
+			power = 60,
+			soundSet = {
+				horn = "vehicle/truck_old/truck_old_horn.wav",
+				name = "Ford_8n",
+ 			},
+			topSpeed = 37.2,
+			tractiveEffort = 35,
+			weight = 4.143, -- 1093 + 3050
+		},
+		transportVehicle = {
+			capacities = {
+				{ type = "LOGS", capacity = cap, loadIndicators = {
+					{ type = "DISCRETE", params = { levels = {
+						{ 19, 20, 21, 22, 23, 24, 25, 26 },
+						{ 20, 21, 22, 23, 24, 25, 26  },
+						{ 21, 22, 23, 24, 25, 26 },
+						{ 22, 23, 24, 25, 26 },
+						{ 23, 24, 25, 26 },
+						{ 24, 25, 26 },
+						{ 25, 26 },
+						{ 26 },
+						{ 19, 20, 21, 22, 23, 24, 25 }
+					} } },
+				} },
+				{ type = "STEEL", capacity = cap, loadIndicators = {
+					{ type = "DISCRETE", params = { levels = {
+						{ 27, 28, 29, 30, 31, 32, 33, 34 },
+						{ 28, 29, 30, 31, 32, 33, 34  },
+						{ 29, 30, 31, 32, 33, 34 },
+						{ 30, 31, 32, 33, 34 },
+						{ 31, 32, 33, 34 },
+						{ 32, 33, 34 },
+						{ 33, 34 },
+						{ 34 },
+						{ 27, 28, 29, 30, 31, 32, 33 }
+					} } },
+				} },
+				{ type = "PLANKS", capacity = cap, loadIndicators = {
+					{ type = "DISCRETE", params = { levels = {
+						{ 35, 36, 37, 38, 39, 40, 41, 42 },
+						{ 36, 37, 38, 39, 40, 41, 42  },
+						{ 37, 38, 39, 40, 41, 42 },
+						{ 38, 39, 40, 41, 42 },
+						{ 39, 40, 41, 42 },
+						{ 40, 41, 42 },
+						{ 41, 42 },
+						{ 42 },
+						{ 35, 36, 37, 38, 39, 40, 41 }
+					} } },
+				} },
+				{ type = "GOODS", capacity = cap, loadIndicators = {
+					{ type = "DISCRETE", params = { items =
+						{ 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55 }
+					} } }
+				},
+				{ type = "CONSTRUCTION_MATERIALS", capacity = cap, loadIndicators = {
+					{ type = "DISCRETE", params = { levels = {
+						{ 56, 57, 58, 59, 60, 61, 62, 63 },
+						{ 57, 58, 59, 60, 61, 62, 63  },
+						{ 58, 59, 60, 61, 62, 63 },
+						{ 59, 60, 61, 62, 63 },
+						{ 60, 61, 62, 63 },
+						{ 61, 62, 63 },
+						{ 62, 63 },
+						{ 63 },
+						{ 56, 57, 58, 59, 60, 62, 62 }
+					} } },
+				} },
+				{ type = "GOODS", capacity = cap, loadIndicators = {
+					{ type = "DISCRETE", params = { items =
+						{ 64, 65, 66, 67, 68, 69, 70, 71 }
+					} } }
+				},
+				{ type = "MACHINES", capacity = cap, loadIndicators = {
+					{ type = "DISCRETE", params = { items =
+						{ 72, 73, 74, 75, 76, 77, 78, 79 }
+					} } }
+				},
+				{ type = "MACHINES", capacity = cap, loadIndicators = {
+					{ type = "DISCRETE", params = { items =
+						{ 80, 81, 82, 83, 84, 85, 86, 87 }
+					} } }
+				},
+				{ type = "FOOD", capacity = cap, loadIndicators = {
+					{ type = "DISCRETE", params = { items =
+						{ 88, 89, 90, 91, 92, 93, 94, 95 }
+					} } }
+				},
+				{ type = "CLOTHES", capacity = cap, loadIndicators = {
+					{ type = "DISCRETE", params = { items =
+						{ 96, 97, 98, 99, 100, 101 }
+					} } }
+				},
+				{ type = "COTTON", capacity = cap, loadIndicators = {
+					{ type = "DISCRETE", params = { levels = {
+						{ 102, 103, 104, 105, 106, 107, 108 },
+						{ 103, 104, 105, 106, 107, 108  },
+						{ 104, 105, 106, 107, 108 },
+						{ 105, 106, 107, 108 },
+						{ 106, 107, 108 },
+						{ 107, 108 },
+						{ 108 },
+						{ 102, 103, 104, 105, 106, 107 }
+					} } },
+				} },
+				{ type = "LIVESTOCK", capacity = cap, loadIndicators = {
+					{ type = "DISCRETE", params = { items =
+						{ 109, 110, 111, 112, 113, 114, 115, 116 }
+					} } }
+				},
+				{ type = "PAPER", capacity = cap, loadIndicators = {
+					{ type = "DISCRETE", params = { levels = {
+						{ 117, 118, 119, 120, 121, 122, 123, 124, 125 },
+						{ 118, 119, 120, 121, 122, 123, 124, 125 },
+						{ 119, 120, 121, 122, 123, 124, 125 },
+						{ 120, 121, 122, 123, 124, 125 },
+						{ 121, 122, 123, 124, 125 },
+						{ 122, 123, 124, 125 },
+						{ 123, 124, 125 },
+						{ 124, 125 },
+						{ 125 },
+						{ 117, 118, 119, 120, 121, 122, 123, 124 }
+					} } },
+				} },
+				{ type = "GRAIN", capacity = cap, loadIndicators = {
+					{ type = "DISCRETE", params = { items =
+						{ 126, 127, 128, 129, 130, 131, 132, 133 }
+					} } }
+				},
+				{ type = "CEMENT", capacity = cap, loadIndicators = {
+					{ type = "DISCRETE", params = { items =
+						{ 134, 135, 136, 137, 138, 139, 140, 141 }
+					} } }
+				},
+				{ type = "FISH", capacity = cap },
+				{ type = "ALUMINUM", capacity = cap },
+			},
+			carrier = "ROAD",
+			loadSpeed = 2,
+		}
+	}
+}
+end

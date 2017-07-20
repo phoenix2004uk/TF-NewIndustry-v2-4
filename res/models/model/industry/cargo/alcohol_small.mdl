@@ -1,0 +1,40 @@
+function data()
+return {
+	boundingInfo = {
+
+	},
+	lods = {
+		{
+			animations = { },
+			children = {
+				{
+					id = "asset/ground/lod_1_wood_barrel1.msh",
+					transf = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 },
+					type = "MESH"
+				}
+			},
+			events = { },
+			matConfigs = { { 0 } },
+			static = false,
+			visibleFrom = 150,
+			visibleTo = 300
+		},
+		{
+			animations = { },
+			children = {
+				{
+					id = "asset/ground/lod_0_wood_barrel1.msh",
+					transf = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 },
+					type = "MESH"
+				}
+			},
+			events = { },
+			matConfigs = { { 0 } },
+			static = false,
+			visibleFrom = 0,
+			visibleTo = 150
+		}
+	},
+	metadata = { }
+}
+end

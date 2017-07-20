@@ -1,0 +1,8 @@
+function data()
+return {
+	children = {
+	},
+	matConfigs = {
+	},
+}
+end

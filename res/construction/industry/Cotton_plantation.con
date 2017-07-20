@@ -1,0 +1,340 @@
+local constructionutil = require "constructionutil"
+local paramsutil = require "paramsutil"
+local vec3 = require "vec3"
+local transf = require "transf"
+
+function data()
+
+return { 
+	type = "INDUSTRY",
+	categories = {_(Extractive_industry)},
+	order = 6,
+	description = {
+		name = _("Cotton plantation"),
+		description = _(Cotton_desc),
+	},
+	availability = {
+
+	},
+	soundConfig = {
+		soundSet = { name = "farm" },
+		effects = {
+			select =  {
+				"selected_industry_farm1.wav",
+				"selected_industry_farm2.wav",
+				"selected_industry_farm3.wav"
+			}
+		}
+	},
+	params = paramsutil.makeIndustryParams(),
+	updateFn = function(params)
+		local result = { }
+		local level = (params.productionLevel or 0) + 1
+		local groundFace = { }
+		local terrainFaces = { }
+		local edges = { }
+
+		result.models = { }
+		result.groundFaces = { }
+		result.stocks = { }
+		result.stockRules = { }
+		result.cost = _G.CottonCost * (params.productionLevel + 1)
+		result.maintenanceCost = _G.CottonMaintenanceCost * (params.productionLevel + 1)
+
+		-- Дороги
+		result.edgeLists = { { type = "STREET", params = { type = "country_old_small.lua" }, edges = edges, snapNodes = { 0 } } }
+
+		edges[#edges + 1] = { { 0.0, -79.0,  0.0 },  { 00.0, 1.0, 0.00 } }
+		edges[#edges + 1] = { { 0.0, -54.0,  0.0 },  { 00.0, 1.0, 0.00 } }
+
+		edges[#edges + 1] = { { 0.0, -54.0,  0.0 },  { -70.0, 22.0, 0.00 } }
+		edges[#edges + 1] = { { -22.0, -32.0,  0.0 },  { 00.0, 22.0, 0.00 } }
+
+		edges[#edges + 1] = { { 0.0, -54.0,  0.0 },  { 70.0, 22.0, 0.00 } }
+		edges[#edges + 1] = { { 22.0, -32.0,  0.0 },  { 00.0, 22.0, 0.00 } }
+
+		edges[#edges + 1] = { { -22.0, -32.0,  0.0 },  { 0.0,  22.0, 0.00 } }
+		edges[#edges + 1] = { { -22.0, -12.0,  0.0 },  { 0.0,  22.0, 0.00 } }
+
+		edges[#edges + 1] = { { 22.0, -32.0,  0.0 },  { 0.0,  22.0, 0.00 } }
+		edges[#edges + 1] = { { 22.0, -12.0,  0.0 },  { 0.0,  22.0, 0.00 } }
+
+		edges[#edges + 1] = { { -22.0, -12.0,  0.0 },  { 00.0,  70.0, 0.00 } }
+		edges[#edges + 1] = { { 0.0, 10.0,  0.0 },  { 10.0,  00.0, 0.00 } }
+
+		edges[#edges + 1] = { { 22.0, -12.0,  0.0 },  { 00.0,  70.0, 0.00 } }
+		edges[#edges + 1] = { { 0.0, 10.0,  0.0 },  { -10.0,  00.0, 0.00 } }
+
+		-- Выравнивание
+		result.terrainAlignmentLists = { { type = "EQUAL", faces = terrainFaces, slopeLow = .20 } }
+		terrainFaces[#terrainFaces + 1] = {  {48, -64, 0}, {59.5, -50, 0}, {110.5, -50, 0}, {122, -40, 0}, {122, 80, 0}, {92, 100, 0}, {-91, 100, 0}, {-121, 80, 0}, {-121, -79, 0}, {-109.5, -89, 0}, {-64.5, -89, 0}, {-40, -64, 0} }
+
+		-- Заливка в круг
+		groundFace = { {0, -54}, {11, -45}, {22, -32}, {22, -12}, {19, -1}, {0, 10}, {-19, -1}, {-22, -12}, {-22, -32}, {-11, -45} }
+	
+	
+		result.groundFaces[#result.groundFaces + 1] = { face = groundFace, modes = { { type = "FILL", key = "building_paving_fill" } } }
+		result.groundFaces[#result.groundFaces + 1] = { face = groundFace, modes = { { type = "STROKE_OUTER", key = "building_paving" } } }
+
+		-- Забор
+		fenceFace = { {-54, -78, 0}, { -54, 15, 0}, {-39, 30, 0}, {42, 30, 0}, {48, 23, 0}, {48, -40, 0}, {59.5, -50, 0}, {110.5, -50, 0}, {122, -40, 0}, {122, 80, 0}, {92, 100, 0}, {-91, 100, 0}, {-121, 80, 0}, {-121, -79, 0}, {-109.5, -89, 0}, {-64.5, -89, 0}, {-54, -78, 0} } 
+		constructionutil.makeFence(constructionutil.reverseFace(fenceFace), "asset/fence_wood.mdl", 3, false, result.models)
+
+		
+		-- Основная текстура + кант
+		groundFace = { {-54, -78}, { -54, 15}, {-39, 30}, {42, 30}, {48, 23}, {48, -40}, {59.5, -50}, {110.5, -50}, {122, -40}, {122, 80}, {92, 100}, {-91, 100}, {-121, 80}, {-121, -79}, {-109.5, -89}, {-64.5, -89} }
+		result.groundFaces[#result.groundFaces + 1] = { face = groundFace, modes = { { type = "FILL", key = "farmland_7" } } }
+	--	result.groundFaces[#result.groundFaces + 1] = { face = groundFace, modes = { { type = "FILL", key = "farmland_4" } } }
+		result.groundFaces[#result.groundFaces + 1] = { face = groundFace, modes = { { type = "STROKE_OUTER", key = "industry_floor_paving_m" } } }
+		result.groundFaces[#result.groundFaces + 1] = { face = constructionutil.reverseFace(groundFace), modes = { { type = "STROKE_OUTER", key = "industry_floor_paving_m" } } }
+
+		-- Грузы
+		if level == 1 then
+			result.personCapacity = { type = "INDUSTRIAL", capacity = _G.ManLeveledPerson[params.productionLevel + 1] }
+			constructionutil.makeStocks({
+				stocks = {
+					{ cargoType = "FERTILIZERS", type = "RECEIVING", x = 0, y = -10, sizex = 2,	sizey = 1 },
+					{ cargoType = "COTTON",		 type = "SENDING",	 x = 0, y = -34, sizex = 2,	sizey = 1 },
+				},
+				stockRules = {
+					{ input = { { 0, 0 }, { 1, 0 } }, output = { { 0, 1 }, { 0, 3 } }, capacity = math.random( _G.leveledCapacity1[1], _G.leveledCapacity1[2] ) }
+				}
+			}, result)
+		end
+
+		if level == 2 then
+			result.personCapacity = { type = "INDUSTRIAL", capacity = _G.ManLeveledPerson[params.productionLevel + 1] }
+			constructionutil.makeStocks({
+				stocks = {
+					{ cargoType = "FERTILIZERS", type = "RECEIVING", x = 0, y = -10, sizex = 2,	sizey = 1 },
+					{ cargoType = "COTTON",		 type = "SENDING",	 x = 0, y = -34, sizex = 2,	sizey = 1 },
+				},
+				stockRules = {
+					{ input = { { 0, 0 }, { 1, 0 } }, output = { { 0, 1 }, { 0, 3 } }, capacity = math.random( _G.leveledCapacity2[1], _G.leveledCapacity2[2] ) }
+				}
+			}, result)
+		end
+
+		if level == 3 then
+			result.personCapacity = { type = "INDUSTRIAL", capacity = _G.ManLeveledPerson[params.productionLevel + 1] }
+			constructionutil.makeStocks({
+				stocks = {
+					{ cargoType = "FERTILIZERS", type = "RECEIVING", x = 0, y = -10, sizex = 2,	sizey = 2 },
+					{ cargoType = "COTTON",		 type = "SENDING",	 x = 0, y = -34, sizex = 2,	sizey = 2 },
+				},
+				stockRules = {
+					{ input = { { 0, 0 }, { 1, 0 } }, output = { { 0, 1 }, { 0, 3 } }, capacity = math.random( _G.leveledCapacity3[1], _G.leveledCapacity3[2] ) }
+				}
+			}, result)
+		end
+
+		if level == 4 then
+			result.personCapacity = { type = "INDUSTRIAL", capacity = _G.ManLeveledPerson[params.productionLevel + 1] }
+			constructionutil.makeStocks({
+				stocks = {
+					{ cargoType = "FERTILIZERS", type = "RECEIVING", x = 0, y = -10, sizex = 3,	sizey = 2 },
+					{ cargoType = "COTTON",		 type = "SENDING",	 x = 0, y = -34, sizex = 3,	sizey = 2 },
+				},
+				stockRules = {
+					{ input = { { 0, 0 }, { 1, 0 } }, output = { { 0, 1 }, { 0, 3 } }, capacity = math.random( _G.leveledCapacity4[1], _G.leveledCapacity4[2] ) }
+				}
+			}, result)
+		end
+
+		if level == 5 then
+			result.personCapacity = { type = "INDUSTRIAL", capacity = _G.ManLeveledPerson[params.productionLevel + 1] }
+			constructionutil.makeStocks({
+				stocks = {
+					{ cargoType = "FERTILIZERS", type = "RECEIVING", x = 0, y = -10, sizex = 3,	sizey = 2 },
+					{ cargoType = "COTTON",		 type = "SENDING",	 x = 0, y = -34, sizex = 3,	sizey = 2 },
+				},
+				stockRules = {
+					{ input = { { 0, 0 }, { 1, 0 } }, output = { { 0, 1 }, { 0, 3 } }, capacity = math.random( _G.leveledCapacity5[1], _G.leveledCapacity5[2] ) }
+				}
+			}, result)
+		end
+		-- Закончили грузы
+
+		-- Модельки
+		if level >= 1 then
+		result.personCapacity = { type = "RESIDENTIAL", capacity =  4 }
+		-- Хозблок
+		result.models[#result.models + 1] = { id = "building/era_a/ind_1_2x3_02_02.mdl", transf = transf.rotZYXTransl(transf.degToRad(180.0, 0.0, 0.0), vec3.new(-30, -29 , 0)) }
+		result.models[#result.models + 1] = { id = "asset/ground/barrel_wood.mdl", transf = transf.rotZYXTransl(transf.degToRad(00.0, 0.0, 0.0), vec3.new(-25.0, -47.6 , 0)) }
+		result.models[#result.models + 1] = { id = "asset/ground/barrel_wood.mdl", transf = transf.rotZYXTransl(transf.degToRad(00.0, 0.0, 0.0), vec3.new(-24.8, -46.3 , 0)) }
+		result.models[#result.models + 1] = { id = "asset/ground/barrel_wood.mdl", transf = transf.rotZYXTransl(transf.degToRad(00.0, 0.0, 0.0), vec3.new(-23.5, -47.4 , 0)) }
+		result.models[#result.models + 1] = { id = "asset/industry/cardboard_box_01.mdl", transf = transf.rotZYXTransl(transf.degToRad(math.random(0, 360), 0.0, 0.0), vec3.new(-20.3, -54.1 , 1.0)) }
+		result.models[#result.models + 1] = { id = "asset/industry/cardboard_box_01.mdl", transf = transf.rotZYXTransl(transf.degToRad(math.random(0, 360), 0.0, 0.0), vec3.new(-20.3, -55.4 , 1.0)) }
+		result.models[#result.models + 1] = { id = "asset/ground/container_fluid.mdl", transf = transf.rotZYXTransl(transf.degToRad(math.random(0, 360), 0.0, 0.0), vec3.new(-18.2, -55 , 0)) }
+		result.models[#result.models + 1] = { id = "asset/ground/container_fluid.mdl", transf = transf.rotZYXTransl(transf.degToRad(math.random(0, 360), 0.0, 0.0), vec3.new(-18.2, -52.2 , 0)) }
+		result.models[#result.models + 1] = { id = "asset/ground/container_fluid.mdl", transf = transf.rotZYXTransl(transf.degToRad(math.random(0, 360), 0.0, 0.0), vec3.new(-15.9, -55 , 0)) }
+		result.models[#result.models + 1] = { id = "tree/whitebirch_rt_1.mdl", transf = transf.rotZYXTransl(transf.degToRad(120, 0.0, 0.0), vec3.new(-13.9, -61.2 , 0)) }
+		result.models[#result.models + 1] = { id = "tree/whitebirch_rt_1.mdl", transf = transf.rotZYXTransl(transf.degToRad(50, 0.0, 0.0), vec3.new(-20.9, -62 , 0)) }
+		result.models[#result.models + 1] = { id = "tree/whitebirch_rt_2.mdl", transf = transf.rotZYXTransl(transf.degToRad(80, 0.0, 0.0), vec3.new(-25.9, -62 , 0)) }
+		result.models[#result.models + 1] = { id = "tree/whitebirch_rt_2.mdl", transf = transf.rotZYXTransl(transf.degToRad(150, 0.0, 0.0), vec3.new(-29.5, -61.5 , 0)) }
+		result.models[#result.models + 1] = { id = "tree/whitebirch_rt_3.mdl", transf = transf.rotZYXTransl(transf.degToRad(150, 0.0, 0.0), vec3.new(-36.1, -62.1 , 0)) }
+		result.models[#result.models + 1] = { id = "tree/whitebirch_rt_"..math.random(1, 5)..".mdl", transf = transf.rotZYXTransl(transf.degToRad(math.random(0, 360), 0.0, 0.0), vec3.new(-41.2, -61.1 , 0)) }
+		result.models[#result.models + 1] = { id = "tree/whitebirch_rt_"..math.random(1, 5)..".mdl", transf = transf.rotZYXTransl(transf.degToRad(math.random(0, 360), 0.0, 0.0), vec3.new(-46.1, -61.9 , 0)) }
+		result.models[#result.models + 1] = { id = "tree/whitebirch_rt_"..math.random(1, 5)..".mdl", transf = transf.rotZYXTransl(transf.degToRad(math.random(0, 360), 0.0, 0.0), vec3.new(-51.0, -60.9 , 0)) }
+		result.models[#result.models + 1] = { id = "asset/old_car.mdl", transf = transf.scaleRotZYXTransl(vec3.new( 0.8, 0.8, 0.8 ), transf.degToRad(270, 5.0, 350.0), vec3.new(29.8, 25.5 , 0)) }
+		result.models[#result.models + 1] = { id = "asset/ground/container_waste3_open.mdl", transf = transf.rotZYXTransl(transf.degToRad(185, 0.0, 0.0), vec3.new(-29.8, -29.5 , 0)) }
+		result.models[#result.models + 1] = { id = "asset/ground/container_waste3.mdl", transf = transf.rotZYXTransl(transf.degToRad(178, 0.0, 0.0), vec3.new(-32.5, -29.4 , 0)) }
+		result.models[#result.models + 1] = { id = "asset/ground/barrel_steel.mdl", transf = transf.rotZYXTransl(transf.degToRad(00.0, 0.0, 0.0), vec3.new(-34.1, -29.6 , 0)) }
+		result.models[#result.models + 1] = { id = "asset/ground/container_wood.mdl", transf = transf.rotZYXTransl(transf.degToRad(270, 0.0, 0.0), vec3.new(-36.6, -35.2 , 0)) }
+		result.models[#result.models + 1] = { id = "asset/ground/container_wood.mdl", transf = transf.rotZYXTransl(transf.degToRad(270, 0.0, 0.0), vec3.new(-36.6, -37.3 , 0)) }
+		result.models[#result.models + 1] = { id = "asset/ground/container_wood.mdl", transf = transf.rotZYXTransl(transf.degToRad(270, 0.0, 0.0), vec3.new(-36.6, -39.4 , 0)) }
+		result.models[#result.models + 1] = { id = "asset/ground/container_wood.mdl", transf = transf.rotZYXTransl(transf.degToRad(270, 0.0, 0.0), vec3.new(-36.6, -41.5 , 0)) }
+		result.models[#result.models + 1] = { id = "asset/ground/wood_plates_01.mdl", transf = { -0.2, 1.5, 0, 0,   1.5, 0.2, 0, 0,   0, 0, 2, 0,   -47.0, -55, 0, 1 } }
+		result.models[#result.models + 1] = { id = "asset/ground/cableroll.mdl", transf = transf.rotZYXTransl(transf.degToRad(0, 0.0, 90.0), vec3.new(-42.6, -54.0 , 1)) }
+		result.models[#result.models + 1] = { id = "asset/barrel_water_blue.mdl", transf = transf.rotZYXTransl(transf.degToRad(0, 0.0, 00.0), vec3.new(-47.9, -51.0 , 0)) }
+		result.models[#result.models + 1] = { id = "asset/barrel_water_blue.mdl", transf = transf.rotZYXTransl(transf.degToRad(0, 0.0, 00.0), vec3.new(-47.7, -50.0 , 0)) }
+		result.models[#result.models + 1] = { id = "asset/barrel_water_blue.mdl", transf = transf.rotZYXTransl(transf.degToRad(0, 0.0, 00.0), vec3.new(-47.9, -49.0 , 0)) }
+		result.models[#result.models + 1] = { id = "asset/barrel_water_blue.mdl", transf = transf.rotZYXTransl(transf.degToRad(0, 0.0, 00.0), vec3.new(-47.8, -47.8 , 0)) }
+		result.models[#result.models + 1] = { id = "asset/barrel_water_blue.mdl", transf = transf.rotZYXTransl(transf.degToRad(0, 0.0, 00.0), vec3.new(-47.9, -46.9 , 0)) }
+		result.models[#result.models + 1] = { id = "asset/barrel_water_blue.mdl", transf = transf.rotZYXTransl(transf.degToRad(0, 0.0, 00.0), vec3.new(-47.7, -45.8 , 0)) }
+		result.models[#result.models + 1] = { id = "asset/barrel_water_blue.mdl", transf = transf.rotZYXTransl(transf.degToRad(0, 0.0, 00.0), vec3.new(-47.6, -44.6 , 0)) }
+		result.models[#result.models + 1] = { id = "asset/barrel_water_blue.mdl", transf = transf.rotZYXTransl(transf.degToRad(0, 0.0, 00.0), vec3.new(-46.6, -50.9 , 0)) }
+		result.models[#result.models + 1] = { id = "asset/barrel_water_blue.mdl", transf = transf.rotZYXTransl(transf.degToRad(0, 0.0, 00.0), vec3.new(-46.7, -49.9 , 0)) }
+		result.models[#result.models + 1] = { id = "asset/barrel_water_blue.mdl", transf = transf.rotZYXTransl(transf.degToRad(0, 0.0, 00.0), vec3.new(-46.9, -48.8 , 0)) }
+		result.models[#result.models + 1] = { id = "asset/barrel_water_blue.mdl", transf = transf.rotZYXTransl(transf.degToRad(0, 0.0, 00.0), vec3.new(-46.8, -47.7 , 0)) }
+		result.models[#result.models + 1] = { id = "asset/barrel_water_blue.mdl", transf = transf.rotZYXTransl(transf.degToRad(125, 0.0, 90.0), vec3.new(-46.9, -46.9 , 0.5)) }
+		result.models[#result.models + 1] = { id = "asset/barrel_water_blue.mdl", transf = transf.rotZYXTransl(transf.degToRad(0, 0.0, 00.0), vec3.new(-45.6, -50.8 , 0)) }
+		result.models[#result.models + 1] = { id = "asset/barrel_water_blue.mdl", transf = transf.rotZYXTransl(transf.degToRad(0, 0.0, 00.0), vec3.new(-45.8, -49.8 , 0)) }
+		result.models[#result.models + 1] = { id = "asset/barrel_water_blue.mdl", transf = transf.rotZYXTransl(transf.degToRad(0, 0.0, 00.0), vec3.new(-46, -48.8 , 0)) }
+		result.models[#result.models + 1] = { id = "asset/Old_tractor/Old_tractor_static.mdl", transf = transf.rotZYXTransl(transf.degToRad(340.0, 0.0, 0.0), vec3.new(-45.8, -24.5 , 0)) }
+		-- Деревья справа внизу от дороги
+		result.models[#result.models + 1] = { id = "tree/whitebirch_rt_"..math.random(1, 5)..".mdl", transf = transf.rotZYXTransl(transf.degToRad(120, 0.0, 0.0), vec3.new(13.9, -61.2 , 0)) }
+		result.models[#result.models + 1] = { id = "tree/whitebirch_rt_"..math.random(1, 5)..".mdl", transf = transf.rotZYXTransl(transf.degToRad(120, 0.0, 0.0), vec3.new(19.1, -61.0 , 0)) }
+		result.models[#result.models + 1] = { id = "tree/whitebirch_rt_"..math.random(1, 5)..".mdl", transf = transf.rotZYXTransl(transf.degToRad(120, 0.0, 0.0), vec3.new(24.5, -60.5 , 0)) }
+		result.models[#result.models + 1] = { id = "tree/whitebirch_rt_"..math.random(1, 5)..".mdl", transf = transf.rotZYXTransl(transf.degToRad(120, 0.0, 0.0), vec3.new(29.2, -60.2 , 0)) }
+		result.models[#result.models + 1] = { id = "tree/whitebirch_rt_"..math.random(1, 5)..".mdl", transf = transf.rotZYXTransl(transf.degToRad(120, 0.0, 0.0), vec3.new(33.9, -58.2 , 0)) }
+		result.models[#result.models + 1] = { id = "tree/whitebirch_rt_"..math.random(1, 5)..".mdl", transf = transf.rotZYXTransl(transf.degToRad(120, 0.0, 0.0), vec3.new(38.9, -59.9 , 0)) }
+		result.models[#result.models + 1] = { id = "tree/whitebirch_rt_"..math.random(1, 5)..".mdl", transf = transf.rotZYXTransl(transf.degToRad(120, 0.0, 0.0), vec3.new(42.9, -55.2 , 0)) }
+		result.models[#result.models + 1] = { id = "tree/whitebirch_rt_"..math.random(1, 5)..".mdl", transf = transf.rotZYXTransl(transf.degToRad(120, 0.0, 0.0), vec3.new(47.9, -50.2 , 0)) }
+		result.models[#result.models + 1] = { id = "tree/whitebirch_rt_"..math.random(1, 5)..".mdl", transf = transf.rotZYXTransl(transf.degToRad(120, 0.0, 0.0), vec3.new(42.9, -51.9 , 0)) }
+		result.models[#result.models + 1] = { id = "tree/whitebirch_rt_"..math.random(1, 5)..".mdl", transf = transf.rotZYXTransl(transf.degToRad(120, 0.0, 0.0), vec3.new(37.9, -49.2 , 0)) }
+		result.models[#result.models + 1] = { id = "tree/whitebirch_rt_"..math.random(1, 5)..".mdl", transf = transf.rotZYXTransl(transf.degToRad(120, 0.0, 0.0), vec3.new(33.9, -50.2 , 0)) }
+		-- Общая заливка под домами
+		groundFace = { {48, -62}, {59.5, -50}, {48, -40}, {48, 23}, {42, 30}, {-39, 30}, {-54, 15}, {-54, -62} }
+			result.groundFaces[#result.groundFaces + 1] = { face = groundFace, modes = { { type = "FILL", key = "industry_floor" } } }
+			result.groundFaces[#result.groundFaces + 1] = { face = groundFace, modes = { { type = "STROKE_OUTER", key = "industry_floor_paving" } } }
+		-- Лавки, стулья, кострище
+		result.models[#result.models + 1] = { id = "asset/ground/garden_sun_pavillion_01.mdl", transf = transf.rotZYXTransl(transf.degToRad(30, 0.0, 0.0), vec3.new(15, 20.0 , 0)) }
+		result.models[#result.models + 1] = { id = "asset/ground/garden_chair_plastic_01.mdl", transf = transf.rotZYXTransl(transf.degToRad(30, 0.0, 0.0), vec3.new(14.5, 21.4 , 0)) }
+		result.models[#result.models + 1] = { id = "asset/ground/garden_chair_plastic_01.mdl", transf = transf.rotZYXTransl(transf.degToRad(340, 0.0, 0.0), vec3.new(16, 20.9 , 0)) }
+		result.models[#result.models + 1] = { id = "asset/ground/garden_chair_plastic_01.mdl", transf = transf.rotZYXTransl(transf.degToRad(180, 0.0, 0.0), vec3.new(15, 19.0 , 0)) }
+		result.models[#result.models + 1] = { id = "asset/ground/garden_chair_plastic_01.mdl", transf = transf.rotZYXTransl(transf.degToRad(80, 0.0, 270.0), vec3.new(13.5, 19.7 , 0.3)) }
+		result.models[#result.models + 1] = { id = "asset/ground/garden_table_round_wood_01.mdl", transf = transf.rotZYXTransl(transf.degToRad(180, 0.0, 0.0), vec3.new(15, 20.0 , 0)) }
+		result.models[#result.models + 1] = { id = "asset/ground/garden_bench_wood_01.mdl", transf = transf.rotZYXTransl(transf.degToRad(90, 0.0, 0.0), vec3.new(9.3, 17.6 , 0)) }
+		result.models[#result.models + 1] = { id = "asset/ground/garden_bench_wood_01.mdl", transf = transf.rotZYXTransl(transf.degToRad(90, 0.0, 0.0), vec3.new(9.3, 21.4 , 0)) }
+		result.models[#result.models + 1] = { id = "tree/orangetree_1_rt_"..math.random(1, 3)..".mdl", transf = transf.rotZYXTransl(transf.degToRad(math.random(0, 360), 0.0, 0.0), vec3.new(11.3, 23.5 , 0)) }
+		result.models[#result.models + 1] = { id = "tree/orangetree_1_rt_"..math.random(1, 3)..".mdl", transf = transf.rotZYXTransl(transf.degToRad(math.random(0, 360), 0.0, 0.0), vec3.new(15.0, 23.6 , 0)) }
+		result.models[#result.models + 1] = { id = "tree/orangetree_1_rt_"..math.random(1, 3)..".mdl", transf = transf.rotZYXTransl(transf.degToRad(math.random(0, 360), 0.0, 0.0), vec3.new(18.0, 23.7 , 0)) }
+		result.models[#result.models + 1] = { id = "tree/orangetree_1_rt_"..math.random(1, 3)..".mdl", transf = transf.rotZYXTransl(transf.degToRad(math.random(0, 360), 0.0, 0.0), vec3.new(20.0, 23.5 , 0)) }
+		result.models[#result.models + 1] = { id = "tree/orangetree_1_rt_"..math.random(1, 3)..".mdl", transf = transf.rotZYXTransl(transf.degToRad(math.random(0, 360), 0.0, 0.0), vec3.new(19.7, 21.5 , 0)) }
+		result.models[#result.models + 1] = { id = "tree/orangetree_1_rt_"..math.random(1, 3)..".mdl", transf = transf.rotZYXTransl(transf.degToRad(math.random(0, 360), 0.0, 0.0), vec3.new(19.6, 19.4 , 0)) }
+		result.models[#result.models + 1] = { id = "tree/orangetree_1_rt_"..math.random(1, 3)..".mdl", transf = transf.rotZYXTransl(transf.degToRad(math.random(0, 360), 0.0, 0.0), vec3.new(19.8, 17.2 , 0)) }
+		result.models[#result.models + 1] = { id = "tree/orangetree_1_rt_"..math.random(1, 3)..".mdl", transf = transf.rotZYXTransl(transf.degToRad(math.random(0, 360), 0.0, 0.0), vec3.new(19.7, 15.1 , 0)) }
+		result.models[#result.models + 1] = { id = "tree/orangetree_1_rt_"..math.random(1, 3)..".mdl", transf = transf.rotZYXTransl(transf.degToRad(math.random(0, 360), 0.0, 0.0), vec3.new(19.7, 12.1 , 0)) }
+		result.models[#result.models + 1] = { id = "tree/orangetree_1_rt_"..math.random(1, 3)..".mdl", transf = transf.rotZYXTransl(transf.degToRad(math.random(0, 360), 0.0, 0.0), vec3.new(16.5, 11.8 , 0)) }
+		result.models[#result.models + 1] = { id = "tree/orangetree_1_rt_"..math.random(1, 3)..".mdl", transf = transf.rotZYXTransl(transf.degToRad(math.random(0, 360), 0.0, 0.0), vec3.new(math.random(22, 31), math.random(5, 24), 0)) }
+		result.models[#result.models + 1] = { id = "tree/orangetree_1_rt_"..math.random(1, 3)..".mdl", transf = transf.rotZYXTransl(transf.degToRad(math.random(0, 360), 0.0, 0.0), vec3.new(math.random(22, 31), math.random(5, 24), 0)) }
+		result.models[#result.models + 1] = { id = "tree/orangetree_1_rt_"..math.random(1, 3)..".mdl", transf = transf.rotZYXTransl(transf.degToRad(math.random(0, 360), 0.0, 0.0), vec3.new(math.random(22, 31), math.random(5, 24), 0)) }
+		result.models[#result.models + 1] = { id = "tree/orangetree_1_rt_"..math.random(1, 3)..".mdl", transf = transf.rotZYXTransl(transf.degToRad(math.random(0, 360), 0.0, 0.0), vec3.new(math.random(22, 31), math.random(5, 24), 0)) }
+		result.models[#result.models + 1] = { id = "tree/orangetree_1_rt_"..math.random(1, 3)..".mdl", transf = transf.rotZYXTransl(transf.degToRad(math.random(0, 360), 0.0, 0.0), vec3.new(math.random(22, 31), math.random(5, 24), 0)) }
+		result.models[#result.models + 1] = { id = "tree/orangetree_1_rt_"..math.random(1, 3)..".mdl", transf = transf.rotZYXTransl(transf.degToRad(math.random(0, 360), 0.0, 0.0), vec3.new(math.random(22, 31), math.random(5, 24), 0)) }
+		result.models[#result.models + 1] = { id = "tree/orangetree_1_rt_"..math.random(1, 3)..".mdl", transf = transf.rotZYXTransl(transf.degToRad(math.random(0, 360), 0.0, 0.0), vec3.new(math.random(22, 31), math.random(5, 24), 0)) }
+		result.models[#result.models + 1] = { id = "tree/orangetree_1_rt_"..math.random(1, 3)..".mdl", transf = transf.rotZYXTransl(transf.degToRad(math.random(0, 360), 0.0, 0.0), vec3.new(math.random(22, 31), math.random(5, 24), 0)) }
+		result.models[#result.models + 1] = { id = "tree/orangetree_1_rt_"..math.random(1, 3)..".mdl", transf = transf.rotZYXTransl(transf.degToRad(math.random(0, 360), 0.0, 0.0), vec3.new(math.random(22, 31), math.random(5, 24), 0)) }
+		result.models[#result.models + 1] = { id = "asset/ground/campfire_smoke.mdl", transf = transf.rotZYXTransl(transf.degToRad(0.0, 0.0, 0.0), vec3.new(14.3, 15.4 , 0)) }
+		end
+
+		if level == 1 then
+		-- Дом
+		result.models[#result.models + 1] = { id = "building/era_a/res_1_2x2_02_02.mdl", transf = transf.rotZYXTransl(transf.degToRad(0.0, 0.0, 0.0), vec3.new(0, 15 , 0)) }
+		end
+		
+		if level <= 3 then
+		-- заливка под хозблоком
+			groundFace = { {-10, -52}, {-20, -47}, {-25, -23}, {-50, -23}, {-50, -58}, {-14, -58} }	
+			result.groundFaces[#result.groundFaces + 1] = { face = groundFace, modes = { { type = "FILL", key = "building_paving_fill" } } }
+			result.groundFaces[#result.groundFaces + 1] = { face = groundFace, modes = { { type = "STROKE_OUTER", key = "building_paving" } } }
+		result.models[#result.models + 1] = { id = "asset/ground/heap_mid.mdl", transf = { 1, 1, 0, 0,   1, -1, 0, 0,   0, 0, 1, 0,   -39, 18, 0, 1 } }
+		result.models[#result.models + 1] = { id = "asset/ground/wheelbarrow.mdl", transf = transf.rotZYXTransl(transf.degToRad(150.0, 0.0, 0.0), vec3.new(-33.3, 10.4 , -0.05)) }
+		result.models[#result.models + 1] = { id = "tree/usa/GreenleafManzanita_RT.mdl", transf = transf.rotZYXTransl(transf.degToRad(math.random(0, 360), 0.0, 0.0), vec3.new(-25, 27, 0)) }
+		result.models[#result.models + 1] = { id = "tree/usa/GreenleafManzanita_RT.mdl", transf = transf.rotZYXTransl(transf.degToRad(math.random(0, 360), 0.0, 0.0), vec3.new(-22, 25, 0)) }
+		result.models[#result.models + 1] = { id = "tree/usa/GreenleafManzanita_RT.mdl", transf = transf.rotZYXTransl(transf.degToRad(math.random(0, 360), 0.0, 0.0), vec3.new(-19, 26, 0)) }
+		result.models[#result.models + 1] = { id = "tree/usa/GreenleafManzanita_RT.mdl", transf = transf.rotZYXTransl(transf.degToRad(math.random(0, 360), 0.0, 0.0), vec3.new(-19.5, 22, 0)) }
+		result.models[#result.models + 1] = { id = "tree/usa/GreenleafManzanita_RT.mdl", transf = transf.rotZYXTransl(transf.degToRad(math.random(0, 360), 0.0, 0.0), vec3.new(-17, 19, 0)) }
+		result.models[#result.models + 1] = { id = "tree/whitebirch_rt_"..math.random(1, 5)..".mdl", transf = transf.rotZYXTransl(transf.degToRad(math.random(0, 360), 0.0, 0.0), vec3.new(math.random(-50, -27), math.random(-19, 5), 0)) }
+		result.models[#result.models + 1] = { id = "tree/whitebirch_rt_"..math.random(1, 5)..".mdl", transf = transf.rotZYXTransl(transf.degToRad(math.random(0, 360), 0.0, 0.0), vec3.new(math.random(-50, -27), math.random(-19, 5), 0)) }
+		result.models[#result.models + 1] = { id = "tree/whitebirch_rt_"..math.random(1, 5)..".mdl", transf = transf.rotZYXTransl(transf.degToRad(math.random(0, 360), 0.0, 0.0), vec3.new(math.random(-50, -27), math.random(-19, 5), 0)) }
+		result.models[#result.models + 1] = { id = "tree/whitebirch_rt_"..math.random(1, 5)..".mdl", transf = transf.rotZYXTransl(transf.degToRad(math.random(0, 360), 0.0, 0.0), vec3.new(math.random(-50, -27), math.random(-19, 5), 0)) }
+		result.models[#result.models + 1] = { id = "tree/whitebirch_rt_"..math.random(1, 5)..".mdl", transf = transf.rotZYXTransl(transf.degToRad(math.random(0, 360), 0.0, 0.0), vec3.new(math.random(-50, -27), math.random(-19, 5), 0)) }
+		result.models[#result.models + 1] = { id = "tree/whitebirch_rt_"..math.random(1, 5)..".mdl", transf = transf.rotZYXTransl(transf.degToRad(math.random(0, 360), 0.0, 0.0), vec3.new(math.random(-50, -27), math.random(-19, 5), 0)) }
+		result.models[#result.models + 1] = { id = "tree/whitebirch_rt_"..math.random(1, 5)..".mdl", transf = transf.rotZYXTransl(transf.degToRad(math.random(0, 360), 0.0, 0.0), vec3.new(math.random(-50, -27), math.random(-19, 5), 0)) }
+		result.models[#result.models + 1] = { id = "tree/whitebirch_rt_"..math.random(1, 5)..".mdl", transf = transf.rotZYXTransl(transf.degToRad(math.random(0, 360), 0.0, 0.0), vec3.new(math.random(-50, -27), math.random(-19, 5), 0)) }
+		result.models[#result.models + 1] = { id = "tree/whitebirch_rt_"..math.random(1, 5)..".mdl", transf = transf.rotZYXTransl(transf.degToRad(math.random(0, 360), 0.0, 0.0), vec3.new(math.random(-50, -27), math.random(-19, 5), 0)) }
+		result.models[#result.models + 1] = { id = "tree/whitebirch_rt_"..math.random(1, 5)..".mdl", transf = transf.rotZYXTransl(transf.degToRad(math.random(0, 360), 0.0, 0.0), vec3.new(math.random(-50, -27), math.random(-19, 5), 0)) }
+		end
+		
+		if level >= 2 then
+		result.models[#result.models + 1] = { id = "asset/Old_tractor/Old_tractor_static.mdl", transf = transf.rotZYXTransl(transf.degToRad(190.0, 0.0, 0.0), vec3.new(-47.8, -29.5 , 0)) }
+		end
+		
+		if level == 2 then
+		result.models[#result.models + 1] = { id = "building/era_a/res_1_2x2_01_01.mdl", transf = transf.rotZYXTransl(transf.degToRad(0.0, 0.0, 0.0), vec3.new(1.4, 15 , 0)) }
+		result.models[#result.models + 1] = { id = "asset/ground/wheelbarrow.mdl", transf = transf.rotZYXTransl(transf.degToRad(170.0, 0.0, 0.0), vec3.new(-31.3, 12.4 , -0.05)) }
+		result.models[#result.models + 1] = { id = "asset/ground/construction_shack.mdl", transf = transf.rotZYXTransl(transf.degToRad(280.0, 00.0, 00.0), vec3.new(36.8, -5.0, -0.85)) }
+		end
+		
+		if level >= 3 then
+		result.models[#result.models + 1] = { id = "building/era_a/res_1_2x2_02_01.mdl", transf = transf.rotZYXTransl(transf.degToRad(0.0, 0.0, 0.0), vec3.new(0, 15 , 0)) }
+		result.models[#result.models + 1] = { id = "industry/farm/cow_barn.mdl", transf = { 0.8, 0, 0, 0,	0, 1, 0, 0,	0, 0, 1, 0,		37, -18, 0, 1 } }
+			groundFace = { {22, 3}, {22, -45}, {45.5, -45}, {45.5, 3} }			
+			result.groundFaces[#result.groundFaces + 1] = { face = groundFace, modes = { { type = "FILL", key = "building_paving_fill" } } }
+			result.groundFaces[#result.groundFaces + 1] = { face = groundFace, modes = { { type = "STROKE_OUTER", key = "building_paving" } } }
+		result.models[#result.models + 1] = { id = "industry/cargo/fertilizers_big.mdl", transf = transf.rotZYXTransl(transf.degToRad(92.0, 0.0, 0.0), vec3.new(-47.8, -37.5 , 0)) }
+		result.models[#result.models + 1] = { id = "asset/Old_tractor/Old_tractor_static.mdl", transf = transf.rotZYXTransl(transf.degToRad(30.0, 0.0, 0.0), vec3.new(35.8, -37.5 , 0)) }
+		result.models[#result.models + 1] = { id = "industry/cargo/cotton_big.mdl", transf = transf.rotZYXTransl(transf.degToRad(185.0, 0.0, 0.0), vec3.new(41.8, -43.5 , 0)) }
+		result.models[#result.models + 1] = { id = "industry/cargo/cotton_big.mdl", transf = transf.rotZYXTransl(transf.degToRad(176.0, 0.0, 0.0), vec3.new(34.8, -44.0 , 0)) }
+		result.models[#result.models + 1] = { id = "asset/cotton.mdl", transf = transf.rotZYXTransl(transf.degToRad(176.0, 0.0, 0.0), vec3.new(34.7, -1.3 , 0)) }
+		result.models[#result.models + 1] = { id = "asset/cotton.mdl", transf = transf.rotZYXTransl(transf.degToRad(180.0, 0.0, 0.0), vec3.new(34.0, -1.3 , 0)) }
+		result.models[#result.models + 1] = { id = "asset/cotton.mdl", transf = transf.rotZYXTransl(transf.degToRad(178.0, 0.0, 0.0), vec3.new(33.3, -1.3 , 0)) }
+		result.models[#result.models + 1] = { id = "asset/cotton.mdl", transf = transf.rotZYXTransl(transf.degToRad(80.0, 0.0, 0.0), vec3.new(34.2, -1.4 , 0.45)) }
+		result.models[#result.models + 1] = { id = "asset/barrel_water_blue.mdl", transf = transf.rotZYXTransl(transf.degToRad(0, 0.0, 00.0), vec3.new(40.5, -1.3 , 0)) }
+		result.models[#result.models + 1] = { id = "asset/barrel_water_blue.mdl", transf = transf.rotZYXTransl(transf.degToRad(0, 0.0, 00.0), vec3.new(41.4, -1.5 , 0)) }
+		end
+		
+		if level <= 4 then
+		result.models[#result.models + 1] = { id = "asset/water_tank_res_01.mdl", transf = { 3, 0, 0, 0,	0, 3, 0, 0,		0, 0, 2.95, 0,		39, 18, 0, 1 } }
+		result.models[#result.models + 1] = { id = "asset/ground/pipes_large_grounded_5m.mdl", transf = transf.rotZYXTransl(transf.degToRad(180.0, 90.0, 00.0), vec3.new(36.8, 18 , 1.03)) }
+		result.models[#result.models + 1] = { id = "asset/ground/pipes_large_grounded_curved_10m.mdl", transf = transf.rotZYXTransl(transf.degToRad(00.0, 90.0, 00.0), vec3.new(34.8, 18, 1.03)) }
+		result.models[#result.models + 1] = { id = "asset/ground/pipes_large_grounded_13m.mdl", transf = transf.rotZYXTransl(transf.degToRad(00.0, 00.0, 00.0), vec3.new(34.8, 27.875, -0.85)) }
+		end
+		
+		if level >= 4 then
+		result.models[#result.models + 1] = { id = "industry/farm/cow_barn.mdl", transf = { 1.0, 0, 0, 0,	0, 1, 0, 0,	0, 0, 1, 0,		-38, -6, 0, 1 } }
+			groundFace = { {-10, -52}, {-20, -47}, {-20, 0}, {-10, 10}, {-20, 25}, {-38, 25}, {-50, 13}, {-50, -58}, {-14, -58} }	
+			result.groundFaces[#result.groundFaces + 1] = { face = groundFace, modes = { { type = "FILL", key = "building_paving_fill" } } }
+			result.groundFaces[#result.groundFaces + 1] = { face = groundFace, modes = { { type = "STROKE_OUTER", key = "building_paving" } } }
+		result.models[#result.models + 1] = { id = "industry/cargo/cotton_big.mdl", transf = transf.rotZYXTransl(transf.degToRad(272.0, 0.0, 0.0), vec3.new(-34.8, 20.2 , 0)) }
+		result.models[#result.models + 1] = { id = "industry/cargo/cotton_big.mdl", transf = transf.rotZYXTransl(transf.degToRad(88.0, 0.0, 0.0), vec3.new(-31.3, 20.5 , 0)) }
+		result.models[#result.models + 1] = { id = "industry/cargo/cotton_big.mdl", transf = transf.rotZYXTransl(transf.degToRad(90.0, 0.0, 0.0), vec3.new(-27.8, 20.3 , 0)) }
+		result.models[#result.models + 1] = { id = "industry/cargo/cotton_big.mdl", transf = transf.rotZYXTransl(transf.degToRad(93.0, 0.0, 0.0), vec3.new(-24.3, 20.4 , 0)) }
+		result.models[#result.models + 1] = { id = "asset/Old_tractor/Old_tractor_static.mdl", transf = transf.rotZYXTransl(transf.degToRad(130.0, 0.0, 0.0), vec3.new(-39.8, 19 , 0)) }
+		end
+		
+		if level == 5 then
+		result.models[#result.models + 1] = { id = "asset/Old_tractor/Old_tractor_static.mdl", transf = transf.rotZYXTransl(transf.degToRad(280.0, 0.0, 0.0), vec3.new(-44.0, 17 , 0)) }
+		result.models[#result.models + 1] = { id = "building/era_a/res_1_1x1_06_01.mdl", transf = { 0, -0.99, 0, 0,	0.99, 0, 0, 0,	0, 0, 0.99, 0,		-18.9, 19.5, 0, 1 } }
+		result.models[#result.models + 1] = { id = "asset/ground/silo_vertical_11m_01.mdl", transf = transf.rotZYXTransl(transf.degToRad(225.0, 0.0, 0.0), vec3.new(38.0, 18 , 0)) }
+		result.models[#result.models + 1] = { id = "asset/ground/silo_vertical_11m_01.mdl", transf = transf.rotZYXTransl(transf.degToRad(225.0, 0.0, 0.0), vec3.new(38.0, 13 , 0)) }
+		result.models[#result.models + 1] = { id = "asset/ground/silo_horizontal_03.mdl", transf = transf.rotZYXTransl(transf.degToRad(0.0, 0.0, 0.0), vec3.new(38.0, 9 , 0)) }
+		end
+
+		return result
+	end
+}
+
+end

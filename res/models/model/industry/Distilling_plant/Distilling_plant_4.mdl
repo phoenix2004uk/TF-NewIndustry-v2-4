@@ -1,0 +1,26 @@
+function data()
+return {
+	boundingInfo = {
+		bbMax = { 5.3, 16.6, 7.1 },
+		bbMin = { -3.5, -18.1, -0.01 }
+	},
+	lods = {
+		{
+			animations = { },
+			children = {
+				{
+					id = "industry/Distilling_plant/Distilling_plant_4.msh",
+					transf = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 3.39, 1 },
+					type = "MESH"
+				}
+			},
+			events = { },
+			matConfigs = { { 0 } },
+			static = false,
+			visibleFrom = 0,
+			visibleTo = 5390
+		}
+	},
+	metadata = { }
+}
+end

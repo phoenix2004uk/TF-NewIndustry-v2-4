@@ -1,0 +1,66 @@
+function data()
+return {
+	boundingInfo = { },
+	collider = { params = { }, type = "MESH", },
+	lods = {
+		{
+			animations = { },
+			children = {
+				-- торец
+				{
+					id = "industry/chemical_plant/lod_0_building_1_front.msh",
+					transf = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 21.3, 0, 1 },
+					type = "MESH",
+				},
+				{
+					id = "industry/chemical_plant/lod_0_building_1_front_decals.msh",
+					transf = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 21.3, 0, 1 },
+					type = "MESH",
+				},
+				-- тело здания
+				{
+					id = "industry/chemical_plant/lod_0_building_1_plain.msh",
+					transf = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 10.55,0, 1 },
+					type = "MESH",
+				},
+				{
+					id = "industry/chemical_plant/lod_0_building_1_plain_decals.msh",
+					transf = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 10.55,0, 1 },
+					type = "MESH",
+				},
+				{
+					id = "industry/chemical_plant/lod_0_building_1_plain.msh",
+					transf = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, -10.55,0, 1 },
+					type = "MESH",
+				},
+				{
+					id = "industry/chemical_plant/lod_0_building_1_plain_decals.msh",
+					transf = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, -10.55,0, 1 },
+					type = "MESH",
+				},
+				{
+					id = "industry/chemical_plant/lod_0_building_1_front.msh",
+					transf = { -1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1, 0, 0, -21.3, 0, 1 },
+					type = "MESH",
+				},
+				{
+					id = "industry/chemical_plant/lod_0_building_1_front_decals.msh",
+					transf = { -1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1, 0, 0, -21.3, 0, 1 },
+					type = "MESH",
+				},
+			},
+			events = { },
+			matConfigs = {
+				{
+					0, 
+				}, 
+			},
+			static = false,
+			visibleFrom = 0,
+			visibleTo = 11470,
+		}
+	},
+	metadata = { }
+	
+}
+end

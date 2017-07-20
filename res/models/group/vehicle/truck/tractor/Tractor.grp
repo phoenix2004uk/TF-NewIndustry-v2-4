@@ -1,0 +1,48 @@
+local vec3 = require "vec3"
+local transf = require "transf"
+
+function data()
+return {
+	animations = { },
+	children = {
+		-- Тело
+		{
+			id = "vehicle/truck/tractor/tractor_body.msh",
+			transf = { -0.15, 0, 0, 0, 0, -0.15, 0, 0, 0, 0, 0.15, 0, 0, 0, 1.1, 1 },
+			type = "MESH",
+		},
+		-- Задние колеса
+		{
+			id = "vehicle/truck/tractor/tractor_bl.msh",
+			transf = { -0.15, 0, 0, 0, 0, -0.15, 0, 0, 0, 0, 0.15, 0, -0.8, 0.65, 0.75, 1 },
+			type = "MESH",
+		},
+		{
+			id = "vehicle/truck/tractor/tractor_br.msh",
+			transf = { -0.15, 0, 0, 0, 0, -0.15, 0, 0, 0, 0, 0.15, 0, -0.8, -0.65, 0.75, 1 },
+			type = "MESH",
+		},
+		-- Передние колеса
+		{
+			id = "vehicle/truck/tractor/tractor_fr.msh",
+			transf = { 0.15, 0, 0, 0, 0, 0.15, 0, 0, 0, 0, 0.15, 0, 1.20, 0.75, 0.37, 1 },
+			type = "MESH",
+		},
+		{
+			id = "vehicle/truck/tractor/tractor_fr.msh",
+			transf = { -0.15, 0, 0, 0, 0, -0.15, 0, 0, 0, 0, 0.15, 0, 1.20, -0.75, 0.37, 1 },
+			type = "MESH",
+		},
+		-- Водитель
+		{
+			id = "vehicle/driver_static/lod_0_driver_static.msh",
+			transf = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, -4.4, -0.6, 0.4, 1 },
+			type = "MESH",
+		},
+	},
+	events = { },
+	matConfigs = {
+		{ 0, 0, 0, 0, 0, 0 }
+	}
+}
+end

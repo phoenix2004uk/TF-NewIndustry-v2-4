@@ -1,0 +1,31 @@
+function data()
+return {
+	boundingInfo = {
+		bbMax = { 1.55, 1.0, 1.75 },
+		bbMin = { -1.55, -1.0, -0.0 }
+	},
+	lods = {
+		{
+			animations = { },
+			children = {
+				{
+					id = "vehicle/truck/tractor/Scep_down.grp",
+					transf = { 0.95, 0, 0, 0, 0, 0.95, 0, 0, 0, 0, 0.95, 0, 0, 0, 0, 1 },
+					type = "GROUP",
+				},
+				{
+					id = "vehicle/truck/tractor/Pricep_gkb819_static.grp",
+					transf = { 0.95, 0, 0, 0, 0, 0.95, 0, 0, 0, 0, 0.95, 0, 0, 0, 0, 1 },
+					type = "GROUP",
+				},
+			},
+			events = { },
+			matConfigs = { { 0 } },
+			static = true,
+			visibleFrom = 0,
+			visibleTo = 300
+		}
+	},
+	metadata = { }
+}
+end

@@ -1,0 +1,24 @@
+function data()
+return {
+	children = {
+		{
+			id = "vehicle/waggon/hopper_bogie/bg.msh",
+			transf = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 },
+			type = "MESH"
+		},
+		{
+			id = "vehicle/waggon/hopper_bogie/w1.msh",
+			transf = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0.93, 0, 0.465, 1 },
+			type = "MESH"
+		},
+		{
+			id = "vehicle/waggon/hopper_bogie/w1.msh",
+			transf = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, -0.93, 0, 0.465, 1 },
+			type = "MESH"
+		}
+	},
+	matConfigs = {
+		{ 0, 0, 0 }
+	}
+}
+end

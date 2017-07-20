@@ -1,0 +1,57 @@
+function data()
+return {
+	boundingInfo = {
+		bbMax = { 0.8, 0.8, 1.39 },
+		bbMin = { -0.8, -0.8, -0.05 }
+	},
+	collider = {
+		params = { }, type = "MESH" },
+	lods = {
+		{
+			animations = { },
+			children = {
+				{
+					id = "industry/cargo/cement_small_lod_1.msh",
+					transf = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0.15, 1 },
+					type = "MESH",
+				},
+				{
+					id = "asset/industry/lod_0_pallet_01.msh",
+					transf = { 1.55, 0, 0, 0, 0, 1.3, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 },
+					type = "MESH",
+				}
+			},
+			events = { },
+			matConfigs = {
+				{ 0 }
+			},
+			static = false,
+			visibleFrom = 50,
+			visibleTo = 1200,
+		},
+		{
+			animations = { },
+			children = {
+				{
+					id = "industry/cargo/cement_small_lod_0.msh",
+					transf = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0.15, 1 },
+					type = "MESH",
+				},
+				{
+					id = "asset/industry/lod_0_pallet_01.msh",
+					transf = { 1.55, 0, 0, 0, 0, 1.3, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 },
+					type = "MESH",
+				}
+			},
+			events = { },
+			matConfigs = {
+				{ 0 }
+			},
+			static = false,
+			visibleFrom = 0,
+			visibleTo = 50,
+		} 
+	},
+	metadata = { },
+}
+end

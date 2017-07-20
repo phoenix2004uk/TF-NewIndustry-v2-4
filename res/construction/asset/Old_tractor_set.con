@@ -1,0 +1,75 @@
+local tractor = {
+	{"asset/Old_tractor/Old_tractor_static_wheel_left.mdl",	"asset/Old_tractor/Old_tractor_static.mdl",	"asset/Old_tractor/Old_tractor_static_wheel_right.mdl"},
+	{"asset/Old_tractor/GKB-817_static_left.mdl",			"asset/Old_tractor/GKB-817_static.mdl",		"asset/Old_tractor/GKB-817_static_right.mdl"},
+	{"asset/Old_tractor/GKB-819_static_left.mdl",			"asset/Old_tractor/GKB-819_static.mdl",		"asset/Old_tractor/GKB-819_static_right.mdl"},
+	{"asset/Old_tractor/PC-817_static_left.mdl",			"asset/Old_tractor/PC-817_static.mdl",		"asset/Old_tractor/PC-817_static_right.mdl"},
+}
+function data()
+return { 
+	type = "ASSET_DEFAULT",
+	description = {
+		name = _(Asset_Name),			
+		description = _(Asset_Desc)
+	},
+	availability = {
+		yearFrom = 1948
+	},
+	buildMode = "MULTI",
+	categories = { "misc" },
+	order = -1,
+	skipCollision = true,
+	autoRemovable = false,
+	params = {
+		{
+			key = "Ford8n",
+			name = _(Asset_1),
+			values = { _("X"),_("Left"),_("Straight"),_("Right") }
+		},
+		{
+			key = "GKB_817",
+			name = _(Asset_2),
+			values = { _("X"),_("Left"),_("Straight"),_("Right") }
+		},
+		{
+			key = "GKB_819",
+			name = _(Asset_3),
+			values = { _("X"),_("Left"),_("Straight"),_("Right") }
+		},
+		{
+			key = "PC_817",
+			name = _(Asset_4),
+			values = { _("X"),_("Left"),_("Straight"),_("Right") }
+		},
+		{
+			key = "position",
+			name = _("Height"),
+			values = { _("Normal"), _("Sidewalk") }
+		},
+	},
+	updateFn = function(params)
+		local result = { }
+		result.models = {  }
+		local height = 0
+		if params.position == 1 then
+			height = 0.3
+		end
+		if params.Ford8n > 0 and params.Ford8n <= #tractor[1] then
+			result.models[#result.models+1] = { id = tractor[1][params.Ford8n], transf = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, height, 1 } }
+		elseif params.GKB_817 > 0 and params.GKB_817 <= #tractor[2] then
+			result.models[#result.models+1] = { id = tractor[2][params.GKB_817], transf = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, height, 1 } }
+		elseif params.GKB_819 > 0 and params.GKB_819 <= #tractor[3] then
+			result.models[#result.models+1] = { id = tractor[3][params.GKB_819], transf = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, height, 1 } }
+		elseif params.PC_817 > 0 and params.PC_817 <= #tractor[4] then
+			result.models[#result.models+1] = { id = tractor[4][params.PC_817], transf = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, height, 1 } }
+		end
+		if #result.models == 0 then
+			result.models[#result.models+1] = { id = "empty.mdl", transf = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, height-0.3, 1 } }
+		end
+		result.terrainAlignmentLists = { {
+			type = "EQUAL",
+			faces =  { }
+		} }
+		return result
+	end
+}
+end

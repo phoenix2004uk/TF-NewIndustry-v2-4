@@ -1,0 +1,123 @@
+function data()
+return {
+	boundingInfo = {
+		bbMax = { 5.9335370063782, 1.4465600252151, 2.6394860744476 },
+		bbMin = { -5.9335370063782, -1.4465600252151, 0.46471598744392 }
+	},
+	collider = { params = { }, type = "MESH" },
+	lods = {
+		{
+			animations = { },
+			children = {
+				{
+					id = "vehicle/waggon/gondola_1907/lod_0_body.msh",
+					transf = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 },
+					type = "MESH",
+				},
+				{
+					id = "vehicle/waggon/_freight/lod_0_us_cargo_load_med.msh",
+					transf = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 },
+					type = "MESH",
+				},
+				{
+					id = "vehicle/waggon/_freight/lod_0_us_cargo_load_med.msh",
+					transf = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 },
+					type = "MESH",
+				},
+				{
+					id = "vehicle/waggon/_freight/lod_0_us_cargo_load_med.msh",
+					transf = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 },
+					type = "MESH",
+				},
+				{
+					id = "vehicle/waggon/_freight/lod_0_us_cargo_load_med.msh",
+					transf = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 },
+					type = "MESH",
+				},
+				{
+					id = "vehicle/waggon/_freight/lod_0_us_cargo_load_med.msh",
+					transf = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 },
+					type = "MESH",
+				},
+				{
+					id = "vehicle/waggon/_freight/lod_0_us_cargo_load_med.msh",
+					transf = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 },
+					type = "MESH",
+				},
+				{
+					id = "vehicle/waggon/_freight/lod_0_us_cargo_load_med.msh",
+					transf = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 },
+					type = "MESH",
+				},
+				{
+					id = "vehicle/waggon/_freight/lod_0_us_cargo_load_med.msh",
+					transf = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 },
+					type = "MESH",	
+				},
+				{
+					id = "vehicle/waggon/american_1850_lod_0_bogie.grp",
+					transf = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, -3.7941, 0, 0, 1 },
+					type = "GROUP",
+				},
+				{
+					id = "vehicle/waggon/american_1850_lod_0_bogie.grp",
+					transf = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 3.7941, 0, 0, 1 },
+					type = "GROUP",
+				}
+			},
+			events = { },
+			matConfigs = {
+				{
+					0, 0, 1, 2, 4, 5, 6, 7, 8, 0, 0 -- 3 Grain
+				}
+			},
+			static = false,
+			visibleFrom = 0,
+			visibleTo = 1090,
+		}
+	},
+	metadata = {
+		description = {
+			name = _("Gondola"),
+			description = _("The gondola is the catchall of the railroad industry.")
+		},
+		railVehicle = {
+			topSpeed = 120,
+			weight = 15,
+			configs = {
+				{
+					axles = { "vehicle/waggon/boxcar_1850/lod_0_w1.msh" }
+				}
+			},
+			soundSet = "waggon_freight_old"
+		},
+		transportVehicle = {
+			carrier = "RAIL",
+			capacities = {
+				{ type = "COAL", capacity = 48, loadIndicator = { type = "LEVEL", params = { id = 2, maxHeight = 1 } } },
+				{ type = "IRON_ORE", capacity = 48, loadIndicator = { type = "LEVEL", params = { id = 3, maxHeight = 1 } } },
+				{ type = "STONE", capacity = 48, loadIndicator = { type = "LEVEL", params = { id = 4, maxHeight = 1 } } },
+				{ type = "SLAG", capacity = 48, loadIndicator = { type = "LEVEL", params = { id = 5, maxHeight = 1 } } },
+				-- New
+				{ type = "WASTE", capacity = 48, loadIndicator = { type = "LEVEL", params = { id = 6, maxHeight = 1 } } },
+				{ type = "MINERALS", capacity = 48, loadIndicator = { type = "LEVEL", params = { id = 7, maxHeight = 1 } } },
+				{ type = "LIMESTONE", capacity = 48, loadIndicator = { type = "LEVEL", params = { id = 8, maxHeight = 1 } } },
+				{ type = "FILINGS", capacity = 48, loadIndicator = { type = "LEVEL", params = { id = 9, maxHeight = 1 } } },
+				{ type = "BAUXITE", capacity = 48 },
+			},
+			loadSpeed = 2
+		},
+		availability = {
+			yearFrom = 1905,
+			yearTo = 1957
+		},
+		cost = {
+			price = -1
+		},
+		maintenance = {
+			runningCosts = -1,
+			lifespan = 45
+		}
+	}
+}
+end

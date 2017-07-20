@@ -1,0 +1,34 @@
+local vec3 = require "vec3"
+local transf = require "transf"
+
+function data()
+return {
+	boundingInfo = {
+		bbMax = { 1.55, 1.0, 1.75 },
+		bbMin = { -1.55, -1.0, -0.0 }
+	},
+	lods = {
+		{
+			animations = { },
+			children = {
+				{
+					id = "vehicle/truck/tractor/Scep_pc817_down.grp",
+					transf = transf.scaleRotZYXTransl(vec3.new( 0.95, 0.95, 0.95 ), transf.degToRad(330.0, 0.0, 0.0), vec3.new(0, 0.7, 0)),
+					type = "GROUP",
+				},
+				{
+					id = "vehicle/truck/tractor/Pricep_pc817.grp",
+					transf = { 0.95, 0, 0, 0, 0, 0.95, 0, 0, 0, 0, 0.95, 0, 0, 0, 0, 1 },
+					type = "GROUP",
+				}
+			},
+			events = { },
+			matConfigs = { { 0 } },
+			static = true,
+			visibleFrom = 0,
+			visibleTo = 300
+		}
+	},
+	metadata = { }
+}
+end

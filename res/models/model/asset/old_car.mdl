@@ -1,0 +1,37 @@
+function data()
+return {
+	lods = {
+		{
+			animations = { },
+			children = {
+				{
+					id = "asset/old_car_lod_1.msh",
+					transf = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 },
+					type = "MESH"
+				}
+			},
+			events = { },
+			matConfigs = { { 0 } },
+			static = false,
+			visibleFrom = 200,
+			visibleTo = 500
+		},
+		{
+			animations = { },
+			children = {
+				{
+					id = "asset/old_car_lod_0.msh",
+					transf = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 },
+					type = "MESH"
+				}
+			},
+			events = { },
+			matConfigs = { { 0 } },
+			static = false,
+			visibleFrom = 0,
+			visibleTo = 200
+		} 
+	},
+	metadata = { }
+}
+end

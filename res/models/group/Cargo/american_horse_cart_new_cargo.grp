@@ -1,0 +1,373 @@
+local vec3 = require "vec3"
+local transf = require "transf"
+
+function data()
+return {
+	children = {
+	
+		-- Не забыть изменить fakeBogies!!!
+		
+		-- fertilizers (86, 87, 88)
+		{
+		id = "asset/ground/lod_0_fluid_container1.msh",
+		transf = { 0.9, 0, 0, 0, 0, 0.9, 0, 0, 0, 0, 0.9, 0, 0.9, 0, 0, 1 },
+		type = "MESH",
+		},
+		{
+		id = "asset/ground/lod_0_fluid_container1.msh",
+		transf = { 0.9, 0, 0, 0, 0, 0.9, 0, 0, 0, 0, 0.9, 0, -0.7, 0, 0, 1 },
+		type = "MESH",
+		},
+		{
+		id = "asset/ground/lod_0_fluid_container1.msh",
+		transf = { 0.9, 0, 0, 0, 0, 0.9, 0, 0, 0, 0, 0.9, 0, -2.3, 0, 0, 1 },
+		type = "MESH",
+		},
+		-- Cotton (89, 90, 91, 92, 93, 94, 95, 96, 97, 98)
+		{
+		id = "industry/cargo/cargo_cotton_small.msh",
+		transf = { 0.9, 0, 0, 0, 0, 0.9, 0, 0, 0, 0, 0.9, 0, 1.5, 0, 0, 1 },
+		type = "MESH",
+		},
+		{
+		id = "industry/cargo/cargo_cotton_small.msh",
+		transf = { 0.9, 0, 0, 0, 0, 0.9, 0, 0, 0, 0, 0.9, 0, 0.65, 0, 0, 1 },
+		type = "MESH",
+		},
+		{
+		id = "industry/cargo/cargo_cotton_small.msh",
+		transf = { 0.9, 0, 0, 0, 0, 0.9, 0, 0, 0, 0, 0.9, 0, -0.2, 0, 0, 1 },
+		type = "MESH",
+		},
+		{
+		id = "industry/cargo/cargo_cotton_small.msh",
+		transf = { 0.9, 0, 0, 0, 0, 0.9, 0, 0, 0, 0, 0.9, 0, -1.05, 0, 0, 1 },
+		type = "MESH",
+		},
+		{
+		id = "industry/cargo/cargo_cotton_small.msh",
+		transf = { 0.9, 0, 0, 0, 0, 0.9, 0, 0, 0, 0, 0.9, 0, -1.9, 0, 0, 1 },
+		type = "MESH",
+		},
+		{
+		id = "industry/cargo/cargo_cotton_small.msh",
+		transf = { 0.9, 0, 0, 0, 0, 0.9, 0, 0, 0, 0, 0.9, 0, -2.75, 0, 0, 1 },
+		type = "MESH",
+		},
+		{
+		id = "industry/cargo/cargo_cotton_small.msh",
+		transf = { 0.9, 0, 0, 0, 0, 0.9, 0, 0, 0, 0, 0.9, 0, 1.05, 0, 0.6, 1 },
+		type = "MESH",
+		},
+		{
+		id = "industry/cargo/cargo_cotton_small.msh",
+		transf = { 0.9, 0, 0, 0, 0, 0.9, 0, 0, 0, 0, 0.9, 0, 0.2, 0, 0.6, 1 },
+		type = "MESH",
+		},
+		{
+		id = "industry/cargo/cargo_cotton_small.msh",
+		transf = { 0.9, 0, 0, 0, 0, 0.9, 0, 0, 0, 0, 0.9, 0, -0.65, 0, 0.6, 1 },
+		type = "MESH",
+		},
+		{
+		id = "industry/cargo/cargo_cotton_small.msh",
+		transf = { 0.9, 0, 0, 0, 0, 0.9, 0, 0, 0, 0, 0.9, 0, -1.5, 0, 0.6, 1 },
+		type = "MESH",
+		},
+		-- waste (99, 102, 105, 108, 111)
+		{
+		id = "Cargo/horse_cart_waste.grp",
+		transf = transf.scaleRotZYXTransl(vec3.new( 1, 1, 1 ),transf.degToRad( 0, 0, 0 ), vec3.new( 1.5, 0, 0 )),
+		type = "GROUP",
+		},
+		{
+		id = "Cargo/horse_cart_waste.grp",
+		transf = transf.scaleRotZYXTransl(vec3.new( 1, 1, 1 ),transf.degToRad( 180, 0, 0 ), vec3.new( 0.5, 0, 0 )),
+		type = "GROUP",
+		},
+		{
+		id = "Cargo/horse_cart_waste.grp",
+		transf = transf.scaleRotZYXTransl(vec3.new( 1, 1, 1 ),transf.degToRad( 0, 0, 0 ), vec3.new( -0.5, 0, 0 )),
+		type = "GROUP",
+		},
+		{
+		id = "Cargo/horse_cart_waste.grp",
+		transf = transf.scaleRotZYXTransl(vec3.new( 1, 1, 1 ),transf.degToRad( 180, 0, 0 ), vec3.new( -1.5, 0, 0 )),
+		type = "GROUP",
+		},
+		{
+		id = "Cargo/horse_cart_waste.grp",
+		transf = transf.scaleRotZYXTransl(vec3.new( 1, 1, 1 ),transf.degToRad( 180, 0, 0 ), vec3.new( -2.5, 0, 0 )),
+		type = "GROUP",
+		},
+		-- Milk (114, 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 131, 132, 133,
+		--		 134, 135, 136, 137, 138)
+		-- 114
+		{
+		id = "asset/industry/lod_0_pallet_01.msh",
+		transf = transf.scaleRotZYXTransl(vec3.new( 1.2, 1.2, 1 ),transf.degToRad( 180, 0, 0 ), vec3.new( 1.5, 0, 0 )),
+		type = "MESH",
+		},
+		{
+		id = "industry/cargo/cargo_milk_small.msh",
+		transf = transf.scaleRotZYXTransl(vec3.new(0.7, 0.7, 0.7),transf.degToRad(math.random(0, 360), 0, 0), vec3.new(1.8, 0.3, 0.2)),
+		type = "MESH",
+		},
+		{
+		id = "industry/cargo/cargo_milk_small.msh",
+		transf = transf.scaleRotZYXTransl(vec3.new(0.7, 0.7, 0.7),transf.degToRad(math.random(0, 360), 0, 0), vec3.new(1.8, -0.3, 0.2)),
+		type = "MESH",
+		},
+		{
+		id = "industry/cargo/cargo_milk_small.msh",
+		transf = transf.scaleRotZYXTransl(vec3.new(0.7, 0.7, 0.7),transf.degToRad(math.random(0, 360), 0, 0), vec3.new(1.2, 0.3, 0.2)),
+		type = "MESH",
+		},
+		{
+		id = "industry/cargo/cargo_milk_small.msh",
+		transf = transf.scaleRotZYXTransl(vec3.new(0.7, 0.7, 0.7),transf.degToRad(math.random(0, 360), 0, 0), vec3.new(1.2, -0.3, 0.2)),
+		type = "MESH",
+		},
+		-- 119
+		{
+		id = "asset/industry/lod_0_pallet_01.msh",
+		transf = transf.scaleRotZYXTransl(vec3.new( 1.2, 1.2, 1 ),transf.degToRad( 0, 0, 0 ), vec3.new( 0.3, 0, 0 )),
+		type = "MESH",
+		},
+		{
+		id = "industry/cargo/cargo_milk_small.msh",
+		transf = transf.scaleRotZYXTransl(vec3.new(0.7, 0.7, 0.7),transf.degToRad(math.random(0, 360), 0, 0), vec3.new(0.6, 0.3, 0.2)),
+		type = "MESH",
+		},
+		{
+		id = "industry/cargo/cargo_milk_small.msh",
+		transf = transf.scaleRotZYXTransl(vec3.new(0.7, 0.7, 0.7),transf.degToRad(math.random(0, 360), 0, 0), vec3.new(0.6, -0.3, 0.2)),
+		type = "MESH",
+		},
+		{
+		id = "industry/cargo/cargo_milk_small.msh",
+		transf = transf.scaleRotZYXTransl(vec3.new(0.7, 0.7, 0.7),transf.degToRad(math.random(0, 360), 0, 0), vec3.new(0.0, 0.3, 0.2)),
+		type = "MESH",
+		},
+		{
+		id = "industry/cargo/cargo_milk_small.msh",
+		transf = transf.scaleRotZYXTransl(vec3.new(0.7, 0.7, 0.7),transf.degToRad(math.random(0, 360), 0, 0), vec3.new(0.0, -0.3, 0.2)),
+		type = "MESH",
+		},
+		-- 124
+		{
+		id = "asset/industry/lod_0_pallet_01.msh",
+		transf = transf.scaleRotZYXTransl(vec3.new( 1.2, 1.2, 1 ),transf.degToRad( 0, 0, 0 ), vec3.new( -0.9, 0, 0 )),
+		type = "MESH",
+		},
+		{
+		id = "industry/cargo/cargo_milk_small.msh",
+		transf = transf.scaleRotZYXTransl(vec3.new(0.7, 0.7, 0.7),transf.degToRad(math.random(0, 360), 0, 0), vec3.new(-0.6, 0.3, 0.2)),
+		type = "MESH",
+		},
+		{
+		id = "industry/cargo/cargo_milk_small.msh",
+		transf = transf.scaleRotZYXTransl(vec3.new(0.7, 0.7, 0.7),transf.degToRad(math.random(0, 360), 0, 0), vec3.new(-0.6, -0.3, 0.2)),
+		type = "MESH",
+		},
+		{
+		id = "industry/cargo/cargo_milk_small.msh",
+		transf = transf.scaleRotZYXTransl(vec3.new(0.7, 0.7, 0.7),transf.degToRad(math.random(0, 360), 0, 0), vec3.new(-1.2, 0.3, 0.2)),
+		type = "MESH",
+		},
+		{
+		id = "industry/cargo/cargo_milk_small.msh",
+		transf = transf.scaleRotZYXTransl(vec3.new(0.7, 0.7, 0.7),transf.degToRad(math.random(0, 360), 0, 0), vec3.new(-1.2, -0.3, 0.2)),
+		type = "MESH",
+		},
+		-- 129
+		{
+		id = "asset/industry/lod_0_pallet_01.msh",
+		transf = transf.scaleRotZYXTransl(vec3.new( 1.2, 1.2, 1 ),transf.degToRad( 0, 0, 0 ), vec3.new( -2.1, 0, 0 )),
+		type = "MESH",
+		},
+		{
+		id = "industry/cargo/cargo_milk_small.msh",
+		transf = transf.scaleRotZYXTransl(vec3.new(0.7, 0.7, 0.7),transf.degToRad(math.random(0, 360), 0, 0), vec3.new(-1.8, 0.3, 0.2)),
+		type = "MESH",
+		},
+		{
+		id = "industry/cargo/cargo_milk_small.msh",
+		transf = transf.scaleRotZYXTransl(vec3.new(0.7, 0.7, 0.7),transf.degToRad(math.random(0, 360), 0, 0), vec3.new(-1.8, -0.3, 0.2)),
+		type = "MESH",
+		},
+		{
+		id = "industry/cargo/cargo_milk_small.msh",
+		transf = transf.scaleRotZYXTransl(vec3.new(0.7, 0.7, 0.7),transf.degToRad(math.random(0, 360), 0, 0), vec3.new(-2.4, 0.3, 0.2)),
+		type = "MESH",
+		},
+		{
+		id = "industry/cargo/cargo_milk_small.msh",
+		transf = transf.scaleRotZYXTransl(vec3.new(0.7, 0.7, 0.7),transf.degToRad(math.random(0, 360), 0, 0), vec3.new(-2.4, -0.3, 0.2)),
+		type = "MESH",
+		},
+		-- 134
+		{
+		id = "asset/industry/lod_0_pallet_01.msh",
+		transf = transf.scaleRotZYXTransl(vec3.new( 1.1, 1.2, 1 ),transf.degToRad( 0, 0, 0 ), vec3.new( -3.27, 0, 0 )),
+		type = "MESH",
+		},
+		{
+		id = "industry/cargo/cargo_milk_small.msh",
+		transf = transf.scaleRotZYXTransl(vec3.new(0.7, 0.7, 0.7),transf.degToRad(math.random(0, 360), 0, 0), vec3.new(-2.98, 0.3, 0.2)),
+		type = "MESH",
+		},
+		{
+		id = "industry/cargo/cargo_milk_small.msh",
+		transf = transf.scaleRotZYXTransl(vec3.new(0.7, 0.7, 0.7),transf.degToRad(math.random(0, 360), 0, 0), vec3.new(-2.98, -0.3, 0.2)),
+		type = "MESH",
+		},
+		{
+		id = "industry/cargo/cargo_milk_small.msh",
+		transf = transf.scaleRotZYXTransl(vec3.new(0.7, 0.7, 0.7),transf.degToRad(math.random(0, 360), 0, 0), vec3.new(-3.55, 0.3, 0.2)),
+		type = "MESH",
+		},
+		{
+		id = "industry/cargo/cargo_milk_small.msh",
+		transf = transf.scaleRotZYXTransl(vec3.new(0.7, 0.7, 0.7),transf.degToRad(math.random(0, 360), 0, 0), vec3.new(-3.55, -0.3, 0.2)),
+		type = "MESH",
+		},
+		-- Chemicals (139, 140, 141)
+		{
+		id = "industry/cargo/lod_0_cargo_crude.msh",
+		transf = { 0.9, 0, 0, 0, 0, 0.9, 0, 0, 0, 0, 0.9, 0, 0.9, 0, 0, 1 },
+		type = "MESH",
+		},
+		{
+		id = "industry/cargo/lod_0_cargo_crude.msh",
+		transf = { 0.9, 0, 0, 0, 0, 0.9, 0, 0, 0, 0, 0.9, 0, -0.7, 0, 0, 1 },
+		type = "MESH",
+		},
+		{
+		id = "industry/cargo/lod_0_cargo_crude.msh",
+		transf = { 0.9, 0, 0, 0, 0, 0.9, 0, 0, 0, 0, 0.9, 0, -2.3, 0, 0, 1 },
+		type = "MESH",
+		},
+		-- Clothes ( 142, 143, 144, 145, 146)
+		{
+		id = "asset/industry/lod_0_wooden_box_04.msh",
+		transf = transf.scaleRotZYXTransl(vec3.new(0.85, 0.9, 0.85),transf.degToRad(0, 0, 0), vec3.new(1.5, 0.0, 0.0)),
+		type = "MESH",
+		},
+		{
+		id = "asset/industry/lod_0_wooden_box_04.msh",
+		transf = transf.scaleRotZYXTransl(vec3.new(0.85, 0.9, 0.85),transf.degToRad(0, 0, 0), vec3.new(0.25, 0.0, 0.0)),
+		type = "MESH",
+		},
+		{
+		id = "asset/industry/lod_0_wooden_box_04.msh",
+		transf = transf.scaleRotZYXTransl(vec3.new(0.85, 0.9, 0.85),transf.degToRad(0, 0, 0), vec3.new(-1.0, 0.0, 0.0)),
+		type = "MESH",
+		},
+		{
+		id = "asset/industry/lod_0_wooden_box_04.msh",
+		transf = transf.scaleRotZYXTransl(vec3.new(0.85, 0.9, 0.85),transf.degToRad(0, 0, 0), vec3.new(-2.25, 0.0, 0.0)),
+		type = "MESH",
+		},
+		{
+		id = "asset/industry/lod_0_wooden_box_04.msh",
+		transf = transf.scaleRotZYXTransl(vec3.new(0.85, 0.9, 0.85),transf.degToRad(0, 0, 0), vec3.new(-3.5, 0.0, 0.0)),
+		type = "MESH",
+		},
+		-- Minerals (147, 150)
+		{
+		id = "industry/cargo/cargo_minerals_small_lod_0.grp",
+		transf = { 0.9, 0, 0, 0, 0, 0.9, 0, 0, 0, 0, 0.9, 0, 0.8, 0, 0, 1 },
+		type = "GROUP",
+		},
+		{
+		id = "industry/cargo/cargo_minerals_small_lod_0.grp",
+		transf = { 0.9, 0, 0, 0, 0, 0.9, 0, 0, 0, 0, 0.9, 0, -1.1, 0, 0, 1 },
+		type = "GROUP",
+		},
+		-- Limestone (153, 156)
+		{
+		id = "industry/cargo/cargo_limestone_small_lod_0.grp",
+		transf = { 0.9, 0, 0, 0, 0, 0.9, 0, 0, 0, 0, 0.9, 0, 0.8, 0, 0, 1 },
+		type = "GROUP",
+		},
+		{
+		id = "industry/cargo/cargo_limestone_small_lod_0.grp",
+		transf = { 0.9, 0, 0, 0, 0, 0.9, 0, 0, 0, 0, 0.9, 0, -1.1, 0, 0, 1 },
+		type = "GROUP",
+		},
+		-- cement (159, 162, 165)
+		{
+		id = "industry/cargo/cargo_cement_small_lod_0.grp",
+		transf = { 0.9, 0, 0, 0, 0, 0.9, 0, 0, 0, 0, 0.9, 0, 0.9, 0, 0, 1 },
+		type = "GROUP",
+		},
+		{
+		id = "industry/cargo/cargo_cement_small_lod_0.grp",
+		transf = { 0.9, 0, 0, 0, 0, 0.9, 0, 0, 0, 0, 0.9, 0, -0.7, 0, 0, 1 },
+		type = "GROUP",
+		},
+		{
+		id = "industry/cargo/cargo_cement_small_lod_0.grp",
+		transf = { 0.9, 0, 0, 0, 0, 0.9, 0, 0, 0, 0, 0.9, 0, -2.3, 0, 0, 1 },
+		type = "GROUP",
+		},
+		-- paper (168, 171, 174)
+		{
+		id = "industry/cargo/cargo_paper_small_lod_0.grp",
+		transf = { 0.9, 0, 0, 0, 0, 0.9, 0, 0, 0, 0, 0.9, 0, 0.9, 0, 0, 1 },
+		type = "GROUP",
+		},
+		{
+		id = "industry/cargo/cargo_paper_small_lod_0.grp",
+		transf = { 0.9, 0, 0, 0, 0, 0.9, 0, 0, 0, 0, 0.9, 0, -0.7, 0, 0, 1 },
+		type = "GROUP",
+		},
+		{
+		id = "industry/cargo/cargo_paper_small_lod_0.grp",
+		transf = { 0.9, 0, 0, 0, 0, 0.9, 0, 0, 0, 0, 0.9, 0, -2.3, 0, 0, 1 },
+		type = "GROUP",
+		},
+		-- Limestone (177, 180)
+		{
+		id = "industry/cargo/cargo_filings_small_lod_0.grp",
+		transf = { 0.9, 0, 0, 0, 0, 0.9, 0, 0, 0, 0, 0.9, 0, 0.8, 0, 0, 1 },
+		type = "GROUP",
+		},
+		{
+		id = "industry/cargo/cargo_filings_small_lod_0.grp",
+		transf = { 0.9, 0, 0, 0, 0, 0.9, 0, 0, 0, 0, 0.9, 0, -1.1, 0, 0, 1 },
+		type = "GROUP",
+		},
+		-- Alcohol (183, 184, 185, 186, 187)
+		{
+			id = "asset/ground/lod_0_wood_barrel1.msh",
+			transf = transf.scaleRotZYXTransl(vec3.new( 1.1, 1.1, 1.1 ),transf.degToRad( 0, math.random(0,360), 90 ), vec3.new( 1.55, 0.92, 0.6 )),
+			type = "MESH"
+		},
+		{
+			id = "asset/ground/lod_0_wood_barrel1.msh",
+			transf = transf.scaleRotZYXTransl(vec3.new( 1.1, 1.1, 1.1 ),transf.degToRad( 0, math.random(0,360), 90 ), vec3.new( 0.35, 0.92, 0.6 )),
+			type = "MESH"
+		},
+		{
+			id = "asset/ground/lod_0_wood_barrel1.msh",
+			transf = transf.scaleRotZYXTransl(vec3.new( 1.1, 1.1, 1.1 ),transf.degToRad( 0, math.random(0,360), 90 ), vec3.new( -0.85, 0.92, 0.6 )),
+			type = "MESH"
+		},
+		{
+			id = "asset/ground/lod_0_wood_barrel1.msh",
+			transf = transf.scaleRotZYXTransl(vec3.new( 1.1, 1.1, 1.1 ),transf.degToRad( 0, math.random(0,360), 90 ), vec3.new( -2.05, 0.92, 0.6 )),
+			type = "MESH"
+		},
+		{
+			id = "asset/ground/lod_0_wood_barrel1.msh",
+			transf = transf.scaleRotZYXTransl(vec3.new( 1.1, 1.1, 1.1 ),transf.degToRad( 0, math.random(0,360), 90 ), vec3.new( -3.25, 0.92, 0.6 )),
+			type = "MESH"
+		},
+	},
+	matConfigs = {
+		{ 0 }
+	},
+}
+end

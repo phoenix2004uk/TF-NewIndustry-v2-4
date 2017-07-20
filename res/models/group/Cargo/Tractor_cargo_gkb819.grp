@@ -1,0 +1,71 @@
+local vec3 = require "vec3"
+local transf = require "transf"
+
+function data()
+return {
+	animations = { },
+	children = {
+	-- Coal (id 168)
+		{
+			id = "vehicle/truck/mack_ac/lod_0_freight_cargo_load.msh",
+			transf = transf.scaleRotZYXTransl(vec3.new(1.225,1.11,0.4),transf.degToRad(0.0, 0.0, 0.0), vec3.new(1.44, 0, -0.41)),
+			type = "MESH"
+		},
+	-- Iron (id 168)
+		{
+			id = "vehicle/truck/mack_ac/lod_0_freight_cargo_load.msh",
+			transf = transf.scaleRotZYXTransl(vec3.new(1.225,1.11,0.4),transf.degToRad(0.0, 0.0, 0.0), vec3.new(1.44, 0, -0.41)),
+			type = "MESH"
+		},
+	-- Stone (id 168)
+		{
+			id = "vehicle/truck/mack_ac/lod_0_freight_cargo_load.msh",
+			transf = transf.scaleRotZYXTransl(vec3.new(1.225,1.11,0.4),transf.degToRad(0.0, 0.0, 0.0), vec3.new(1.44, 0, -0.41)),
+			type = "MESH"
+		},
+	-- Grain (id 168)
+		{
+			id = "vehicle/truck/mack_ac/lod_0_freight_cargo_load.msh",
+			transf = transf.scaleRotZYXTransl(vec3.new(1.225,1.11,0.4),transf.degToRad(0.0, 0.0, 0.0), vec3.new(1.44, 0, -0.41)),
+			type = "MESH"
+		},
+	-- Slag (id 168)
+		{
+			id = "vehicle/truck/mack_ac/lod_0_freight_cargo_load.msh",
+			transf = transf.scaleRotZYXTransl(vec3.new(1.225,1.11,0.4),transf.degToRad(0.0, 0.0, 0.0), vec3.new(1.44, 0, -0.49)),
+			type = "MESH"
+		},
+	-- Minerals (id 168)
+		{
+			id = "industry/cargo/open/cargo_bulk_big_lod_0.msh",
+			transf = transf.scaleRotZYXTransl(vec3.new(0.93,0.734,0.4),transf.degToRad(90.0, 0.0, 0.0), vec3.new(-0.09, 0, -0.565)),
+			type = "MESH"
+		},
+	-- Limestone (id 168)
+		{
+			id = "industry/cargo/open/cargo_bulk_big_lod_0.msh",
+			transf = transf.scaleRotZYXTransl(vec3.new(0.93,0.734,0.4),transf.degToRad(90.0, 0.0, 0.0), vec3.new(-0.09, 0, -0.565)),
+			type = "MESH"
+		},
+	-- Filings (id 169)
+		{
+			id = "industry/cargo/open/cargo_bulk_big_lod_0.msh",
+			transf = transf.scaleRotZYXTransl(vec3.new(0.93,0.734,0.4),transf.degToRad(90.0, 0.0, 0.0), vec3.new(-0.09, 0, -0.565)),
+			type = "MESH"
+		},
+	-- Waste (id 166)
+		{
+			id = "industry/cargo/open/cargo_bulk_big_lod_0.msh",
+			transf = transf.scaleRotZYXTransl(vec3.new(0.93,0.734,0.4),transf.degToRad(90.0, 0.0, 0.0), vec3.new(-0.09, 0, -0.565)),
+			type = "MESH"
+		}
+	},
+	events = { },
+	matConfigs = {
+		{
+		0, 1, 2, 3, 4,
+		0, 1, 2, 3
+		}
+	}
+}
+end

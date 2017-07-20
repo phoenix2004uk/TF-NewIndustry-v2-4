@@ -1,0 +1,138 @@
+local vec3 = require "vec3"
+local transf = require "transf"
+function data()
+
+return {
+	boundingInfo = {
+		bbMax = { 1.6, 1.25, 2.5 },
+		bbMin = { -7.3, -1.25, -0.0 },
+	},
+	lods = {
+		{
+			animations = { },
+			children = {
+				{
+					id = "vehicle/truck/tractor/Tractor.grp",
+					transf = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0.0, 0, 0, 1 },
+					type = "GROUP",
+				},
+				{
+					id = "vehicle/truck/tractor/Scep.grp",
+					transf = { 0.95, 0, 0, 0, 0, 0.95, 0, 0, 0, 0, 0.95, 0, -5, 0, 0, 1 },
+					type = "GROUP",
+				},
+				{
+					id = "vehicle/truck/tractor/Pricep_gkb819.grp",
+					transf = { 0.95, 0, 0, 0, 0, 0.95, 0, 0, 0, 0, 0.95, 0, -5, 0, 0, 1 },
+					type = "GROUP",
+				}
+			},
+			events = { },
+			matConfigs = {
+				{ 0, 0, 0 }, 
+			},
+			static = false,
+			visibleFrom = 0,
+			visibleTo = 300,
+		},
+		{
+			animations = { },
+			children = {
+				{
+					id = "vehicle/truck/tractor/Tractor_lod1.grp",
+					transf = { 1, 0, 0, 0, 0, 1.1, 0, 0, 0, 0, 1, 0, 0.0, 0, 0, 1 },
+					type = "GROUP",
+				},
+				{
+					id = "vehicle/truck/tractor/Scep.grp",
+					transf = { 0.95, 0, 0, 0, 0, 0.95, 0, 0, 0, 0, 0.95, 0, -5, 0, 0, 1 },
+					type = "GROUP",
+				},
+				{
+					id = "vehicle/truck/tractor/Pricep_gkb819.grp",
+					transf = { 0.95, 0, 0, 0, 0, 0.95, 0, 0, 0, 0, 0.95, 0, -5, 0, 0, 1 },
+					type = "GROUP",
+				}
+			},
+			events = { },
+			matConfigs = {
+				{ 0, 0, 0 }, 
+			},
+			static = false,
+			visibleFrom = 300,
+			visibleTo = 700,
+		},
+	},
+	metadata = {
+		availability = {
+			yearFrom = 1948,
+			yearTo = 0,
+		},
+		cost = {
+			price = -1,
+		},
+		description = {
+			name = _(gkb819_info),
+			description = _(gkb819_desk),
+		},
+		maintenance = {
+			lifespan = 45,
+			runningCosts = -1,
+		},
+		roadVehicle = {
+			configs = {
+				{
+					wheels = {
+						"vehicle/truck/tractor/tractor_fr.msh"
+					},
+					axles = {
+						"vehicle/truck/tractor/koleso01.msh",
+						"vehicle/truck/tractor/tractor_bl.msh",
+						"vehicle/truck/tractor/tractor_br.msh",
+						"asset/rock_2_9_lod_0.msh"
+					},
+					fakeBogies = { }
+				},
+				{
+					wheels = {
+						"vehicle/truck/tractor/tractor_fr.msh"
+					},
+					axles = {
+						"vehicle/truck/tractor/koleso01.msh",
+						"vehicle/truck/tractor/tractor_bl.msh",
+						"vehicle/truck/tractor/tractor_br.msh",
+						"asset/rock_2_9_lod_0.msh"
+					},
+					fakeBogies = { }
+				},
+			},
+			-- Info ( http://www.tractordata.com/farm-tractors/000/2/2/223-ford-8n-transmission.html )
+			power = 17.3,
+			soundSet = {
+				horn = "vehicle/truck_old/truck_old_horn.wav",
+				name = "Ford_8n",
+ 			},
+			topSpeed = 37.2,
+			tractiveEffort = 35,
+			weight = 4.143, -- 1093 + 3050
+		},
+		transportVehicle = {
+			capacities = {
+				{ type = "COAL", capacity = 56, loadIndicators = { {type = "LEVEL", params = { id = 19, maxHeight = 1.6 }} }},
+				{ type = "IRON_ORE", capacity = 56, loadIndicators = { {type = "LEVEL", params = { id = 20, maxHeight = 1.6 }} }},
+				{ type = "STONE", capacity = 56, loadIndicators = { {type = "LEVEL", params = { id = 21, maxHeight = 1.6 }} }},
+				{ type = "GRAIN", capacity = 56, loadIndicators = { {type = "LEVEL", params = { id = 22, maxHeight = 1.6 }} }},
+				{ type = "SLAG", capacity = 56, loadIndicators = { {type = "LEVEL", params = { id = 23, maxHeight = 1.6 }} }},
+				-- New
+				{ type = "MINERALS", capacity = 56, loadIndicators = { {type = "LEVEL", params = { id = 24, maxHeight = 1.6 }} }},
+				{ type = "LIMESTONE", capacity = 56, loadIndicators = { {type = "LEVEL", params = { id = 25, maxHeight = 1.6 }} }},
+				{ type = "FILINGS", capacity = 56, loadIndicators = { {type = "LEVEL", params = { id = 26, maxHeight = 1.6 }} }},
+				{ type = "WASTE", capacity = 56, loadIndicators = { {type = "LEVEL", params = { id = 27, maxHeight = 1.6 }} }},
+				{ type = "BAUXITE", capacity = 56 },
+			},
+			carrier = "ROAD",
+			loadSpeed = 2,
+		}
+	}
+}
+end

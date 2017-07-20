@@ -1,0 +1,47 @@
+function data()
+return {
+	boundingInfo = {
+		bbMax = { 2.8, 1.42, 2.58 },
+		bbMin = { -2.8, -1.42, -0.05 }
+	},
+	collider = {
+		params = { }, type = "MESH" },
+	lods = {
+		{
+			animations = { },
+			children = {
+				{
+					id = "industry/cargo/paper_cargo_big_lod_1.msh",
+					transf = { 0, 1, 0, 0, -1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 },
+					type = "MESH",
+				}
+			},
+			events = { },
+			matConfigs = {
+				{ 0 }
+			},
+			static = false,
+			visibleFrom = 100,
+			visibleTo = 1200,
+		},
+		{
+			animations = { },
+			children = {
+				{
+					id = "industry/cargo/paper_cargo_big_lod_0.msh",
+					transf = { 0, 1, 0, 0, -1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 },
+					type = "MESH",
+				}
+			},
+			events = { },
+			matConfigs = {
+				{ 0 }
+			},
+			static = false,
+			visibleFrom = 0,
+			visibleTo = 100,
+		} 
+	},
+	metadata = { },
+}
+end

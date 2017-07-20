@@ -1,0 +1,87 @@
+function data()
+return {
+	boundingInfo = {
+		
+	},
+	collider = {
+		params = {
+			
+		},
+		type = "MESH",
+		
+	},
+	lods = {
+		{
+			animations = {
+				
+			},
+			children = {
+				{
+					id = "asset/ground/lod_1_small_steel_container1.msh",
+					transf = {
+						1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 
+					},
+					type = "MESH",
+					
+				}, {
+					id = "asset/ground/lod_1_small_steel_container1_content.msh",
+					transf = {
+						1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 
+					},
+					type = "MESH",
+					
+				}
+			},
+			events = {
+				
+			},
+			matConfigs = {
+				{
+					0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+				}, 
+			},
+			static = false,
+			visibleFrom = 50,
+			visibleTo = 290,
+			
+		}, {
+			animations = {
+				
+			},
+			children = {
+				{
+					id = "asset/ground/lod_0_small_steel_container1.msh",
+					transf = {
+						1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 
+					},
+					type = "MESH",
+					
+				}, {
+					id = "asset/ground/lod_0_small_steel_container1_content.msh",
+					transf = {
+						1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 
+					},
+					type = "MESH",
+					
+				}
+			},
+			events = {
+				
+			},
+			matConfigs = {
+				{
+					0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+				}, 
+			},
+			static = false,
+			visibleFrom = 0,
+			visibleTo = 50,
+			
+		}, 
+	},
+	metadata = {
+		
+	},
+	
+}
+end

@@ -1,0 +1,26 @@
+function data()
+return {
+	boundingInfo = {
+		bbMax = { 0.1, 1.25, 3.0 },
+		bbMin = { -0.1, -1.25, -0.01 }
+	},
+	lods = {
+		{
+			animations = { },
+			children = {
+				{
+					id = "industry/Distilling_plant/signboard.msh",
+					transf = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 1.5, 1 },
+					type = "MESH"
+				}
+			},
+			events = { },
+			matConfigs = { { 0 } },
+			static = false,
+			visibleFrom = 0,
+			visibleTo = 200
+		}
+	},
+	metadata = { }
+}
+end

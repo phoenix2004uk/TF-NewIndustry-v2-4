@@ -1,0 +1,43 @@
+function data()
+return {
+	collider = {
+		params = { }, type = "MESH" },
+	lods = {
+		{
+			animations = { },
+			children = {
+				{
+					id = "industry/cargo/cargo_chemical_big.msh",
+					transf = { 0, 1, 0, 0, -1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 },
+					type = "MESH",
+				}
+			},
+			events = { },
+			matConfigs = {
+				{ 1 }
+			},
+			static = false,
+			visibleFrom = 150,
+			visibleTo = 1200,
+		},
+		{
+			animations = { },
+			children = {
+				{
+					id = "industry/cargo/cargo_chemical_big.msh",
+					transf = { 0, 1, 0, 0, -1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 },
+					type = "MESH",
+				}
+			},
+			events = { },
+			matConfigs = {
+				{ 1 }
+			},
+			static = false,
+			visibleFrom = 0,
+			visibleTo = 150,
+		} 
+	},
+	metadata = { }
+}
+end

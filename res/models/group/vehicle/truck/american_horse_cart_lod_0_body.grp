@@ -1,0 +1,596 @@
+function data()
+return {
+	children = {
+		
+		{
+			id = "vehicle/truck/american_horse_cart/lod_0_body.msh",
+			transf = {
+				1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 
+			},
+			type = "MESH",			
+		}, {
+			id = "vehicle/truck/american_horse_cart/lod_0_w2.msh",
+			transf = {
+				1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, -1.8842, 0, 0.5579, 1, 
+			},
+			type = "MESH",			
+		},   {
+			id = "vehicle/truck/american_horse_cart_lod_0_guide.grp",
+			transf = {
+				1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 1.6942, 0, 0.0, 1, 
+			},
+			type = "GROUP",			
+		},
+		
+		
+		-- -----------------------
+		-- Freights
+		-- -----------------------
+		
+		-- OIL_FREIGHT 
+		{
+			id = "industry/cargo/oil_small_lod_0_small_oil_1.msh",
+			transf = {
+				1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0,1.4186, 0.411, 1.07, 1, 
+			},
+			type = "MESH",
+			
+		}, 
+		{
+			id = "industry/cargo/oil_small_lod_0_small_oil_2.msh",
+			transf = {
+				1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0,1.4186, -0.411, 1.07, 1, 
+			},
+			type = "MESH",
+			
+		}, 
+		
+		{
+			id = "industry/cargo/oil_small_lod_0_small_oil_3.msh",
+			transf = {
+				1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0,0.57, 0.411, 1.07, 1, 
+			},
+			type = "MESH",
+			
+		}, 
+		{
+			id = "industry/cargo/oil_small_lod_0_small_oil_1.msh",
+			transf = {
+				1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0,0.57, -0.411, 1.07, 1, 
+			},
+			type = "MESH",
+			
+		}, 
+		
+		{
+			id = "industry/cargo/oil_small_lod_0_small_oil_2.msh",
+			transf = {
+				1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, -0.30, 0.411, 1.07, 1, 
+			},
+			type = "MESH",
+			
+		}, 
+		{
+			id = "industry/cargo/oil_small_lod_0_small_oil_3.msh",
+			transf = {
+				1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, -0.3, -0.411, 1.07, 1, 
+			},
+			type = "MESH",
+			
+		}, 
+		
+		{
+			id = "industry/cargo/oil_small_lod_0_small_oil_2.msh",
+			transf = {
+				1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, -1.2, 0.411, 1.07, 1, 
+			},
+			type = "MESH",
+			
+		}, 
+		{
+			id = "industry/cargo/oil_small_lod_0_small_oil_3.msh",
+			transf = {
+				1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, -1.2, -0.411, 1.07, 1, 
+			},
+			type = "MESH",
+			
+		}, 
+		{
+			id = "industry/cargo/oil_small_lod_0_small_oil_2.msh",
+			transf = {
+				1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, -2.1, 0.411, 1.07, 1, 
+			},
+			type = "MESH",
+			
+		}, 
+		{
+			id = "industry/cargo/oil_small_lod_0_small_oil_3.msh",
+			transf = {
+				1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, -2.1, -0.411, 1.07, 1, 
+			},
+			type = "MESH",
+			
+		}, 
+		{
+			id = "industry/cargo/oil_small_lod_0_small_oil_2.msh",
+			transf = {
+				1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, -3.0, 0.411, 1.07, 1, 
+			},
+			type = "MESH",
+			
+		}, 
+		{
+			id = "industry/cargo/oil_small_lod_0_small_oil_3.msh",
+			transf = {
+				1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, -3.0, -0.411, 1.07, 1, 
+			},
+			type = "MESH",
+			
+		}, 
+		
+		-- CARGO_FREIGHT 
+		{
+			id = "asset/industry/lod_0_wooden_box_02.msh",
+			transf = {
+				0, -1, 0, 0,
+				1, 0, 0, 0, 
+				0, 0, 1, 0, 
+				1.159, 0.51, 1.12, 1, 
+			},
+			type = "MESH",
+			
+		}, 
+		{
+			id = "asset/industry/lod_0_wooden_box_02.msh",
+			transf = {
+				0, -1, 0, 0,
+				1, 0, 0, 0, 
+				0, 0, 1, 0, 
+				1.159, -0.51, 1.12, 1, 
+			},
+			type = "MESH",
+			
+		}, {
+			id = "asset/industry/lod_0_wooden_box_02.msh",
+			transf = {
+				0, -1, 0, 0,
+				1, 0, 0, 0, 
+				0, 0, 1, 0, 
+				-0.0009, 0.51, 1.12, 1, 
+			},
+			type = "MESH",
+			
+		}, 
+		{
+			id = "asset/industry/lod_0_wooden_box_02.msh",
+			transf = {
+				0, -1, 0, 0,
+				1, 0, 0, 0, 
+				0, 0, 1, 0, 
+				-0.0009, -0.51, 1.12, 1, 
+			},
+			type = "MESH",
+			
+		}, 
+		{
+			id = "asset/industry/lod_0_wooden_box_02.msh",
+			transf = {
+				0, -1, 0, 0,
+				1, 0, 0, 0, 
+				0, 0, 1, 0, 
+				-1.1855, 0.51, 1.12, 1, 
+			},
+			type = "MESH",
+			
+		}, 
+		{
+			id = "asset/industry/lod_0_wooden_box_02.msh",
+			transf = {
+				0, -1, 0, 0,
+				1, 0, 0, 0, 
+				0, 0, 1, 0, 
+				-1.1855, -0.51, 1.12, 1, 
+			},
+			type = "MESH",
+			
+		}, 
+		{
+			id = "asset/industry/lod_0_wooden_box_02.msh",
+			transf = {
+				0, -1, 0, 0,
+				1, 0, 0, 0, 
+				0, 0, 1, 0, 
+				-2.3784, 0.51, 1.12, 1, 
+			},
+			type = "MESH",
+			
+		}, 
+		{
+			id = "asset/industry/lod_0_wooden_box_02.msh",
+			transf = {
+				0, -1, 0, 0,
+				1, 0, 0, 0, 
+				0, 0, 1, 0, 
+				-2.3784, -0.51, 1.12, 1, 
+			},
+			type = "MESH",
+		},	
+		
+		
+		-- WOOD_FREIGHT 
+		{
+			id =  "vehicle/truck/mack_ac/lod_0_freight_wood.msh",
+			transf = {
+				0, 1, 0, 0, -1, 0, 0, 0, 0, 0, 1, 0, 0.8, 0.4, 0, 1, 
+			},
+			type = "MESH",
+			
+		},
+		{
+			id =  "vehicle/truck/mack_ac/lod_0_freight_wood.msh",
+			transf = {
+				0, -1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, -1.2966, -0.4, 0, 1, 
+			},
+			type = "MESH",
+			
+		},
+		
+		{
+			id =  "vehicle/truck/mack_ac/lod_0_freight_wood.msh",
+			transf = {
+				0, 1, 0, 0, -1, 0, 0, 0, 0, 0, 1, 0, 0.8, 0.4, 0.2161, 1, 
+			},
+			type = "MESH",
+			
+		},
+		{
+			id =  "vehicle/truck/mack_ac/lod_0_freight_wood.msh",
+			transf = {
+				0, -1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, -1.2966, -0.4, 0.2161, 1, 
+			},
+			type = "MESH",
+			
+		},
+		
+		{
+			id =  "vehicle/truck/mack_ac/lod_0_freight_wood.msh",
+			transf = {
+				0, 1, 0, 0, -1, 0, 0, 0, 0, 0, 1, 0, 0.8, 0.4, 0.4322, 1, 
+			},
+			type = "MESH",
+			
+		},
+		{
+			id =  "vehicle/truck/mack_ac/lod_0_freight_wood.msh",
+			transf = {
+				0, -1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, -1.2966, -0.4, 0.4322, 1, 
+			},
+			type = "MESH",
+			
+		},
+		
+		{
+			id =  "vehicle/truck/mack_ac/lod_0_freight_wood.msh",
+			transf = {
+				0, 1, 0, 0, -1, 0, 0, 0, 0, 0, 1, 0, 0.8, 0.4, 0.6483, 1, 
+			},
+			type = "MESH",
+			
+		},
+		{
+			id =  "vehicle/truck/mack_ac/lod_0_freight_wood.msh",
+			transf = {
+				0, -1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, -1.2966, -0.4, 0.6483, 1, 
+			},
+			type = "MESH",
+			
+		}, 
+		{
+			id =  "vehicle/truck/mack_ac/lod_0_freight_wood.msh",
+			transf = {
+				0, 1, 0, 0, -1, 0, 0, 0, 0, 0, 1, 0, 0.8, 0.4, 0.8483, 1, 
+			},
+			type = "MESH",
+			
+		},
+		{
+			id =  "vehicle/truck/mack_ac/lod_0_freight_wood.msh",
+			transf = {
+				0, -1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, -1.2966, -0.4, 0.8483, 1, 
+			},
+			type = "MESH",
+			
+		}, 
+		{
+			id =  "vehicle/truck/mack_ac/lod_0_freight_wood.msh",
+			transf = {
+				0, 1, 0, 0, -1, 0, 0, 0, 0, 0, 1, 0, 0.8, 0.4, 1.0483, 1, 
+			},
+			type = "MESH",
+			
+		},
+		{
+			id =  "vehicle/truck/mack_ac/lod_0_freight_wood.msh",
+			transf = {
+				0, -1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, -1.2966, -0.4, 1.0483, 1, 
+			},
+			type = "MESH",
+			
+		}, 
+		
+		
+		-- cargo livestock
+		{
+			id = "industry/cargo/lod_0_cargo_livestock.msh",
+			transf = {
+				0.9, 0, 0, 0, 0, 0.9, 0, 0, 0, 0, 0.9, 0, 0.8, 0, 1.15, 1, 
+			},
+			type = "MESH",
+
+		},
+		{
+			id = "industry/cargo/lod_0_cargo_livestock.msh",
+			transf = {
+				0.9, 0, 0, 0, 0, 0.9, 0, 0, 0, 0, 0.9, 0, -1.1, 0, 1.15, 1, 
+			},
+			type = "MESH",
+
+		},
+		
+		-- crude
+		{
+			id = "industry/cargo/lod_0_cargo_crude.msh",
+			transf = {
+				0.9, 0, 0, 0, 0, 0.9, 0, 0, 0, 0, 0.9, 0, 0.9, 0, 1.15, 1, 
+			},
+			type = "MESH",
+			
+		}, 
+		{
+			id = "industry/cargo/lod_0_cargo_crude.msh",
+			transf = {
+				0.9, 0, 0, 0, 0, 0.9, 0, 0, 0, 0, 0.9, 0, -0.7, 0, 1.15, 1, 
+			},
+			type = "MESH",
+			
+		}, 
+		
+		-- steel
+		{
+			id = "industry/cargo/lod_0_cargo_steel.msh",
+			transf = {
+				0.8, 0, 0, 0, 0, 0.8, 0, 0, 0, 0, 0.8, 0, 0.9, 0.15, 1.15, 1, 
+			},
+			type = "MESH",
+			
+		}, 
+		{
+			id = "industry/cargo/lod_0_cargo_steel.msh",
+			transf = {
+				0.8, 0, 0, 0, 0, 0.8, 0, 0, 0, 0, 0.8, 0, -0.8, 0.15, 1.15, 1, 
+			},
+			type = "MESH",
+			
+		}, 
+		
+		-- planks		
+		{
+			id = "industry/cargo/lod_0_cargo_planks.msh",
+			transf = {
+				0.8, 0, 0, 0, 0, 0.8, 0, 0, 0, 0, 0.8, 0, 0.9, 0, 1.15, 1, 
+			},
+			type = "MESH",
+			
+		},	
+		{
+			id = "industry/cargo/lod_0_cargo_planks.msh",
+			transf = {
+				0.8, 0, 0, 0, 0, 0.8, 0, 0, 0, 0, 0.8, 0, -0.8, 0, 1.15, 1, 
+			},
+			type = "MESH",
+			
+		},
+		
+		-- plastic
+		{
+			id = "industry/cargo/lod_0_cargo_plastic.msh",
+			transf = {
+				0.9, 0, 0, 0, 0, 0.9, 0, 0, 0, 0, 0.9, 0, 0.8, 0, 1.15, 1, 
+			},
+			type = "MESH",	
+			
+		},{
+			id = "industry/cargo/lod_0_cargo_plastic.msh",
+			transf = {
+				0.9, 0, 0, 0, 0, 0.9, 0, 0, 0, 0, 0.9, 0, -1, 0, 1.15, 1, 
+			},
+			type = "MESH",	
+			
+		},
+		
+		-- construction goods
+		{
+			id = "industry/cargo/lod_0_cargo_construction_goods.msh",
+			transf = {
+				0.9, 0, 0, 0, 0, 0.9, 0, 0, 0, 0, 0.9, 0, 0.8, 0, 1.15, 1, 
+			},
+			type = "MESH",
+			
+		}, 
+		{
+			id = "industry/cargo/lod_0_cargo_construction_goods.msh",
+			transf = {
+				0.9, 0, 0, 0, 0, 0.9, 0, 0, 0, 0, 0.9, 0, -1, 0, 1.15, 1, 
+			},
+			type = "MESH",
+			
+		}, 
+		
+		-- cargo_machines
+		{
+			id = "industry/cargo/lod_0_cargo_machines.msh",
+			transf = {
+				0.9, 0, 0, 0, 0, 0.9, 0, 0, 0, 0, 0.9, 0, 0.8, 0, 1.15, 1, 
+			},
+			type = "MESH",
+			
+		}, {
+			id = "industry/cargo/lod_0_cargo_machines.msh",
+			transf = {
+				0.9, 0, 0, 0, 0, 0.9, 0, 0, 0, 0, 0.9, 0, -1.0, 0, 1.15, 1, 
+			},
+			type = "MESH",
+			
+		}, 
+		
+		-- fuel
+		{
+			id = "industry/cargo/lod_0_cargo_fuel.msh",
+			transf = {
+				1.0, 0, 0, 0, 0, 1.0, 0, 0, 0, 0, 1.0, 0, 0.7, 0, 1.15, 1, 
+			},
+			type = "MESH",
+			
+		}, {
+			id = "industry/cargo/lod_0_cargo_fuel.msh",
+			transf = {
+				1.0, 0, 0, 0, 0, 1.0, 0, 0, 0, 0, 1.0, 0, -1.4, 0, 1.15, 1, 
+			},
+			type = "MESH",
+			
+		}, 
+		
+		-- cargo tools
+		{
+			id = "industry/cargo/lod_0_cargo_tools.msh",
+			transf = {
+				1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0.65, 0, 1.15, 1, 
+			},
+			type = "MESH",
+			
+		},	{
+			id = "industry/cargo/lod_0_cargo_tools.msh",
+			transf = {
+				1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, -1.5, 0, 1.15, 1, 
+			},
+			type = "MESH",
+			
+		},
+		-- cargo food
+		{
+			id = "industry/cargo/lod_0_cargo_food.msh",
+			transf = {
+				0.9, 0, 0, 0, 0, 0.9, 0, 0, 0, 0, 0.9, 0, 0.9, 0, 1.15, 1, 
+			},
+			type = "MESH",
+			
+		}, 
+		{
+			id = "industry/cargo/lod_0_cargo_food.msh",
+			transf = {
+				0.9, 0, 0, 0, 0, 0.9, 0, 0, 0, 0, 0.9, 0, -0.9, 0, 1.15, 1, 
+			},
+			type = "MESH",
+			
+		}, 
+		-- cargo grain
+		{
+			id = "industry/cargo/lod_0_cargo_grain.msh",
+			transf = {
+				0.8, 0, 0, 0, 0, 0.8, 0, 0, 0, 0, 0.8, 0, 0.9, 0, 1.15, 1, 
+			},
+			type = "MESH",
+			
+		}, 
+		{
+			id = "industry/cargo/lod_0_cargo_grain.msh",
+			transf = {
+				0.8, 0, 0, 0, 0, 0.8, 0, 0, 0, 0, 0.8, 0, -0.8, 0, 1.15, 1, 
+			},
+			type = "MESH",
+			
+		}, 
+		
+		-- cargo stone
+		{
+			id = "industry/cargo/lod_0_cargo_small_stone.grp",
+			transf = {
+				.9, 0, 0, 0, 0, .9, 0, 0, 0, 0, .9, 0, 0.8, 0, 1.15, 1, 
+			},
+			type = "GROUP",
+			
+		},{
+			id = "industry/cargo/lod_0_cargo_small_stone.grp",
+			transf = {
+				.9, 0, 0, 0, 0, .9, 0, 0, 0, 0, .9, 0, -1.1, 0, 1.15, 1, 
+			},
+			type = "GROUP",
+			
+		},
+		
+		
+		-- cargo coal
+		{
+			id = "industry/cargo/lod_0_cargo_small_coal.grp",
+			transf = {
+				.9, 0, 0, 0, 0, .9, 0, 0, 0, 0, .9, 0, 0.8, 0, 1.15, 1, 
+			},
+			type = "GROUP",
+			
+		},
+		{
+			id = "industry/cargo/lod_0_cargo_small_coal.grp",
+			transf = {
+				.9, 0, 0, 0, 0, .9, 0, 0, 0, 0, .9, 0, -1.1, 0, 1.15, 1, 
+			},
+			type = "GROUP",
+			
+		},
+		
+		-- cargo iron
+		{
+			id = "industry/cargo/lod_0_cargo_small_iron.grp",
+			transf = {
+				.9, 0, 0, 0, 0, .9, 0, 0, 0, 0, .9, 0, 0.8, 0, 1.15, 1, 
+			},
+			type = "GROUP",
+			
+		},
+		{
+			id = "industry/cargo/lod_0_cargo_small_iron.grp",
+			transf = {
+				.9, 0, 0, 0, 0, .9, 0, 0, 0, 0, .9, 0, -1.1, 0, 1.15, 1, 
+			},
+			type = "GROUP",
+			
+		},
+			
+		-- cargo slag
+		{
+			id = "industry/cargo/lod_0_cargo_small_slag.grp",
+			transf = {
+				.9, 0, 0, 0, 0, .9, 0, 0, 0, 0, .9, 0, 0.8, 0, 1.15, 1, 
+			},
+			type = "GROUP",
+			
+		},
+		{
+			id = "industry/cargo/lod_0_cargo_small_slag.grp",
+			transf = {
+				.9, 0, 0, 0, 0, .9, 0, 0, 0, 0, .9, 0, -1.1, 0, 1.15, 1, 
+			},
+			type = "GROUP",
+			
+		},
+		{
+			id = "Cargo/american_horse_cart_new_cargo.grp",
+			transf = { 0.9, 0, 0, 0, 0, 0.9, 0, 0, 0, 0, 0.9, 0, 0, 0, 1.15, 1 },
+			type = "GROUP",
+		},
+		
+	},
+	matConfigs = {
+		{ 0, 0, 0 }
+	},
+}
+end

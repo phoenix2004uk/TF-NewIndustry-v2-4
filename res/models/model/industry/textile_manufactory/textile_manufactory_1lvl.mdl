@@ -1,0 +1,47 @@
+function data()
+return {
+	boundingInfo = { },
+	collider = { params = { }, type = "MESH" },
+	lods = {
+		{
+			animations = { },
+			children = {				
+				{
+					id = "industry/textile_manufactory/textile_manufactory_1lvl.msh",
+					transf = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 },
+					type = "MESH",
+				}, 
+			},
+			events = { },
+			matConfigs = { { 0 } },
+			static = false,
+			visibleFrom = 0,
+			visibleTo = 5390,
+		}, 
+	},
+	metadata = {
+		particleSystem = {
+			emitters = { 
+				{
+					position = { -5.6, -10.0, 19.3 },
+					velocity = { 0, 0, 2 },
+					color = { .9, .9, .9 },
+					frequency = 75,
+					lifeTime = 10,
+					size01 = { 1, 2 },
+					child = 0,
+				},
+				{
+					position = { -5.6, -10.0, 19.3 },
+					velocity = { 0, 0, 2 },
+					color = { .9, .9, .9 },
+					frequency = 75,
+					lifeTime = 10,
+					size01 = { 1, 2 },
+					child = 0,
+				}
+			}
+		}
+	},
+}
+end

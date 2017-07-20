@@ -1,0 +1,59 @@
+local vec3 = require "vec3"
+local transf = require "transf"
+
+function data()
+return {
+	boundingInfo = {
+		bbMax = { 1.0189059972763, 0.67459601163864, 1.4718279838562 },
+		bbMin = { -0.99555802345276, -0.67459601163864, 0.002917000092566 }
+	},
+	collider = { params = { }, type = "MESH" },
+	lods = {
+		{
+			animations = { },
+			children = {
+				{
+					id = "industry/cargo/open/cargo_bulk_small_lod_1.msh",
+					transf = transf.scaleRotZYXTransl(vec3.new(1.25,1.25,1.0),transf.degToRad(90,0,0), vec3.new(0.00,0,-0.2)),
+					type = "MESH"
+				},
+				{
+					id = "industry/cargo/lod_1_cargo_open_container.msh",
+					transf = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 },
+					type = "MESH"
+				} 
+			},
+			events = { },
+			matConfigs = {
+				{ 1, 0 }
+			},
+			static = false,
+			visibleFrom = 110,
+			visibleTo = 600
+		},
+		{
+			animations = { },
+			children = {
+				{
+					id = "industry/cargo/open/cargo_bulk_small_lod_0.msh",
+					transf = transf.scaleRotZYXTransl(vec3.new(1.25,1.25,1.0),transf.degToRad(90,0,0), vec3.new(0.00,0,-0.2)),
+					type = "MESH"
+				},
+				{
+					id = "industry/cargo/lod_0_cargo_open_container.msh",
+					transf = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 },
+					type = "MESH"
+				}
+			},
+			events = { },
+			matConfigs = {
+				{ 1, 0 }
+			},
+			static = false,
+			visibleFrom = 0,
+			visibleTo = 110
+		}
+	},
+	metadata = { }
+}
+end

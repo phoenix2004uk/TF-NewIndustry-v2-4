@@ -1,0 +1,332 @@
+local constructionutil = require "constructionutil"
+local vec3 = require "vec3"
+local transf = require "transf"
+
+local function makeParams()
+	return {
+		{
+			key = "productionLevel",
+			name = _("Industry production level"),
+			values = { _("1") },
+			yearFrom = 1890,
+			yearTo = 0
+		},
+	}
+end
+
+function data()
+
+return {
+	boundingInfo = {
+		bbMax = { 63, 81, 25 },
+		bbMin = { -36, -63, -0.02 },
+	},
+	type = "INDUSTRY",
+	categories = {_(Manufacturing)},
+	description = {
+		name = _("Power plant"),
+		description = _(Power_desc),
+	},
+	availability = {
+		yearFrom = 1890,
+		yearTo = 0
+	},
+	soundConfig = {
+		soundSet = { name = "steel_mill" },
+		effects = {
+			select =  {
+				"selected_industry_steel_mill1.wav",
+				"selected_industry_steel_mill2.wav",
+				"selected_industry_steel_mill3.wav"
+			}
+		}
+	},
+	params = makeParams(),
+	updateFn = function(params)
+		local result = { }
+		local level = (params.productionLevel or 0) + 1
+		local groundFace = { }
+		local terrainFaces = { }	
+		local edges = { }
+		
+		-- Дороги
+		result.edgeLists = { { type = "STREET", params = { type = "country_new_small.lua" }, edges = edges, snapNodes = { 0 } } }
+		
+		edges[#edges + 1] = { { 0.0, -79.0, 0.0 },		{ 0.0, 15.0, 0.0 } }
+		edges[#edges + 1] = { { 0.0, -64.0, 0.0 },		{ 0.0, 15.0, 0.0 } }
+
+		edges[#edges + 1] = { { 0.0, -64.0, 0.0 },		{ 0.0, 15.0, 0.0 } }
+		edges[#edges + 1] = { { 0.0, -54.0, 0.0 },		{ 0.0, 15.0, 0.0 } }
+		
+		edges[#edges + 1] = { { 0.0, -54.0, 0.0 },		{ 0.0, 33.0, 0.0 } }
+		edges[#edges + 1] = { { -15.0, -38.0, 0.0 },	{ -33.0, 00.0, 0.0 } }
+		
+		edges[#edges + 1] = { { -15.0, -38.0, 0.0 },	{ -33.0, 00.0, 0.0 } }
+		edges[#edges + 1] = { { -30.0, -23.0, 0.0 },	{ 0.0, 33.0, 0.0 } }
+
+		edges[#edges + 1] = { { -30.0, -23.0, 0.0 },	{ 0.0, 58.0, 0.0 } }
+		edges[#edges + 1] = { { -30.0, 48.5, 0.0 },		{ 0.0, 58.0, 0.0 } }
+		
+		edges[#edges + 1] = { { -30.0, 48.5, 0.0 },		{ 0.0, 20.0, 0.0 } }
+		edges[#edges + 1] = { { -20.0, 58.5, 0.0 },		{ 20.0, 0.0, 0.0 } }
+		
+		edges[#edges + 1] = { { -20.0, 58.5, 0.0 },		{ 60.0, 0.0, 0.0 } }
+		edges[#edges + 1] = { { 47.0, 58.5, 0.0 },		{ 60.0, 0.0, 0.0 } }
+		
+		edges[#edges + 1] = { { 47.0, 58.5, 0.0 },		{ 20.0, 0.0, 0.0 } }
+		edges[#edges + 1] = { { 57.0, 48.5, 0.0 },		{ 00.0, -12.0, 0.0 } }
+		
+		edges[#edges + 1] = { { 57.0, 48.5, 0.0 },		{ 0.0, -50.0, 0.0 } }
+		edges[#edges + 1] = { { 57.0, -44.0, 0.0 },		{ 0.0, -50.0, 0.0 } }
+		
+		edges[#edges + 1] = { { 57.0, -44.0, 0.0 },		{ 0.0, -20.0, 0.0 } }
+		edges[#edges + 1] = { { 47.0, -54.0, 0.0 },		{ -20.0, 0.0, 0.0 } }
+
+		edges[#edges + 1] = { { 47.0, -54.0, 0.0 },		{ -50.0, 0.0, 0.0 } }
+		edges[#edges + 1] = { { 00.0, -54.0, 0.0 },		{ -50.0, 0.0, 0.0 } }
+		
+		result.models = { }
+		result.groundFaces = { }
+		result.stocks = { }
+		result.stockRules = { }
+		result.cost = _G.PowerCost * (params.productionLevel + 1)
+		result.maintenanceCost = _G.PowerMaintenanceCost * (params.productionLevel + 1)
+		
+		-- Выравнивание
+		result.terrainAlignmentLists = { { type = "EQUAL", faces = terrainFaces, slopeLow = .40 } }
+		terrainFaces[#terrainFaces + 1] = { {63, -63, 0}, {63, 81, 0}, {-36, 81, 0}, {-36, -63, 0} }
+		
+		-- Заливка
+		groundFace = { {63, -63}, { 63, 81}, {-36, 81}, {-36, -63} }
+			result.groundFaces[#result.groundFaces + 1] = { face = groundFace, modes = { { type = "FILL", key = "industry_floor" } } }
+			result.groundFaces[#result.groundFaces + 1] = { face = groundFace, modes = { { type = "STROKE_OUTER", key = "industry_floor_paving" } } }
+		groundFace = { {0, -54}, { 57, -54}, {57, 45.5}, {-29, 45.5}, {-29, -37}, {0, -39} }
+			result.groundFaces[#result.groundFaces + 1] = { face = groundFace, modes = { { type = "FILL", key = "building_paving_fill" } } }
+
+		
+		-- Забор
+		fenceFace = { {-6,-63, 0}, {-36, -63, 0}, {-36, 81, 0}, {63, 81, 0}, {63, -63, 0}, {6, -63, 0} } 
+		constructionutil.makeFence(fenceFace, "station/airport/asset/fence_metal.mdl", 3, false, result.models)
+		
+		-- Здания, трубы
+		result.models[#result.models + 1] = {
+		id = "industry/power_plant/building_small.mdl",
+		transf = transf.scaleRotZYXTransl(vec3.new( 1.5, 1.5, 1.5 ),transf.degToRad( 0, 0, 0 ), vec3.new( -10.0, 20.0, 0.0 ))
+		}
+		result.models[#result.models + 1] = {
+		id = "asset/chimney_ind_03.mdl",
+		transf = transf.scaleRotZYXTransl(vec3.new( 4.0, 4.0, 4.0 ),transf.degToRad( 0, 0, 0 ), vec3.new( 10.0, 43.6, 0.0 ))
+		}
+		result.models[#result.models + 1] = {
+		id = "asset/ground/pipes_large_grounded_5m.mdl",
+		transf = transf.scaleRotZYXTransl(vec3.new( 2.0, 2.0, 2.0 ),transf.degToRad( 0, 0, 0 ), vec3.new( 10.0, 43.6, -1.0 ))
+		}
+		result.models[#result.models + 1] = {
+		id = "asset/chimney_ind_03.mdl",
+		transf = transf.scaleRotZYXTransl(vec3.new( 4.0, 4.0, 4.0 ),transf.degToRad( 0, 0, 0 ), vec3.new( 10.0, 27.9, 0.0 ))
+		}
+		result.models[#result.models + 1] = {
+		id = "asset/ground/pipes_large_grounded_5m.mdl",
+		transf = transf.scaleRotZYXTransl(vec3.new( 2.0, 2.0, 2.0 ),transf.degToRad( 0, 0, 0 ), vec3.new( 10.0, 27.9, -1.0 ))
+		}
+		result.models[#result.models + 1] = {
+		id = "asset/chimney_ind_03.mdl",
+		transf = transf.scaleRotZYXTransl(vec3.new( 4.0, 4.0, 4.0 ),transf.degToRad( 0, 0, 0 ), vec3.new( 10.0, 12.1, 0.0 ))
+		}
+		result.models[#result.models + 1] = {
+		id = "asset/ground/pipes_large_grounded_5m.mdl",
+		transf = transf.scaleRotZYXTransl(vec3.new( 2.0, 2.0, 2.0 ),transf.degToRad( 0, 0, 0 ), vec3.new( 10.0, 12.1, -1.0 ))
+		}
+		result.models[#result.models + 1] = {
+		id = "asset/chimney_ind_03.mdl",
+		transf = transf.scaleRotZYXTransl(vec3.new( 4.0, 4.0, 4.0 ),transf.degToRad( 0, 0, 0 ), vec3.new( 10.0, -3.6, 0.0 ))
+		}
+		result.models[#result.models + 1] = {
+		id = "asset/ground/pipes_large_grounded_5m.mdl",
+		transf = transf.scaleRotZYXTransl(vec3.new( 2.0, 2.0, 2.0 ),transf.degToRad( 0, 0, 0 ), vec3.new( 10.0, -3.6, -1.0 ))
+		}
+		result.models[#result.models + 1] = { id = "asset/ground/container_waste3.mdl", transf = transf.rotZYXTransl(transf.degToRad(180.0, 0.0, 0.0), vec3.new(-15.6, 52.8, 0)) }
+		result.models[#result.models + 1] = { id = "asset/ground/container_waste3.mdl", transf = transf.rotZYXTransl(transf.degToRad(181.0, 0.0, 0.0), vec3.new(-17.8, 52.8, 0)) }
+		result.models[#result.models + 1] = { id = "asset/ground/container_waste3_open.mdl", transf = transf.rotZYXTransl(transf.degToRad(180.0, 0.0, 0.0), vec3.new(-20.0, 52.7, 0)) }
+		result.models[#result.models + 1] = { id = "asset/ground/barrel_wood.mdl", transf = transf.rotZYXTransl(transf.degToRad(0.0, 0.0, 0.0), vec3.new(-6.9, 52.8, 0)) }
+		result.models[#result.models + 1] = { id = "asset/ground/barrel_wood.mdl", transf = transf.rotZYXTransl(transf.degToRad(0.0, 0.0, 0.0), vec3.new(-5.8, 52.5, 0)) }
+		result.models[#result.models + 1] = { id = "tree/usa/OcotilloCluster_RT.mdl", transf = transf.rotZYXTransl(transf.degToRad(0.0, 0.0, 0.0), vec3.new(-23.3, 53.0, 0)) }
+		
+		-- Склад
+		result.models[#result.models + 1] = {
+		id = "industry/steel_mill/building_big.mdl",
+		transf = transf.scaleRotZYXTransl(vec3.new( 0.8, 0.8, 0.8 ),transf.degToRad( 0, 0, 0 ), vec3.new( 44.0, -15.0, 0.0 ))
+		}
+		result.models[#result.models + 1] = { id = "industry/cargo/coal_big.mdl", transf = transf.scaleRotZYXTransl(vec3.new( 1.0, 1.0, 1.0 ),transf.degToRad( 98, 0, 0 ), vec3.new(43.7, -30.0, 0.0)) }
+		result.models[#result.models + 1] = { id = "asset/big_steel_container.mdl", transf = transf.scaleRotZYXTransl(vec3.new( 1.0, 1.0, 1.0 ),transf.degToRad( 85, 0, 0 ), vec3.new(33.0, -27.0, 0.0)) }
+		result.models[#result.models + 1] = { id = "asset/big_steel_container.mdl", transf = transf.scaleRotZYXTransl(vec3.new( 1.0, 1.0, 1.0 ),transf.degToRad( 87, 0, 0 ), vec3.new(30.0, -27.3, 0.0)) }
+		result.models[#result.models + 1] = { id = "asset/big_steel_container.mdl", transf = transf.scaleRotZYXTransl(vec3.new( 1.0, 1.0, 1.0 ),transf.degToRad( 83, 0, 0 ), vec3.new(26.8, -27.2, 0.0)) }
+		result.models[#result.models + 1] = { id = "industry/cargo/fuel_big.mdl", transf = transf.scaleRotZYXTransl(vec3.new( 1.0, 1.0, 1.0 ),transf.degToRad( 95, 0, 0 ), vec3.new(26.7, -11.0, 0.0)) }
+		result.models[#result.models + 1] = { id = "industry/cargo/fuel_big.mdl", transf = transf.scaleRotZYXTransl(vec3.new( 1.0, 1.0, 1.0 ),transf.degToRad( 90, 0, 0 ), vec3.new(23.2, -11.0, 0.0)) }
+		result.models[#result.models + 1] = { id = "industry/cargo/fuel_big.mdl", transf = transf.scaleRotZYXTransl(vec3.new( 1.0, 1.0, 1.0 ),transf.degToRad( 93, 0, 0 ), vec3.new(20.2, -11.0, 0.0)) }
+		result.models[#result.models + 1] = { id = "industry/cargo/fuel_big.mdl", transf = transf.scaleRotZYXTransl(vec3.new( 1.0, 1.0, 1.0 ),transf.degToRad( 89, 0, 0 ), vec3.new(17.1, -11.0, 0.0)) }
+		result.models[#result.models + 1] = { id = "asset/ground/cableroll.mdl", transf = transf.scaleRotZYXTransl(vec3.new( 0.8, 0.8, 0.8 ),transf.degToRad( 0, 0, 90 ), vec3.new(-2.1, -12.0, 1.0)) }
+		result.models[#result.models + 1] = { id = "asset/ground/cableroll.mdl", transf = transf.scaleRotZYXTransl(vec3.new( 0.8, 0.8, 0.8 ),transf.degToRad( 0, 0, 90 ), vec3.new(-3.7, -12.0, 1.0)) }
+		result.models[#result.models + 1] = { id = "asset/ground/cableroll.mdl", transf = transf.scaleRotZYXTransl(vec3.new( 0.8, 0.8, 0.8 ),transf.degToRad( 0, 0, 90 ), vec3.new(-0.5, -12.1, 1.0)) }
+		result.models[#result.models + 1] = { id = "asset/ground/cableroll.mdl", transf = transf.scaleRotZYXTransl(vec3.new( 0.8, 0.8, 0.8 ),transf.degToRad( 0, 0, 90 ), vec3.new(-2.8, -13.4, 1.0)) }
+		result.models[#result.models + 1] = { id = "asset/ground/cableroll.mdl", transf = transf.scaleRotZYXTransl(vec3.new( 0.8, 0.8, 0.8 ),transf.degToRad( 0, 0, 90 ), vec3.new(-1.2, -13.5, 1.0)) }
+		result.models[#result.models + 1] = { id = "asset/ground/cableroll.mdl", transf = transf.scaleRotZYXTransl(vec3.new( 0.8, 0.8, 0.8 ),transf.degToRad( 0, 90, 0 ), vec3.new(-5.7, -13.0, 1.0)) }
+		result.models[#result.models + 1] = { id = "industry/cargo/machines_big.mdl", transf = transf.rotZYXTransl(transf.degToRad(5.0, 0.0, 0.0), vec3.new(-20.8, -30.4, 0)) }
+		result.models[#result.models + 1] = { id = "industry/cargo/tools_big.mdl", transf = transf.rotZYXTransl(transf.degToRad(0.0, 0.0, 0.0), vec3.new(-20.8, -27.2, 0)) }
+		result.models[#result.models + 1] = { id = "asset/ground/pallet_01.mdl", transf = transf.rotZYXTransl(transf.degToRad(0.0, 0.0, 0.0), vec3.new(-18, -13 , 0)) }
+		result.models[#result.models + 1] = { id = "asset/ground/pallet_01.mdl", transf = transf.rotZYXTransl(transf.degToRad(5.0, 0.0, 0.0), vec3.new(-18, -13 , 0.2)) }
+		result.models[#result.models + 1] = { id = "asset/ground/pallet_01.mdl", transf = transf.rotZYXTransl(transf.degToRad(2.0, 0.0, 0.0), vec3.new(-18, -13 , 0.4)) }
+		result.models[#result.models + 1] = { id = "asset/ground/pallet_01.mdl", transf = transf.rotZYXTransl(transf.degToRad(2.0, 0.0, 0.0), vec3.new(-19.2, -13 , 0)) }
+		result.models[#result.models + 1] = { id = "asset/ground/pallet_01.mdl", transf = transf.rotZYXTransl(transf.degToRad(0.0, 0.0, 0.0), vec3.new(-19.2, -13 , 0.2)) }
+		result.models[#result.models + 1] = { id = "asset/ground/pallet_01.mdl", transf = transf.rotZYXTransl(transf.degToRad(357.0, 0.0, 0.0), vec3.new(-19.2, -13 , 0.4)) }
+		result.models[#result.models + 1] = { id = "asset/ground/pallet_01.mdl", transf = transf.rotZYXTransl(transf.degToRad(95.0, 0.0, 0.0), vec3.new(-18.6, -13 , 0.6)) }
+		result.models[#result.models + 1] = { id = "industry/cargo/machines_small.mdl", transf = transf.rotZYXTransl(transf.degToRad(5.0, 0.0, 0.0), vec3.new(-20.8, -13, 0)) }
+		--[[ Административное здание
+		result.models[#result.models + 1] = {
+		id = "building/era_a/ind_1_2x3_02_01.mdl",
+		transf = transf.rotZYXTransl(transf.degToRad( 90.0, 0.0, 0.0 ), vec3.new(-20.0, -50.0, 0 ))
+		}
+		result.models[#result.models + 1] = {
+		id = "building/era_a/ind_1_2x3_02_02.mdl",
+		transf = transf.rotZYXTransl(transf.degToRad( 90.0, 0.0, 0.0 ), vec3.new(-40.0, -50.0, 0 ))
+		}]]
+		-- Бочки, трубы
+		result.models[#result.models + 1] = {
+		id = "asset/ground/silo_vertical_3m_03.mdl",
+		transf = transf.scaleRotZYXTransl(vec3.new( 1.4, 1.4, 1.4 ),transf.degToRad( 180, 0, 0 ), vec3.new(18.0, 35.8, 0))
+		}
+		result.models[#result.models + 1] = {
+		id = "asset/ground/silo_vertical_3m_01.mdl",
+		transf = transf.scaleRotZYXTransl(vec3.new( 1.4, 1.4, 1.4 ),transf.degToRad( 0, 0, 0 ), vec3.new(28.0, 35.8, 0))
+		}
+		result.models[#result.models + 1] = { id = "asset/ground/pipes_small_grounded_6m.mdl", transf = transf.scaleRotZYXTransl(vec3.new( 0.8, 0.8, 0.8 ),transf.degToRad( 180, 0, 0 ), vec3.new(22.7, 35.8, 4.7)) }
+		result.models[#result.models + 1] = { id = "asset/ground/pipes_small_grounded_6m.mdl", transf = transf.scaleRotZYXTransl(vec3.new( 0.8, 0.8, 0.8 ),transf.degToRad( 0, 0, 0 ), vec3.new(23.2, 35.8, 4.7)) }
+		result.models[#result.models + 1] = { id = "asset/ground/pipe_valve.mdl", transf = transf.scaleRotZYXTransl(vec3.new( 1.1, 1.1, 1.1 ),transf.degToRad( 0, 0, 0 ), vec3.new(18.0, 31.9, -0.2)) }
+		result.models[#result.models + 1] = { id = "asset/ground/pipe_valve.mdl", transf = transf.scaleRotZYXTransl(vec3.new( 1.1, 1.1, 1.1 ),transf.degToRad( 0, 0, 0 ), vec3.new(27.97, 31.9, -0.2)) }
+		result.models[#result.models + 1] = { id = "asset/ground/pipe_t.mdl", transf = transf.scaleRotZYXTransl(vec3.new( 1.1, 1.1, 1.1 ),transf.degToRad( 90, 0, 0 ), vec3.new(18.0, 29.1, -0.2)) }
+		result.models[#result.models + 1] = { id = "asset/ground/pipes_small_grounded_9m.mdl", transf = transf.scaleRotZYXTransl(vec3.new( 1.1, 1.1, 1.1 ),transf.degToRad( 0, 180, 90 ), vec3.new(17.5, 29.6, 0.3)) }
+		result.models[#result.models + 1] = { id = "asset/ground/pipes_small_grounded_6m.mdl", transf = transf.scaleRotZYXTransl(vec3.new( 1.1, 1.1, 1.1 ),transf.degToRad( 270, 0, 0 ), vec3.new(27.95, 29.6, -0.2)) }
+		result.models[#result.models + 1] = { id = "asset/ground/pipes_small_grounded_end.mdl", transf = transf.scaleRotZYXTransl(vec3.new( 1.1, 1.1, 1.1 ),transf.degToRad( 270, 0, 90 ), vec3.new(17.3, 29.65, 0.35)) }
+		result.models[#result.models + 1] = { id = "asset/ground/pipes_small_grounded_9m.mdl", transf = transf.scaleRotZYXTransl(vec3.new( 1.1, 1.1, 1.1 ),transf.degToRad( 0, 180, 270 ), vec3.new(06.35, 29.6, 0.35)) }
+		result.models[#result.models + 1] = { id = "asset/ground/pipes_small_grounded_12m.mdl", transf = transf.scaleRotZYXTransl(vec3.new( 1.0, 1.0, 1.0 ),transf.degToRad( 0, 0, 0 ), vec3.new(30.8, 39.4, 4.45)) }
+		result.models[#result.models + 1] = { id = "asset/ground/pipes_small_grounded_6m.mdl", transf = transf.scaleRotZYXTransl(vec3.new( 1.0, 1.0, 1.0 ),transf.degToRad( 270, 0, 270 ), vec3.new(30.8, 32.9, 4.89)) }
+		result.models[#result.models + 1] = { id = "asset/ground/pipes_small_grounded_6m.mdl", transf = transf.scaleRotZYXTransl(vec3.new( 1.0, 1.0, 1.0 ),transf.degToRad( 90, 0, 0 ), vec3.new(31.24, 32.9, 4.45)) }
+		result.models[#result.models + 1] = { id = "asset/ground/pipes_small_grounded_6m.mdl", transf = transf.scaleRotZYXTransl(vec3.new( 1.0, 1.0, 1.0 ),transf.degToRad( 90, 0, 0 ), vec3.new(30.74, 32.9, 4.45)) }
+		result.models[#result.models + 1] = { id = "asset/ground/pipes_small_grounded_end.mdl", transf = transf.scaleRotZYXTransl(vec3.new( 1.0, 1.0, 1.0 ),transf.degToRad( 90, 0, 0 ), vec3.new(30.74, 32.9, 4.45)) }
+		result.models[#result.models + 1] = { id = "asset/ground/pipes_small_grounded_6m.mdl", transf = transf.scaleRotZYXTransl(vec3.new( 1.0, 1.0, 1.0 ),transf.degToRad( 00, 270, 0 ), vec3.new(31.18, 26.4, 4.45)) }
+		result.models[#result.models + 1] = { id = "asset/ground/pipes_small_grounded_6m.mdl", transf = transf.scaleRotZYXTransl(vec3.new( 1.0, 1.0, 1.0 ),transf.degToRad( 00, 270, 0 ), vec3.new(31.68, 26.4, 4.45)) }
+		result.models[#result.models + 1] = { id = "asset/roof/generator1.mdl", transf = transf.scaleRotZYXTransl(vec3.new( 1.0, 1.0, 1.0 ),transf.degToRad( 00, 180, 0 ), vec3.new(31.0, 25.8, 1.0)) }
+		--
+		result.models[#result.models + 1] = {
+		id = "asset/ground/silo_vertical_3m_03.mdl",
+		transf = transf.scaleRotZYXTransl(vec3.new( 1.4, 1.4, 1.4 ),transf.degToRad( 180, 0, 0 ), vec3.new(18.0, 20.1, 0))
+		}
+		result.models[#result.models + 1] = {
+		id = "asset/ground/silo_vertical_3m_01.mdl",
+		transf = transf.scaleRotZYXTransl(vec3.new( 1.4, 1.4, 1.4 ),transf.degToRad( 0, 0, 0 ), vec3.new(28.0, 20.1, 0))
+		}
+		result.models[#result.models + 1] = { id = "asset/ground/pipes_small_grounded_6m.mdl", transf = transf.scaleRotZYXTransl(vec3.new( 0.8, 0.8, 0.8 ),transf.degToRad( 180, 0, 0 ), vec3.new(22.7, 20.1, 4.7)) }
+		result.models[#result.models + 1] = { id = "asset/ground/pipes_small_grounded_6m.mdl", transf = transf.scaleRotZYXTransl(vec3.new( 0.8, 0.8, 0.8 ),transf.degToRad( 0, 0, 0 ), vec3.new(23.2, 20.1, 4.7)) }
+		result.models[#result.models + 1] = { id = "asset/ground/pipe_valve.mdl", transf = transf.scaleRotZYXTransl(vec3.new( 1.1, 1.1, 1.1 ),transf.degToRad( 0, 0, 0 ), vec3.new(18.0, 16.3, -0.2)) }
+		result.models[#result.models + 1] = { id = "asset/ground/pipe_valve.mdl", transf = transf.scaleRotZYXTransl(vec3.new( 1.1, 1.1, 1.1 ),transf.degToRad( 0, 0, 0 ), vec3.new(27.97, 16.3, -0.2)) }
+		result.models[#result.models + 1] = { id = "asset/ground/pipe_t.mdl", transf = transf.scaleRotZYXTransl(vec3.new( 1.1, 1.1, 1.1 ),transf.degToRad( 90, 0, 0 ), vec3.new(18.0, 13.5, -0.2)) }
+		result.models[#result.models + 1] = { id = "asset/ground/pipes_small_grounded_9m.mdl", transf = transf.scaleRotZYXTransl(vec3.new( 1.1, 1.1, 1.1 ),transf.degToRad( 0, 180, 90 ), vec3.new(17.5, 14.0, 0.3)) }
+		result.models[#result.models + 1] = { id = "asset/ground/pipes_small_grounded_6m.mdl", transf = transf.scaleRotZYXTransl(vec3.new( 1.1, 1.1, 1.1 ),transf.degToRad( 270, 0, 0 ), vec3.new(27.95, 14.0, -0.2)) }
+		result.models[#result.models + 1] = { id = "asset/ground/pipes_small_grounded_end.mdl", transf = transf.scaleRotZYXTransl(vec3.new( 1.1, 1.1, 1.1 ),transf.degToRad( 270, 0, 90 ), vec3.new(17.3, 14.05, 0.35)) }
+		result.models[#result.models + 1] = { id = "asset/ground/pipes_small_grounded_9m.mdl", transf = transf.scaleRotZYXTransl(vec3.new( 1.1, 1.1, 1.1 ),transf.degToRad( 0, 180, 270 ), vec3.new(06.35, 13.7, 0.35)) }
+		result.models[#result.models + 1] = { id = "asset/ground/pipes_small_grounded_12m.mdl", transf = transf.scaleRotZYXTransl(vec3.new( 1.0, 1.0, 1.0 ),transf.degToRad( 0, 0, 0 ), vec3.new(30.8, 16.61, 4.45)) }
+		result.models[#result.models + 1] = { id = "asset/ground/pipes_small_grounded_6m.mdl", transf = transf.scaleRotZYXTransl(vec3.new( 1.0, 1.0, 1.0 ),transf.degToRad( 90, 0, 90 ), vec3.new(30.8, 23.11, 4.89)) }
+		result.models[#result.models + 1] = { id = "asset/ground/pipes_small_grounded_end.mdl", transf = transf.scaleRotZYXTransl(vec3.new( 1.0, 1.0, 1.0 ),transf.degToRad( 90, 0, 00 ), vec3.new(31.24, 23.1, 4.45)) }
+		result.models[#result.models + 1] = { id = "asset/ground/pipes_small_grounded_end.mdl", transf = transf.scaleRotZYXTransl(vec3.new( 1.0, 1.0, 1.0 ),transf.degToRad( 90, 0, 00 ), vec3.new(30.74, 23.1, 4.45)) }
+		result.models[#result.models + 1] = { id = "asset/ground/pipes_small_grounded_end.mdl", transf = transf.scaleRotZYXTransl(vec3.new( 1.0, 1.0, 1.0 ),transf.degToRad( 270, 0, 00 ), vec3.new(30.74, 23.1, 4.45)) }
+		result.models[#result.models + 1] = { id = "asset/ground/pipes_small_grounded_6m.mdl", transf = transf.scaleRotZYXTransl(vec3.new( 1.0, 1.0, 1.0 ),transf.degToRad( 00, 270, 0 ), vec3.new(31.18, 23.6, 4.45)) }
+		result.models[#result.models + 1] = { id = "asset/ground/pipes_small_grounded_6m.mdl", transf = transf.scaleRotZYXTransl(vec3.new( 1.0, 1.0, 1.0 ),transf.degToRad( 00, 270, 0 ), vec3.new(31.68, 23.6, 4.45)) }
+		result.models[#result.models + 1] = { id = "asset/roof/generator1.mdl", transf = transf.scaleRotZYXTransl(vec3.new( 1.0, 1.0, 1.0 ),transf.degToRad( 00, 180, 0 ), vec3.new(31.0, 24.2, 1.0)) }
+		--
+		result.models[#result.models + 1] = {
+		id = "asset/ground/silo_vertical_3m_03.mdl",
+		transf = transf.scaleRotZYXTransl(vec3.new( 1.4, 1.4, 1.4 ),transf.degToRad( 180, 0, 0 ), vec3.new(18.0, 4.4, 0))
+		}
+		result.models[#result.models + 1] = {
+		id = "asset/ground/silo_vertical_3m_01.mdl",
+		transf = transf.scaleRotZYXTransl(vec3.new( 1.4, 1.4, 1.4 ),transf.degToRad( 0, 0, 0 ), vec3.new(28.0, 4.4, 0))
+		}
+		result.models[#result.models + 1] = { id = "asset/ground/pipes_small_grounded_6m.mdl", transf = transf.scaleRotZYXTransl(vec3.new( 0.8, 0.8, 0.8 ),transf.degToRad( 180, 0, 0 ), vec3.new(22.7, 4.4, 4.7)) }
+		result.models[#result.models + 1] = { id = "asset/ground/pipes_small_grounded_6m.mdl", transf = transf.scaleRotZYXTransl(vec3.new( 0.8, 0.8, 0.8 ),transf.degToRad( 0, 0, 0 ), vec3.new(23.2, 4.4, 4.7)) }
+		result.models[#result.models + 1] = { id = "asset/ground/pipe_valve.mdl", transf = transf.scaleRotZYXTransl(vec3.new( 1.1, 1.1, 1.1 ),transf.degToRad( 0, 0, 0 ), vec3.new(18.0, 0.5, -0.2)) }
+		result.models[#result.models + 1] = { id = "asset/ground/pipe_valve.mdl", transf = transf.scaleRotZYXTransl(vec3.new( 1.1, 1.1, 1.1 ),transf.degToRad( 0, 0, 0 ), vec3.new(27.97, 0.5, -0.2)) }
+		result.models[#result.models + 1] = { id = "asset/ground/pipe_t.mdl", transf = transf.scaleRotZYXTransl(vec3.new( 1.1, 1.1, 1.1 ),transf.degToRad( 90, 0, 0 ), vec3.new(18.0, -2.3, -0.2)) }
+		result.models[#result.models + 1] = { id = "asset/ground/pipes_small_grounded_9m.mdl", transf = transf.scaleRotZYXTransl(vec3.new( 1.1, 1.1, 1.1 ),transf.degToRad( 0, 180, 90 ), vec3.new(17.5, -1.8, 0.3)) }
+		result.models[#result.models + 1] = { id = "asset/ground/pipes_small_grounded_6m.mdl", transf = transf.scaleRotZYXTransl(vec3.new( 1.1, 1.1, 1.1 ),transf.degToRad( 270, 0, 0 ), vec3.new(27.95, -1.8, -0.2)) }
+		result.models[#result.models + 1] = { id = "asset/ground/pipes_small_grounded_end.mdl", transf = transf.scaleRotZYXTransl(vec3.new( 1.1, 1.1, 1.1 ),transf.degToRad( 270, 0, 90 ), vec3.new(17.3, -1.75, 0.35)) }
+		result.models[#result.models + 1] = { id = "asset/ground/pipes_small_grounded_9m.mdl", transf = transf.scaleRotZYXTransl(vec3.new( 1.1, 1.1, 1.1 ),transf.degToRad( 0, 180, 270 ), vec3.new(06.35, -2.0, 0.35)) }
+		result.models[#result.models + 1] = { id = "asset/ground/pipes_small_grounded_curved_3m.mdl", transf = transf.scaleRotZYXTransl(vec3.new( 1.0, 1.0, 1.0 ),transf.degToRad( 270, 270, 90 ), vec3.new(16.29, 4.01, 4.39)) }
+		result.models[#result.models + 1] = { id = "asset/ground/pipes_small_grounded_12m.mdl", transf = transf.scaleRotZYXTransl(vec3.new( 1.0, 1.0, 1.0 ),transf.degToRad( 180, 0, 270 ), vec3.new(16.24, 8.4, 4.89)) }
+		result.models[#result.models + 1] = { id = "asset/ground/pipes_small_grounded_end.mdl", transf = transf.scaleRotZYXTransl(vec3.new( 1.0, 1.0, 1.0 ),transf.degToRad( 90, 0, 00 ), vec3.new(29.24, 8.4, 4.45)) }
+		result.models[#result.models + 1] = { id = "asset/ground/pipes_small_grounded_end.mdl", transf = transf.scaleRotZYXTransl(vec3.new( 1.0, 1.0, 1.0 ),transf.degToRad( 270, 0, 00 ), vec3.new(29.24, 8.4, 4.45)) }
+		result.models[#result.models + 1] = { id = "asset/ground/pipes_small_grounded_6m.mdl", transf = transf.scaleRotZYXTransl(vec3.new( 1.0, 1.0, 1.0 ),transf.degToRad( 00, 270, 0 ), vec3.new(29.68, 8.9, 4.45)) }
+		result.models[#result.models + 1] = { id = "asset/ground/pipes_small_grounded_end.mdl", transf = transf.scaleRotZYXTransl(vec3.new( 1.0, 1.0, 1.0 ),transf.degToRad( 90, 0, 00 ), vec3.new(28.74, 8.4, 4.45)) }
+		result.models[#result.models + 1] = { id = "asset/ground/pipes_small_grounded_6m.mdl", transf = transf.scaleRotZYXTransl(vec3.new( 1.0, 1.0, 1.0 ),transf.degToRad( 00, 270, 0 ), vec3.new(29.18, 8.9, 4.45)) }
+		result.models[#result.models + 1] = { id = "asset/roof/generator1.mdl", transf = transf.scaleRotZYXTransl(vec3.new( 1.0, 1.0, 1.0 ),transf.degToRad( 00, 180, 0 ), vec3.new(29.0, 9.5, 1.0)) }
+		-- Деревья
+		result.models[#result.models + 1] = { id = "tree/whiteoak_rt_1.mdl", transf = transf.scaleRotZYXTransl(vec3.new( 1.0, 1.0, 1.0 ),transf.degToRad( math.random(0, 360), 0, 0 ), vec3.new(-24.0, 75.0, 0.0)) }
+		result.models[#result.models + 1] = { id = "tree/whiteoak_rt_2.mdl", transf = transf.scaleRotZYXTransl(vec3.new( 1.0, 1.0, 1.0 ),transf.degToRad( math.random(0, 360), 0, 0 ), vec3.new(-29.0, 64.0, 0.0)) }
+		result.models[#result.models + 1] = { id = "tree/whiteoak_rt_2.mdl", transf = transf.scaleRotZYXTransl(vec3.new( 1.0, 1.0, 1.0 ),transf.degToRad( math.random(0, 360), 0, 0 ), vec3.new(55.0, 75.0, 0.0)) }
+		result.models[#result.models + 1] = { id = "tree/whiteoak_rt_2.mdl", transf = transf.scaleRotZYXTransl(vec3.new( 1.0, 1.0, 1.0 ),transf.degToRad( math.random(0, 360), 0, 0 ), vec3.new(58.0, 64.0, 0.0)) }
+		--
+		result.models[#result.models + 1] = { id = "tree/whitebirch_rt_1.mdl", transf = transf.scaleRotZYXTransl(vec3.new( 1.0, 1.0, 1.0 ),transf.degToRad( math.random(0, 360), 0, 0 ), vec3.new(17.0, 50.0, 0.0)) }
+		result.models[#result.models + 1] = { id = "tree/whitebirch_rt_2.mdl", transf = transf.scaleRotZYXTransl(vec3.new( 1.0, 1.0, 1.0 ),transf.degToRad( math.random(0, 360), 0, 0 ), vec3.new(23.0, 49.0, 0.0)) }
+		result.models[#result.models + 1] = { id = "tree/whitebirch_rt_3.mdl", transf = transf.scaleRotZYXTransl(vec3.new( 1.0, 1.0, 1.0 ),transf.degToRad( math.random(0, 360), 0, 0 ), vec3.new(29.0, 51.0, 0.0)) }
+		result.models[#result.models + 1] = { id = "tree/whitebirch_rt_4.mdl", transf = transf.scaleRotZYXTransl(vec3.new( 1.0, 1.0, 1.0 ),transf.degToRad( math.random(0, 360), 0, 0 ), vec3.new(36.0, 48.0, 0.0)) }
+		result.models[#result.models + 1] = { id = "tree/whitebirch_rt_3.mdl", transf = transf.scaleRotZYXTransl(vec3.new( 1.0, 1.0, 1.0 ),transf.degToRad( math.random(0, 360), 0, 0 ), vec3.new(41.0, 50.0, 0.0)) }
+		result.models[#result.models + 1] = { id = "tree/whitebirch_rt_3.mdl", transf = transf.scaleRotZYXTransl(vec3.new( 1.0, 1.0, 1.0 ),transf.degToRad( math.random(0, 360), 0, 0 ), vec3.new(47.0, 51.0, 0.0)) }
+		result.models[#result.models + 1] = { id = "tree/orangetree_1_rt_3.mdl", transf = transf.scaleRotZYXTransl(vec3.new( 1.0, 1.0, 1.0 ),transf.degToRad( math.random(0, 360), 0, 0 ), vec3.new(51.0, 48.0, 0.0)) }
+		--
+		result.models[#result.models + 1] = { id = constructionutil.getTree(params.state, "broadleaf"), transf = transf.rotZYXTransl(transf.degToRad(math.random(0, 360), 0.0, 0.0), vec3.new(math.random(-32, -7), math.random(-60, -45), 0)) }
+		result.models[#result.models + 1] = { id = constructionutil.getTree(params.state, "broadleaf"), transf = transf.rotZYXTransl(transf.degToRad(math.random(0, 360), 0.0, 0.0), vec3.new(math.random(-32, -7), math.random(-60, -45), 0)) }
+		result.models[#result.models + 1] = { id = constructionutil.getTree(params.state, "broadleaf"), transf = transf.rotZYXTransl(transf.degToRad(math.random(0, 360), 0.0, 0.0), vec3.new(math.random(-32, -7), math.random(-60, -45), 0)) }
+		result.models[#result.models + 1] = { id = constructionutil.getTree(params.state, "broadleaf"), transf = transf.rotZYXTransl(transf.degToRad(math.random(0, 360), 0.0, 0.0), vec3.new(math.random(-32, -7), math.random(-60, -45), 0)) }
+		result.models[#result.models + 1] = { id = constructionutil.getTree(params.state, "broadleaf"), transf = transf.rotZYXTransl(transf.degToRad(math.random(0, 360), 0.0, 0.0), vec3.new(math.random(-32, -7), math.random(-60, -45), 0)) }
+		result.models[#result.models + 1] = { id = constructionutil.getTree(params.state, "broadleaf"), transf = transf.rotZYXTransl(transf.degToRad(math.random(0, 360), 0.0, 0.0), vec3.new(math.random(-32, -7), math.random(-60, -45), 0)) }
+		result.models[#result.models + 1] = { id = constructionutil.getTree(params.state, "broadleaf"), transf = transf.rotZYXTransl(transf.degToRad(math.random(0, 360), 0.0, 0.0), vec3.new(math.random(-32, -7), math.random(-60, -45), 0)) }
+		result.models[#result.models + 1] = { id = constructionutil.getTree(params.state, "broadleaf"), transf = transf.rotZYXTransl(transf.degToRad(math.random(0, 360), 0.0, 0.0), vec3.new(math.random(-32, -7), math.random(-60, -45), 0)) }
+		-- Отходы
+		groundFace = { {52, 63}, { 52, 80}, {-18, 80}, {-18, 63} }
+			result.groundFaces[#result.groundFaces + 1] = { face = groundFace, modes = { { type = "FILL", key = "building_paving_fill" } } }
+			result.groundFaces[#result.groundFaces + 1] = { face = groundFace, modes = { { type = "STROKE_OUTER", key = "building_paving" } } }
+		result.models[#result.models + 1] = { id = "industry/cargo/waste_big.mdl", transf = transf.rotZYXTransl(transf.degToRad(10.0, 0.0, 0.0), vec3.new(25.0, 75.9, 0)) }
+		result.models[#result.models + 1] = { id = "industry/cargo/waste_big.mdl", transf = transf.rotZYXTransl(transf.degToRad(5.0, 0.0, 0.0), vec3.new(24.8, 72.4, 0)) }
+		result.models[#result.models + 1] = { id = "asset/construction_1850.mdl", transf = transf.rotZYXTransl(transf.degToRad(270.0, 0.0, 0.0), vec3.new(35, 72, 0)) }
+		result.models[#result.models + 1] = { id = "asset/small_steel_container_1.mdl", transf = transf.rotZYXTransl(transf.degToRad(35.0, 0.0, 0.0), vec3.new(35.0, 63.0, 3)) }
+		result.models[#result.models + 1] = { id = "asset/big_steel_container.mdl", transf = transf.rotZYXTransl(transf.degToRad(95.0, 0.0, 0.0), vec3.new(41.1, 69.0, 0)) }
+		result.models[#result.models + 1] = { id = "asset/big_steel_container.mdl", transf = transf.rotZYXTransl(transf.degToRad(94.0, 0.0, 0.0), vec3.new(44.0, 70.0, 0)) }
+		result.models[#result.models + 1] = { id = "asset/big_steel_container.mdl", transf = transf.rotZYXTransl(transf.degToRad(96.0, 0.0, 0.0), vec3.new(47.1, 69.5, 0)) }
+		result.models[#result.models + 1] = { id = "industry/cargo/waste_small.mdl", transf = transf.rotZYXTransl(transf.degToRad(8.0, 0.0, 0.0), vec3.new(23.5, 69.2, 0)) }
+		result.models[#result.models + 1] = { id = "industry/cargo/waste_small.mdl", transf = transf.rotZYXTransl(transf.degToRad(1.0, 0.0, 0.0), vec3.new(24.65, 69.4, 0)) }
+		result.models[#result.models + 1] = { id = "industry/cargo/waste_small.mdl", transf = transf.rotZYXTransl(transf.degToRad(0.0, 0.0, 0.0), vec3.new(25.7, 69.2, 0)) }
+		result.models[#result.models + 1] = { id = "industry/cargo/waste_small.mdl", transf = transf.rotZYXTransl(transf.degToRad(7.0, 0.0, 0.0), vec3.new(26.9, 69.4, 0)) }
+		result.models[#result.models + 1] = { id = "industry/cargo/planks_small.mdl", transf = transf.rotZYXTransl(transf.degToRad(math.random(0, 360), 0.0, 0.0), vec3.new(41.0, 78.4, 0)) }
+		result.models[#result.models + 1] = { id = "industry/cargo/planks_small.mdl", transf = transf.rotZYXTransl(transf.degToRad(math.random(0, 360), 0.0, 0.0), vec3.new(44.0, 78.4, 0)) }
+		-- Товары
+		if (params.state or 1 == 1) then
+			-- Персонал
+			result.personCapacity = { type = "INDUSTRIAL", capacity = math.random(10, 30) }
+			-- Товары	
+			constructionutil.makeStocks({
+				stocks = {
+					{ cargoType = "FUEL",  type = "RECEIVING",	x = 44,		y = 20,		angle = math.rad(180),	sizex = 2,	sizey = 4 },
+					{ cargoType = "COAL",  type = "RECEIVING",	x = 31,		y = -41,	angle = math.rad(180),	sizex = 5,	sizey = 2 },
+					{ cargoType = "WASTE", type = "SENDING",	x = 0,		y = 72,		angle = math.rad(180),	sizex = 4,	sizey = 2 }
+				},
+				stockRules = {
+					{ input = { { 1, 0, 0 } }, output = { { 0, 0, 0 } }, capacity = math.random(50, 70) },
+					{ input = { { 0, 2, 0 } }, output = { { 0, 0, 1 } }, capacity = math.random(50, 70) }
+				}
+			}, result)
+		end
+
+		return result
+	end
+}
+
+end

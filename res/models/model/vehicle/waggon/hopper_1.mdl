@@ -1,0 +1,120 @@
+﻿function data()
+return {
+	boundingInfo = {
+		bbMax = { 4.28, 1.6, 4.3 },
+		bbMin = { -4.28, -1.6, -0.5 }
+	},
+	collider = { params = { }, type = "MESH" },
+	lods = {
+		{
+			animations = { },
+			children = {
+				{
+					id = "vehicle/waggon/hopper_1/hopper_1_body_lod0.msh",
+					transf = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 },
+					type = "MESH",
+				},
+				{
+					id = "vehicle/waggon/hopper_1/hopper_1_w_lod0.msh",
+					transf = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 1.95, 0, 0.43, 1 },
+					type = "MESH",
+				},
+				{
+					id = "vehicle/waggon/hopper_1/hopper_1_w_lod0.msh",
+					transf = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, -1.95, 0, 0.43, 1 },
+					type = "MESH",
+				}
+			},
+			events = { },
+			matConfigs = {
+				{ 0, 0, 0 }
+			},
+			static = false,
+			visibleFrom = 0,
+			visibleTo = 100,
+		},
+		{
+			animations = { },
+			children = {
+				{
+					id = "vehicle/waggon/hopper_1/hopper_1_body_lod1.msh",
+					transf = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 },
+					type = "MESH",
+				},
+				{
+					id = "vehicle/waggon/hopper_1/hopper_1_w_lod0.msh",
+					transf = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 1.95, 0, 0.43, 1 },
+					type = "MESH",
+				},
+				{
+					id = "vehicle/waggon/hopper_1/hopper_1_w_lod0.msh",
+					transf = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, -1.95, 0, 0.43, 1 },
+					type = "MESH",
+				}
+			},
+			events = { },
+			matConfigs = {
+				{ 0, 0, 0 }
+			},
+			static = false,
+			visibleFrom = 100,
+			visibleTo = 500,
+		},
+		{
+			animations = { },
+			children = {
+				{
+					id = "vehicle/waggon/hopper_1/hopper_1_body_lod2.msh",
+					transf = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 },
+					type = "MESH",
+				},
+			},
+			events = { },
+			matConfigs = {
+				{ 0 }
+			},
+			static = false,
+			visibleFrom = 500,
+			visibleTo = 1070,
+		},
+	},
+	metadata = {
+		description = {
+			name = _(Hopper),
+			description = _(Hopper_desc)
+		},
+		railVehicle = {
+			topSpeed = 80.0,
+			weight = 6.0,
+			configs = {
+				{
+					axles = { "vehicle/waggon/hopper_1/hopper_1_w_lod0.msh" }
+				},
+				{
+					axles = { "vehicle/waggon/hopper_1/hopper_1_w_lod0.msh" }
+				}
+			},
+			soundSet = "waggon_freight_old"
+		},
+		transportVehicle = {
+			carrier = "RAIL",
+			capacities = {
+				{ type = "GRAIN", capacity = 20 },
+				{ type = "CEMENT", capacity = 20 },
+			},
+			loadSpeed = 1
+		},
+		availability = {
+			yearFrom = 1850,
+			yearTo = 1915
+		},
+		cost = {
+			price = -1
+		},
+		maintenance = {
+			runningCosts = -1,
+			lifespan = 30
+		}
+	}
+}
+end

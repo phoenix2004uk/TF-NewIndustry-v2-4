@@ -1,0 +1,40 @@
+function data()
+return {
+	boundingInfo = { },
+	collider = { params = { }, type = "MESH" },
+	lods = {
+		{
+			animations = { },
+			children = {
+				{
+					id = "asset/rock_2_9_lod_0.msh",
+					transf = { 0.0001, 0, 0, 0, 0, 0.0001, 0, 0, 0, 0, 0.0001, 0, 0, 0, 0, 1 },
+					type = "MESH"
+				} 
+			},
+			events = { },
+			matConfigs = {
+				{ 0 }
+			},
+			static = false,
+			visibleFrom = 0,
+			visibleTo = 50
+		} 
+	},
+	metadata = {
+		particleSystem = {
+			emitters = { 
+				{
+					position = { 0.0, 0.0, 0.0 },
+					velocity = { 0, 0, 4 },
+					color = { 0.9, 0.9, 0.9 },
+					frequency = 75,
+					lifeTime = 1,
+					size01 = { 0.2, 0.5 },
+					child = 0
+				}
+			}
+		}
+	}
+}
+end

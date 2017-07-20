@@ -1,0 +1,37 @@
+function data()
+return {
+	lods = {
+		{
+			animations = { },
+			children = {
+				{
+				id = "asset/ground/lod_1_small_steel_container1.msh",
+				transf = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 },
+				type = "MESH"
+				}
+			},
+			events = { },
+			matConfigs = { { 0 } },
+			static = false,
+			visibleFrom = 110,
+			visibleTo = 250
+		},
+		{
+			animations = { },
+			children = {
+				{
+				id = "asset/ground/lod_0_small_steel_container1.msh",
+				transf = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 },
+				type = "MESH"
+				}
+			},
+			events = { },
+			matConfigs = { { 0 } },
+			static = false,
+			visibleFrom = 0,
+			visibleTo = 110
+		}
+	},
+	metadata = { }
+}
+end

@@ -1,0 +1,45 @@
+function data()
+return {
+	boundingInfo = { },
+	collider = { params = { }, type = "MESH" },
+	lods = {
+		{
+			animations = { },
+			children = {
+				{
+					id = "industry/food_processing_plant/lod_0_silo_connector_2.msh",
+					transf = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 },
+					type = "MESH"
+				},
+				{
+					id = "industry/food_processing_plant/lod_0_silo_crane.msh",
+					transf = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, -3, 0, 11, 1 },
+					type = "MESH"
+				},
+				{
+					id = "industry/food_processing_plant/lod_0_silo_crane.msh",
+					transf = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 3, 0, 11, 1 },
+					type = "MESH"
+				}
+			},
+			events = {
+				productionHalf = {
+					[2] = { name = "move", forward = true},
+					[3] = { name = "move", forward = true}
+				},
+				productionFull = {
+					[2] = { name = "move", forward = true},
+					[3] = { name = "move", forward = true}
+				}
+			},
+			matConfigs = {
+				{ 0, 0, 0 }
+			},
+			static = false,
+			visibleFrom = 0,
+			visibleTo = 2400
+		}
+	},
+	metadata = { }
+}
+end

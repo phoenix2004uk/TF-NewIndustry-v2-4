@@ -1,0 +1,120 @@
+﻿function data()
+return {
+	boundingInfo = {
+		bbMax = { 5.83, 1.6697959899902, 4.2351810932159 },
+		bbMin = { -5.83, -1.6697959899902, -0.50375598669052 },
+	},
+	collider = { params = { }, type = "MESH" },
+	lods = {
+		{
+			animations = { },
+			children = {
+				{
+					id = "vehicle/waggon/hopper_4/hopper_4.msh",
+					transf = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 },
+					type = "MESH",
+				},
+				{
+					id = "vehicle/waggon/hopper_3.grp",
+					transf = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 3.9, 0, 0, 1 },
+					type = "GROUP",
+				},
+				{
+					id = "vehicle/waggon/hopper_3.grp",
+					transf = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, -3.9, 0, 0, 1 },
+					type = "GROUP",
+				}
+			},
+			events = { },
+			matConfigs = {
+				{ 0, 0, 0 }
+			},
+			static = false,
+			visibleFrom = 0,
+			visibleTo = 100,
+		},
+		{
+			animations = { },
+			children = {
+				{
+					id = "vehicle/waggon/hopper_4/hopper_4_lod1.msh",
+					transf = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 },
+					type = "MESH",
+				},
+				{
+					id = "vehicle/waggon/hopper_3_lod_1.grp",
+					transf = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 3.9, 0, 0, 1 },
+					type = "GROUP",
+				},
+				{
+					id = "vehicle/waggon/hopper_3_lod_1.grp",
+					transf = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, -3.9, 0, 0, 1 },
+					type = "GROUP",
+				}
+			},
+			events = { },
+			matConfigs = {
+				{ 0, 0, 0 }
+			},
+			static = false,
+			visibleFrom = 100,
+			visibleTo = 500,
+		},
+		{
+			animations = { },
+			children = {
+				{
+					id = "vehicle/waggon/hopper_4/hopper_4_lod2.msh",
+					transf = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 },
+					type = "MESH",
+				}
+			},
+			events = { },
+			matConfigs = {
+				{ 0 }
+			},
+			static = false,
+			visibleFrom = 500,
+			visibleTo = 1510,
+		}
+	},
+	metadata = {
+		description = {
+			name = _(Hopper), -- 199-862
+			description = _(Hopper_desc)
+		},
+		railVehicle = {
+			topSpeed = 160.0,
+			weight = 20.0,
+			configs = {
+				{
+					axles = { "vehicle/waggon/hopper_bogie/w1.msh" }
+				},
+				{
+					axles = { "vehicle/waggon/hopper_bogie/w1_lod_1.msh" }
+				}
+			},
+			soundSet = "waggon_freight_modern"
+		},
+		transportVehicle = {
+			carrier = "RAIL",
+			capacities = {
+				{ type = "GRAIN", capacity = 72 },
+				{ type = "CEMENT", capacity = 72 },
+			},
+			loadSpeed = 4
+		},
+		availability = {
+			yearFrom = 1996,
+			yearTo = 0
+		},
+		cost = {
+			price = -1
+		},
+		maintenance = {
+			runningCosts = -1,
+			lifespan = 40
+		}
+	}
+}
+end

@@ -1,0 +1,65 @@
+function data()
+return {
+	boundingInfo = {
+		bbMax = {
+			0.43182200193405, 0.44054499268532, 5.035083770752, 
+		},
+		bbMin = {
+			-0.43182200193405, -0.44054499268532, -0.063054002821445, 
+		},
+		
+	},
+	collider = {
+		params = {
+			
+		},
+		type = "MESH",
+		
+	},
+	lods = {
+		{
+			animations = {
+				
+			},
+			children = {
+				{
+					id = "asset/chimney_ind_01_lod_0.msh",
+					transf = {
+						3.7, 0, 0, 0, 0, 3.7, 0, 0, 0, 0, 5, 0, 0, 0, 0, 1, 
+					},
+					type = "MESH",
+					
+				}, 
+			},
+			events = {
+				
+			},
+			matConfigs = {
+				{
+					0, 
+				}, 
+			},
+			static = false,
+			visibleFrom = 0,
+			visibleTo = 5390,
+			
+		}, 
+	},
+	metadata = {
+		particleSystem = {
+			emitters = {
+				{
+					position = { .0, .0, 25.2 },
+					velocity = { .0, .0, 2.0 },
+					color = { .3, .3, .3 },
+					frequency = 75,
+					lifeTime = 10.0,
+					size01 = { .8, 6.0 },
+					child = 0
+				}
+			}
+		}	
+	},
+	
+}
+end

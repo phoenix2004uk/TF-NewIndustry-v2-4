@@ -1,0 +1,102 @@
+function data()
+return {
+	animations = {
+	
+			dig = {
+				type = "KEYFRAME",
+				params = {
+					origin = {
+						0, 0, 0, 
+					},
+					keyframes = {
+						{
+							time = 0,
+							rot = { 0, 0, 0 },
+							transl = { 0, 0, 0 }
+						}, {
+							time = 2000,
+							rot = { 0, 0, -45 },
+							transl = { 0, 0 ,0 }
+						}, {
+							time = 7000,
+							rot = { 0, 0, -45 },
+							transl = { 0, 0 ,0 }
+						}, {
+							time = 9000,
+							rot = { 0, 0, 0 },
+							transl = { 0, 0 ,0 }
+						}, {
+							time = 14000,
+							rot = { 0, 0, 0 },
+							transl = { 0, 0 ,0 }
+						}
+					}
+				}
+			},
+		},
+	matConfigs = {
+		{
+			0, 
+		}, 
+	},
+	subMeshes = {
+		{
+			indices = {
+				normal = {
+					count = 1704,
+					offset = 14724,
+					
+				},
+				position = {
+					count = 1704,
+					offset = 11316,
+					
+				},
+				tangent = {
+					count = 1704,
+					offset = 16428,
+					
+				},
+				uv0 = {
+					count = 1704,
+					offset = 13020,
+					
+				},
+				
+			},
+			materials = {
+				"industry/iron_ore_mine/excavator_1.mtl", 
+			},
+			
+		}, 
+	},
+	vertexAttr = {
+		normal = {
+			count = 5112,
+			numComp = 3,
+			offset = 2012,
+			
+		},
+		position = {
+			count = 900,
+			numComp = 3,
+			offset = 0,
+			
+		},
+		tangent = {
+			count = 4192,
+			numComp = 4,
+			offset = 7124,
+			
+		},
+		uv0 = {
+			count = 1112,
+			numComp = 2,
+			offset = 900,
+			
+		},
+		
+	},
+	
+}
+end

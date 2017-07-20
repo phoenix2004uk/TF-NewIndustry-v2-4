@@ -1,0 +1,50 @@
+function data()
+return {
+	boundingInfo = {
+		
+	},
+	lods = {
+		{
+			animations = { },
+			children = {
+				{
+					id = "asset/ground/lod_1_small_steel_container1.msh",
+					transf = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 },
+					type = "MESH"
+				},
+				{
+					id = "industry/cargo/open/cargo_bulk_small_lod_1.msh",
+					transf = { 0.94, 0, 0, 0, 0, 0.94, 0, 0, 0, 0, 1, 0, 0, 0, -0.5, 1 },
+					type = "MESH",
+				}
+			},
+			events = { },
+			matConfigs = { { 0, 3 } },
+			static = false,
+			visibleFrom = 50,
+			visibleTo = 290
+		},
+		{
+			animations = { },
+			children = {
+				{
+					id = "asset/ground/lod_0_small_steel_container1.msh",
+					transf = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 },
+					type = "MESH",
+				},
+				{
+					id = "industry/cargo/open/cargo_bulk_small_lod_0.msh",
+					transf = { 0.94, 0, 0, 0, 0, 0.94, 0, 0, 0, 0, 1, 0, 0, 0, -0.5, 1 },
+					type = "MESH",
+				}
+			},
+			events = { },
+			matConfigs = { { 0, 3 } },
+			static = false,
+			visibleFrom = 0,
+			visibleTo = 50
+		}
+	},
+	metadata = { }
+}
+end

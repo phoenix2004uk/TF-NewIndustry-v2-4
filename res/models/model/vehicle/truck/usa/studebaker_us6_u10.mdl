@@ -1,0 +1,379 @@
+local vec3 = require "vec3"
+local transf = require "transf"
+function data()
+return {
+	boundingInfo = {
+		bbMax = { 3.3864951133728, 1.2725360393524, 2.552619934082 },
+		bbMin = { -3.3795609474182, -1.2725360393524, -0.51032000780106 },
+	},
+	collider = {
+		params = { },
+		type = "MESH",
+	},
+	lods = {
+		{
+			animations = { },
+			children = {
+				{
+					id = "vehicle/truck/studebaker_us6/lod_2_body.msh",
+					transf = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 },
+					type = "MESH",
+				},
+				{
+					id = "vehicle/truck/studebaker_us6/lod_2_w1.msh",
+					transf = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 2.6873, -0.7486, 0.5052, 1 },
+					type = "MESH",
+				},
+				{
+					id = "vehicle/truck/studebaker_us6/lod_2_w1.msh",
+					transf = { -1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1, 0, 2.6873, 0.7486, 0.5052, 1 },
+					type = "MESH",
+				},
+				{
+					id = "vehicle/truck/studebaker_us6/lod_2_w2.msh",
+					transf = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, -0.9635, 0, 0.5048, 1 },
+					type = "MESH",
+				},
+				{
+					id = "vehicle/truck/studebaker_us6/lod_2_w2.msh",
+					transf = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, -2.2082, 0, 0.5048, 1 },
+					type = "MESH",
+				}, 
+				{
+					id = "vehicle/truck/studebaker_us6/lod_2_body_gondola.msh",
+					transf = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 },
+					type = "MESH",
+				},
+				{
+					id = "vehicle/truck/studebaker_us6/lod_2_freight_coal.msh",
+					transf = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 },
+					type = "MESH",
+				},
+				{
+					id = "vehicle/truck/studebaker_us6/lod_2_freight_iron.msh",
+					transf = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 
+					},
+					type = "MESH",
+				},
+				{
+					id = "vehicle/truck/studebaker_us6/lod_2_freight_stone.msh",
+					transf = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 },
+					type = "MESH",
+				},
+				{
+					id = "vehicle/truck/studebaker_us6/lod_2_freight_slag.msh",
+					transf = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 },
+					type = "MESH",
+				},
+				{
+					id = "vehicle/truck/studebaker_us6/lod_2_freight_grain.msh",
+					transf = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 },
+					type = "MESH",
+				}, 
+				{
+					id = "industry/cargo/truck/studebaker_us6_freight_content.msh",
+					transf = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 },
+					type = "MESH",
+				},
+				{
+					id = "industry/cargo/truck/studebaker_us6_freight_content.msh",
+					transf = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 },
+					type = "MESH",
+				},
+				{
+					id = "industry/cargo/truck/studebaker_us6_freight_content.msh",
+					transf = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 },
+					type = "MESH",
+				},
+				{
+					id = "industry/cargo/truck/studebaker_us6_freight_content.msh",
+					transf = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 },
+					type = "MESH",
+				},
+			},
+			events = { },
+			matConfigs = {
+				{
+					0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+					0, 1, 2, 3,
+				}, 
+			},
+			static = false,
+			visibleFrom = 220,
+			visibleTo = 790,
+		}, 
+		{
+			animations = { },
+			children = {
+				{
+					id = "vehicle/truck/studebaker_us6/lod_1_body.msh",
+					transf = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 },
+					type = "MESH",
+				},
+				{
+					id = "vehicle/truck/studebaker_us6/lod_1_w1.msh",
+					transf = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 2.6873, -0.7486, 0.5052, 1 },
+					type = "MESH",
+				},
+				{
+					id = "vehicle/truck/studebaker_us6/lod_1_w1.msh",
+					transf = { -1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1, 0, 2.6873, 0.7486, 0.5052, 1 },
+					type = "MESH",
+				},
+				{
+					id = "vehicle/truck/studebaker_us6/lod_1_w2.msh",
+					transf = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, -0.9635, 0, 0.5048, 1 },
+					type = "MESH",
+				},
+				{
+					id = "vehicle/truck/studebaker_us6/lod_1_w2.msh",
+					transf = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, -2.2082, 0, 0.5048, 1 },
+					type = "MESH",
+				}, 
+				{
+					id = "vehicle/truck/studebaker_us6/lod_1_body_gondola.msh",
+					transf = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 },
+					type = "MESH",
+				},
+				{
+					id = "vehicle/truck/studebaker_us6/lod_1_freight_coal.msh",
+					transf = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 },
+					type = "MESH",
+				},
+				{
+					id = "vehicle/truck/studebaker_us6/lod_1_freight_iron.msh",
+					transf = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 },
+					type = "MESH",
+				},
+				{
+					id = "vehicle/truck/studebaker_us6/lod_1_freight_stone.msh",
+					transf = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 },
+					type = "MESH",
+				},
+				{
+					id = "vehicle/truck/studebaker_us6/lod_1_freight_slag.msh",
+					transf = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 },
+					type = "MESH",
+				},
+				{
+					id = "vehicle/truck/studebaker_us6/lod_1_freight_grain.msh",
+					transf = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 },
+					type = "MESH",
+				}, 
+				{
+					id = "industry/cargo/truck/studebaker_us6_freight_content.msh",
+					transf = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 },
+					type = "MESH",
+				},
+				{
+					id = "industry/cargo/truck/studebaker_us6_freight_content.msh",
+					transf = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 },
+					type = "MESH",
+				},
+				{
+					id = "industry/cargo/truck/studebaker_us6_freight_content.msh",
+					transf = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 },
+					type = "MESH",
+				},
+				{
+					id = "industry/cargo/truck/studebaker_us6_freight_content.msh",
+					transf = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 },
+					type = "MESH",
+				},
+			},
+			events = { },
+			matConfigs = {
+				{
+					0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+					0, 1, 2, 3,
+				}, 
+			},
+			static = false,
+			visibleFrom = 80,
+			visibleTo = 220,
+		}, 
+		{
+			animations = { },
+			children = {
+				{
+					id = "vehicle/truck/studebaker_us6/lod_0_body.msh",
+					transf = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 },
+					type = "MESH",
+				},
+				{
+					id = "vehicle/truck/studebaker_us6/lod_0_w1.msh",
+					transf = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 2.6873, -0.7486, 0.5052, 1 },
+					type = "MESH",
+				},
+				{
+					id = "vehicle/truck/studebaker_us6/lod_0_w1.msh",
+					transf = { -1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1, 0, 2.6873, 0.7486, 0.5052, 1 },
+					type = "MESH",
+				},
+				{
+					id = "vehicle/truck/studebaker_us6/lod_0_w2.msh",
+					transf = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, -0.9635, 0, 0.5048, 1 },
+					type = "MESH",
+				},
+				{
+					id = "vehicle/truck/studebaker_us6/lod_0_w2.msh",
+					transf = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, -2.2082, 0, 0.5048, 1 },
+					type = "MESH",
+				}, 
+				{
+					id = "vehicle/truck/studebaker_us6/lod_0_body_gondola.msh",
+					transf = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 },
+					type = "MESH",
+				},
+				{
+					id = "vehicle/truck/studebaker_us6/lod_0_freight_coal.msh",
+					transf = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 },
+					type = "MESH",
+				},
+				{
+					id = "vehicle/truck/studebaker_us6/lod_0_freight_iron.msh",
+					transf = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 },
+					type = "MESH",
+				},
+				{
+					id = "vehicle/truck/studebaker_us6/lod_0_freight_stone.msh",
+					transf = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 },
+					type = "MESH",
+				},
+				{
+					id = "vehicle/truck/studebaker_us6/lod_0_freight_slag.msh",
+					transf = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 },
+					type = "MESH",
+				},
+				{
+					id = "vehicle/truck/studebaker_us6/lod_0_freight_grain.msh",
+					transf = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 },
+					type = "MESH",
+				},
+				{
+					id = "industry/cargo/truck/studebaker_us6_freight_content.msh",
+					transf = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 },
+					type = "MESH",
+				},
+				{
+					id = "industry/cargo/truck/studebaker_us6_freight_content.msh",
+					transf = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 },
+					type = "MESH",
+				},
+				{
+					id = "industry/cargo/truck/studebaker_us6_freight_content.msh",
+					transf = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 },
+					type = "MESH",
+				},
+				{
+					id = "industry/cargo/truck/studebaker_us6_freight_content.msh",
+					transf = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 },
+					type = "MESH",
+				},
+
+				-- interior
+				{
+					id = "vehicle/truck/studebaker_us6/lod_0_interior.msh",
+					transf = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 },
+					type = "MESH",
+				},
+				--lights
+				--manual lights
+				{
+					id = "vehicle/asset/lod_0_light_round_white.msh",
+					transf = transf.scaleRotZYXTransl(vec3.new(1.0,1.0,1.0),transf.degToRad( 0.0, 0.0, 0.0), vec3.new( 2.98, 0.52, 1.37)),
+					type = "MESH", 
+				},
+				--manual lights
+				{
+					id = "vehicle/asset/lod_0_light_round_white.msh",
+					transf = transf.scaleRotZYXTransl(vec3.new(1.0,1.0,1.0),transf.degToRad( 0.0, 0.0, 0.0), vec3.new( 2.98, -0.52, 1.37)),
+					type = "MESH", 
+				},
+				--manual lights
+				{
+					id = "vehicle/asset/lod_0_light_round_red.msh",
+					transf = transf.scaleRotZYXTransl(vec3.new(1.0,0.6,0.6),transf.degToRad( 180.0, 0.0, 0.0), vec3.new( -3.11, -0.716, 0.867)),
+					type = "MESH", 
+				},
+				--manual lights
+				{
+					id = "vehicle/asset/lod_0_light_round_red.msh",
+					transf = transf.scaleRotZYXTransl(vec3.new(1.0,0.6,0.6),transf.degToRad( 180.0, 0.0, 0.0), vec3.new( -3.11, 0.716, 0.867)),
+					type = "MESH", 
+				},
+			},
+			events = { },
+			matConfigs = {
+				{
+					0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+					0, 1, 2, 3, -- New content
+					0, 0, 0, 0, 0, -- interior
+				}, 
+			},
+			static = false,
+			visibleFrom = 0,
+			visibleTo = 80,
+		}, 
+	},
+	metadata = {
+		availability = {
+			yearFrom = 1945,
+			yearTo = 1995,
+		},
+		cost = { price = -1 },
+		description = {
+			name = _("Studebaker US6 U10"),
+			description = _("The Studebaker US6 is a class of 2.5 ton trucks manufactured by the Studebaker Corporation during World War II, later used in civil service."),
+		},
+		maintenance = {
+			lifespan = 25,
+			runningCosts = -1,
+		},
+		roadVehicle = {
+			configs = {
+				{
+					axles = { "vehicle/truck/studebaker_us6/lod_2_w2.msh" },
+					wheels = { "vehicle/truck/studebaker_us6/lod_2_w1.msh" },
+					fakeBogies = { { group = 0, position = 0, offset = 0 } }
+				},
+				{
+					axles = { "vehicle/truck/studebaker_us6/lod_1_w2.msh" },
+					wheels = { "vehicle/truck/studebaker_us6/lod_1_w1.msh" },
+					fakeBogies = { { group = 0, position = 0, offset = 0 } }
+				},
+				{
+					axles = { "vehicle/truck/studebaker_us6/lod_0_w2.msh" },
+					wheels = { "vehicle/truck/studebaker_us6/lod_0_w1.msh" },
+					fakeBogies = { { group = 0, position = 0, offset = 0 } }
+				},
+			},
+			power = 100,
+			soundSet = {
+				horn = "",
+				name = "truck_modern",
+			},
+			topSpeed = 60,
+			tractiveEffort = 12,
+			weight = 5,
+		},
+		transportVehicle = {
+			capacities = {
+				{ type = "COAL", capacity = 52, loadIndicator = { type = "LEVEL", params = { id = 7, maxHeight = 0.45 } } },
+				{ type = "IRON_ORE", capacity = 52, loadIndicator = { type = "LEVEL", params = { id = 8, maxHeight = 0.45 } } },
+				{ type = "STONE", capacity = 52 , loadIndicator = { type = "LEVEL", params = { id = 9, maxHeight = 0.45 } } },
+				{ type = "SLAG", capacity = 52, loadIndicator = { type = "LEVEL", params = { id = 10, maxHeight = 0.45 } } },
+				{ type = "GRAIN", capacity = 52, loadIndicator = { type = "LEVEL", params = { id = 11, maxHeight = 0.45 } } },
+				{ type = "WASTE", capacity = 52, loadIndicator = { type = "LEVEL", params = { id = 12, maxHeight = 0.45 } } },
+				{ type = "MINERALS", capacity = 52, loadIndicator = { type = "LEVEL", params = { id = 13, maxHeight = 0.45 } } },
+				{ type = "LIMESTONE", capacity = 52, loadIndicator = { type = "LEVEL", params = { id = 14, maxHeight = 0.45 } } },
+				{ type = "FILINGS", capacity = 52, loadIndicator = { type = "LEVEL", params = { id = 15, maxHeight = 0.45 } } },
+				{ type = "BAUXITE", capacity = 52 },
+			},
+			carrier = "ROAD",
+			loadSpeed = 3,
+			seats = { { group =1, transf = transf.rotZYXTransl(transf.degToRad(0.0, 0.0, 0.0), vec3.new(1, 0.3, 0.75)), crew = true} },
+		},
+	},
+}
+end

@@ -1,0 +1,29 @@
+local vec3 = require "vec3"
+local transf = require "transf"
+
+function data()
+return {
+	animations = { },
+	children = {
+		{
+			id = "vehicle/truck/tractor/gkb819_body.msh",
+			transf = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0.0, 0.0, 0.0, 1 },
+			type = "MESH",
+		},
+		{
+			id = "vehicle/truck/tractor/koleso01.msh",
+			transf = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, -1.5, 0.91, 0.5, 1 },
+			type = "MESH",
+		},
+		{
+			id = "vehicle/truck/tractor/koleso01.msh",
+			transf = { -1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1, 0, -1.5, -0.91, 0.5, 1 },
+			type = "MESH",
+		},
+	},
+	events = { },
+	matConfigs = {
+		{ 0, 0, 0, 0 }
+	}
+}
+end

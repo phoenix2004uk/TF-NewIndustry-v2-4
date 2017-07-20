@@ -1,0 +1,61 @@
+function data()
+return {
+	collider = {
+		params = {
+			
+		},
+		type = "MESH",
+		
+	},
+	lods = {
+		{
+			animations = {
+				
+			},
+			children = {
+				{
+					id = "industry/cargo/cargo_cotton_small.msh",
+					transf = {0.7, 0, 0, 0, 0, 0.7, 0, 0, 0, 0, 0.7, 0, -0.35, 0, 0, 1},
+					type = "MESH",					
+				},
+				{
+					id = "industry/cargo/cargo_cotton_small.msh",
+					transf = {0.7, 0, 0, 0, 0, 0.7, 0, 0, 0, 0, 0.7, 0, 0.35, 0, 0, 1},
+					type = "MESH",					
+				},
+				{
+					id = "industry/cargo/cargo_cotton_small.msh",
+					transf = {0, 0.7, 0, 0, -0.7, 0, 0, 0, 0, 0, 0.7, 0, 0, 0.35, 0.4, 1},
+					type = "MESH",					
+				},
+				{
+					id = "industry/cargo/cargo_cotton_small.msh",
+					transf = {0, 0.7, 0, 0, -0.7, 0, 0, 0, 0, 0, 0.7, 0, 0, -0.35, 0.4, 1},
+					type = "MESH",					
+				},
+				{
+					id = "industry/cargo/cargo_cotton_small.msh",
+					transf = {0.5, 0.5, 0, 0, -0.5, 0.5, 0, 0, 0, 0, 0.7, 0, 0, 0, 0.8, 1},
+					type = "MESH",					
+				},
+			},
+			events = {
+				
+			},
+			matConfigs = {
+				{
+					0
+				}, 
+			},
+			static = false,
+			visibleFrom = 0,
+			visibleTo = 600,
+			
+		}, 
+	},
+	metadata = {
+		
+	},
+	
+}
+end

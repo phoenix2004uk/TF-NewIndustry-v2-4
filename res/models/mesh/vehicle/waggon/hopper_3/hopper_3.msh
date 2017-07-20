@@ -1,0 +1,22 @@
+function data() return {
+	animations = {
+
+	},
+	matConfigs = { { 0, }, },
+	subMeshes = { {
+		indices = {
+			position = { count = 32424, offset = 0, },
+				normal = { count = 32424, offset = 32424, },
+				uv0 = { count = 32424, offset = 64848, },
+				tangent = { count = 32424, offset = 97272, },
+		},
+		materials = { "vehicle/waggon/hopper_3.mtl" },
+	}, },
+	vertexAttr =
+	{
+		position = { count = 68112, numComp = 3, offset = 129696, },
+		normal = { count = 68112, numComp = 3, offset = 197808, },
+		uv0 = { count = 45408, numComp = 2, offset = 265920, },
+		tangent = { count = 90816, numComp = 4, offset = 311328, },
+	},
+} end

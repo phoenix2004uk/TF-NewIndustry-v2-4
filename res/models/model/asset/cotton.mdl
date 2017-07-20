@@ -1,0 +1,41 @@
+function data()
+return {
+	collider = {
+		params = {
+			
+		},
+		type = "MESH",
+		
+	},
+	lods = {
+		{
+			animations = {
+				
+			},
+			children = {
+				{
+					id = "industry/cargo/cargo_cotton_small.msh",
+					transf = {0.7, 0, 0, 0, 0, 0.7, 0, 0, 0, 0, 0.7, 0, 0, 0, 0, 1},
+					type = "MESH",					
+				},
+			},
+			events = {
+				
+			},
+			matConfigs = {
+				{
+					0
+				}, 
+			},
+			static = false,
+			visibleFrom = 0,
+			visibleTo = 600,
+			
+		}, 
+	},
+	metadata = {
+		
+	},
+	
+}
+end

@@ -1,0 +1,415 @@
+local constructionutil = require "constructionutil"
+local paramsutil = require "paramsutil"
+local vec3 = require "vec3"
+local transf = require "transf"
+
+function data()
+
+return { 
+	type = "INDUSTRY",
+	categories = {_(Manufacturing)},
+	description = {
+		name = _("Oil refinery"),
+		description = _(Oil_refinery_desc),
+	},
+	availability = {
+
+	},
+	soundConfig = {
+		soundSet = { name = "oil_refinery" },
+		effects = {
+			select =  {
+				"selected_industry_oil_refinery1.wav",
+				"selected_industry_oil_refinery2.wav",
+				"selected_industry_oil_refinery3.wav"
+			}
+		}
+	},
+	params = paramsutil.makeIndustryParams(),
+	updateFn = function(params)
+		local result = { }
+
+		local level = (params.productionLevel or 0) + 1
+
+		result.models = { }
+		result.groundFaces = { }
+		result.stocks = { }
+		result.stockRules = { }
+		result.cost = _G.OilRefCost * (params.productionLevel + 1)
+		result.maintenanceCost = _G.OilRefMaintenanceCost * (params.productionLevel + 1)
+
+		local edges = { }
+		local terrainFaces = { }	
+		local groundFace = { }
+		local fenceFace = { }
+				
+		terrainFaces = { { {64, -64, 0}, {64, 64, 0}, {-64, 64, 0}, {-64, -64, 0} } }
+		fenceFace = { {-6,-63, 0}, {-63, -63, 0}, {-63, 63, 0}, {63, 63, 0}, {63, -63, 0}, { 6, -63, 0} } 
+		
+		--collider
+		result.models[#result.models + 1] = { id = "asset/industry/collider_rock_9.mdl", transf = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 } }
+		
+		if (level >= 1) then
+			result.models[#result.models + 1] = {
+				id = "industry/oil_refinery/main_building.mdl",
+				transf = transf.rotZYXTransl(transf.degToRad(0.0, 0.0, 0.0), vec3.new(-35, 0 , 0))
+			}
+			result.models[#result.models + 1] = {
+				id = "industry/oil_refinery/refinery.mdl",
+				transf = transf.rotZYXTransl(transf.degToRad(0.0, 0.0, 0.0), vec3.new(-35, 15 , 0))
+			}
+			
+			edges[#edges + 1] = { { 0.0, -64.0 - 15.0,  0.0 },  { 00.0, 20.0 + 15.0, 0.00 } }
+			edges[#edges + 1] = { { 0.0, -44.0,  0.0 },  { 00.0, 20.0 + 15.0, 0.00 } }
+			
+			edges[#edges + 1] = { { 0.0, -44.0,  0.0 },  { 00.0, 20.0, 0.00 } }
+			edges[#edges + 1] = { { 0.0, -24.0,  0.0 },  { 00.0, 20.0, 0.00 } }
+						
+			edges[#edges + 1] = { { 0.0, -24.0,  0.0 },  { -40.0,  0.0, 0.00 } }
+			edges[#edges + 1] = { {-40.0, -24.0,  0.0 },  { -40.0,  0.0, 0.00 } }
+			
+			edges[#edges + 1] = { {-40.0, -24.0,  0.0 },  { -15.71,  0.0, 0.00 } }
+			edges[#edges + 1] = { {-50.0, -34.0,  0.0 },  { 0.0,  -15.71, 0.00 } }
+			
+			edges[#edges + 1] = { {-50.0, -34.0,  0.0 },  { 0.0, -15.71, 0.00 } }
+			edges[#edges + 1] = { {-40.0, -44.0,  0.0 },  { 15.71, 0.0, 0.00 } }
+			
+			edges[#edges + 1] = { {-40.0, -44.0,  0.0 },  { 40.0, 0.0, 0.00 } }
+			edges[#edges + 1] = { { 0.0, -44.0,  0.0 },  { 40.0, 0.0, 0.00 } }
+			
+		end
+
+		if (level == 1) then
+			constructionutil.makeStocks({
+				stocks = {
+					{ cargoType = "CRUDE", 	type = "RECEIVING", x = 0,	y = 10, 	sizex = 1,	sizey = 4 },
+					{ cargoType = "OIL",	type = "SENDING", 	x = -48, 	y = -55, 	sizex = 2,	sizey = 1 },
+					{ cargoType = "FUEL",	type = "SENDING", 	x = -18,	y = -55, 	sizex = 2,	sizey = 1 }
+				},
+				stockRules = {
+					{ input = { { 1, 0, 0} }, output = { { 0, 1, 0 }, { 0, 0, 1 } }, capacity = math.random( _G.leveledCapacity1[1], _G.leveledCapacity1[2] ) },					
+				}
+			}, result)
+			
+			result.personCapacity = { type = "INDUSTRIAL", capacity = _G.ManLeveledPerson[params.productionLevel + 1] }
+			
+			groundFace = { {-63, -63}, {-63, 36}, { 9, 36}, {9, -63} }
+			result.groundFaces[#result.groundFaces+1] = { face = groundFace, modes = {	{ type = "FILL", key = "industry_concrete_01" } } }
+			result.groundFaces[#result.groundFaces + 1] = { face = groundFace, modes = { { type = "STROKE_OUTER", key = "building_paving" } } }
+			result.groundFaces[#result.groundFaces + 1] = { face = constructionutil.reverseFace(groundFace), modes = { { type = "STROKE_OUTER", key = "building_paving" } } }
+			
+			fenceFace = { {-6,-63,0}, {-63, -63, 0}, {-63, 36 ,0}, {9, 36,0}, { 9, -63,0}, {6, -63,0} }
+			
+		end
+
+		if (level >= 2) then
+			result.models[#result.models + 1] = {
+				id = "industry/oil_refinery/refinery.mdl",
+				transf = transf.rotZYXTransl(transf.degToRad(0.0, 0.0, 0.0), vec3.new(-35, 35 , 0))
+			}
+			
+			edges[#edges + 1] = { { 0.0, -24.0,  0.0 },  { 00.0, 20.0, 0.00 } }
+			edges[#edges + 1] = { { 0.0,  -4.0,  0.0 },  { 00.0, 20.0, 0.00 } }
+			
+			edges[#edges + 1] = { { 0.0,  -4.0,  0.0 },  { 00.0, 50.0, 0.00 } }
+			edges[#edges + 1] = { { 0.0,  42.0,  0.0 },  { 00.0, 50.0, 0.00 } }		
+		end
+				
+		if (level == 2) then
+			constructionutil.makeStocks({
+				stocks = {
+					{ cargoType = "CRUDE", 	type = "RECEIVING", x = -28,	y = 54, 	sizex = 8,	sizey = 1 },
+					{ cargoType = "OIL",	type = "SENDING", 	x = -48, 	y = -55, 	sizex = 2,	sizey = 1 },
+					{ cargoType = "FUEL",	type = "SENDING", 	x = -18,	y = -55, 	sizex = 2,	sizey = 1 }
+				},
+				stockRules = {
+					{ input = { { 1, 0, 0} }, output = { { 0, 1, 0 }, { 0, 0, 1 } }, capacity = math.random( _G.leveledCapacity2[1], _G.leveledCapacity2[2] ) }
+				}
+			}, result)
+			
+			result.personCapacity = { type = "INDUSTRIAL", capacity = _G.ManLeveledPerson[params.productionLevel + 1] }
+			
+			groundFace = { {-63, -63}, {-63, 63}, { 9, 63}, {9, -63} }
+			result.groundFaces[#result.groundFaces+1] = { face = groundFace, modes = {	{ type = "FILL", key = "industry_concrete_01" } } }
+			result.groundFaces[#result.groundFaces + 1] = { face = groundFace, modes = { { type = "STROKE_OUTER", key = "building_paving" } } }
+			result.groundFaces[#result.groundFaces + 1] = { face = constructionutil.reverseFace(groundFace), modes = { { type = "STROKE_OUTER", key = "building_paving" } } }			
+			fenceFace = { {-6,-63,0}, {-63, -63, 0}, {-63, 63 ,0}, {9, 63,0}, { 9, -63,0}, {6, -63,0} }
+		end
+
+		if (level >= 3) then
+
+			result.models[#result.models + 1] = {
+				id = "industry/oil_refinery/side_building.mdl",
+				transf = transf.rotZYXTransl(transf.degToRad(0.0, 0.0, 0.0), vec3.new(-35, 0 , 0))
+			}
+			result.models[#result.models + 1] = {
+				id = "industry/oil_refinery/refinery_tanks1.mdl",
+				transf = transf.rotZYXTransl(transf.degToRad(0.0, 0.0, 0.0), vec3.new(-35, 15 , 0))
+			}
+			
+		end
+
+		if (level == 3) then
+			constructionutil.makeStocks({
+				stocks = {
+					{ cargoType = "CRUDE", 	type = "RECEIVING", x = -28,	y = 51, 	sizex = 8,	sizey = 2 },
+					{ cargoType = "OIL",	type = "SENDING", 	x = -48, 	y = -55, 	sizex = 3,	sizey = 1 },
+					{ cargoType = "FUEL",	type = "SENDING", 	x = -18,	y = -55, 	sizex = 3,	sizey = 1 }
+				},
+				stockRules = {
+					{ input = { { 1, 0, 0} }, output = { { 0, 1, 0 }, { 0, 0, 1 } }, capacity = math.random( _G.leveledCapacity3[1], _G.leveledCapacity3[2] ) }
+				}
+			}, result)
+			
+			result.personCapacity = { type = "INDUSTRIAL", capacity = _G.ManLeveledPerson[params.productionLevel + 1] }
+			
+			groundFace = { {-63, -63}, {-63, 63}, { 9, 63}, {9, -63} }
+			result.groundFaces[#result.groundFaces+1] = { face = groundFace, modes = {	{ type = "FILL", key = "industry_concrete_01" } } }
+			result.groundFaces[#result.groundFaces + 1] = { face = groundFace, modes = { { type = "STROKE_OUTER", key = "building_paving" } } }
+			result.groundFaces[#result.groundFaces + 1] = { face = constructionutil.reverseFace(groundFace), modes = { { type = "STROKE_OUTER", key = "building_paving" } } }			
+			fenceFace = { {-6,-63,0}, {-63, -63, 0}, {-63, 63 ,0}, {9, 63,0}, { 9, -63,0}, {6, -63,0} }
+		end
+
+		if (level >= 4) then
+			result.models[#result.models + 1] = {
+				id = "industry/oil_refinery/refinery.mdl",
+				transf = transf.rotZYXTransl(transf.degToRad(180.0, 0.0, 0.0), vec3.new(35, 15 , 0))
+			}
+			result.models[#result.models + 1] = {
+				id = "industry/oil_refinery/refinery_tanks1.mdl",
+				transf = transf.rotZYXTransl(transf.degToRad(180.0, 0.0, 0.0), vec3.new(35, 15 , 0))
+			}				
+						
+			edges[#edges + 1] = { { 0.0,  -4.0,  0.0 },  { 40.0,  0.0, 0.00 } }
+			edges[#edges + 1] = { {40.0,  -4.0,  0.0 },  { 40.0,  0.0, 0.00 } }
+		end
+
+		if (level == 4) then
+			constructionutil.makeStocks({
+				stocks = {
+					{ cargoType = "CRUDE", 	type = "RECEIVING", x =	34,		y = 42, 	sizex = 6,	sizey = 4 },
+					{ cargoType = "OIL",	type = "SENDING", 	x = -46,	y = 51, 	sizex = 4,	sizey = 2 },
+					{ cargoType = "FUEL",	type = "SENDING", 	x = -10,	y = 51, 	sizex = 4,	sizey = 2 }
+				},
+				stockRules = {
+					{ input = { { 1, 0, 0} }, output = { { 0, 1, 0 }, { 0, 0, 1 } }, capacity = math.random( _G.leveledCapacity4[1], _G.leveledCapacity4[2] ) }
+				}
+			}, result)
+			
+			result.personCapacity = { type = "INDUSTRIAL", capacity = _G.ManLeveledPerson[params.productionLevel + 1] }
+			
+			groundFace = { {-63, -63}, {-63, 63}, {63,63}, {63,-15}, {9,-15}, {9, -63} }
+			result.groundFaces[#result.groundFaces+1] = { face = groundFace, modes = {	{ type = "FILL", key = "industry_concrete_01" } } }
+			result.groundFaces[#result.groundFaces + 1] = { face = groundFace, modes = { { type = "STROKE_OUTER", key = "building_paving" } } }
+			result.groundFaces[#result.groundFaces + 1] = { face = constructionutil.reverseFace(groundFace), modes = { { type = "STROKE_OUTER", key = "building_paving" } } }			
+			fenceFace = { {-6,-63,0}, {-63, -63, 0}, {-63, 63 ,0}, {63, 63, 0}, {63,-15,0}, {9,-15,0}, { 9, -63,0}, {6, -63,0} }
+		end
+
+		if (level >= 5) then
+			result.models[#result.models + 1] = {
+				id = "industry/oil_refinery/refinery.mdl",
+				transf = transf.rotZYXTransl(transf.degToRad(180.0, 0.0, 0.0), vec3.new(35, 35 , 0))
+			}
+			result.models[#result.models + 1] = {
+				id = "industry/oil_refinery/refinery_tanks1.mdl",
+				transf = transf.rotZYXTransl(transf.degToRad(180.0, 0.0, 0.0), vec3.new(35, 35 , 0))
+			}
+			result.models[#result.models + 1] = {
+				id = "industry/oil_refinery/refinery_tanks1.mdl",
+				transf = transf.rotZYXTransl(transf.degToRad(0.0, 0.0, 0.0), vec3.new(-35, 35 , 0))
+			}			
+			result.models[#result.models + 1] = {
+				id = "industry/oil_refinery/refinery_tanks2.mdl",
+				transf = transf.rotZYXTransl(transf.degToRad(0.0, 0.0, 0.0), vec3.new(-35, 15 , 0))
+			}
+			result.models[#result.models + 1] = {
+				id = "industry/oil_refinery/refinery_tanks2.mdl",
+				transf = transf.rotZYXTransl(transf.degToRad(180.0, 0.0, 0.0), vec3.new(35, 15 , 0))
+			}
+				result.models[#result.models + 1] = {
+				id = "industry/oil_refinery/refinery_tanks2.mdl",
+				transf = transf.rotZYXTransl(transf.degToRad(180.0, 0.0, 0.0), vec3.new(35, 35 , 0))
+			}
+			result.models[#result.models + 1] = {
+				id = "industry/oil_refinery/refinery_tanks2.mdl",
+				transf = transf.rotZYXTransl(transf.degToRad(0.0, 0.0, 0.0), vec3.new(-35, 35 , 0))
+			}
+			
+			result.models[#result.models + 1] = { id = "asset/ground/container_waste2.mdl",	transf = transf.rotZYXTransl(transf.degToRad(0.0, 0.0, 0.0), vec3.new(36, 10 , 0))	}
+			
+			result.models[#result.models + 1] = { id = "asset/ground/container_hexagon.mdl",	transf = transf.rotZYXTransl(transf.degToRad(190.0, 0.0, 0.0), vec3.new(-50, 15 , 0))	}
+		end
+
+		if (level == 5) then
+			constructionutil.makeStocks({
+				stocks = {
+					{ cargoType = "CRUDE", 	type = "RECEIVING", x = 33,	y = -35, 	sizex = 6,	sizey = 6 },
+					{ cargoType = "OIL",	type = "SENDING", 	x = 30, 	y = 54, 	sizex = 7,	sizey = 1 },
+					{ cargoType = "FUEL",	type = "SENDING", 	x = -30,	y = 54, 	sizex = 7,	sizey = 1 }
+				},
+				stockRules = {
+					{ input = { { 1, 0, 0} }, output = { { 0, 1, 0 }, { 0, 0, 1 } }, capacity = math.random( _G.leveledCapacity5[1], _G.leveledCapacity5[2] ) }
+				}
+			}, result)
+			
+			result.personCapacity = { type = "INDUSTRIAL", capacity = _G.ManLeveledPerson[params.productionLevel + 1] }
+			
+			groundFace = { {-63, -63}, {-63, 63}, {63,63}, {63,-63} }
+			result.groundFaces[#result.groundFaces+1] = { face = groundFace, modes = {	{ type = "FILL", key = "industry_concrete_01" } } }
+			result.groundFaces[#result.groundFaces + 1] = { face = groundFace, modes = { { type = "STROKE_OUTER", key = "building_paving" } } }
+			result.groundFaces[#result.groundFaces + 1] = { face = constructionutil.reverseFace(groundFace), modes = { { type = "STROKE_OUTER", key = "building_paving" } } }			
+			fenceFace = { {-6,-63,0}, {-63, -63, 0}, {-63, 63 ,0}, {63, 63, 0}, { 63, -63,0}, {6, -63,0} }
+		end
+
+		
+		result.models[#result.models + 1] = { id = "industry/cargo/oil_big.mdl", transf = { -4.44055e-006, 1, 0, 0,   -1, -4.44055e-006, 0, 0,   0, 0, 1, 0,   -59.5013, -8.06482, -0.0385437, 1 } }
+		result.models[#result.models + 1] = { id = "industry/cargo/oil_big.mdl", transf = { -4.44055e-006, 1, 0, 0,   -1, -4.44055e-006, 0, 0,   0, 0, 1, 0,   -59.7515, -18, -0.0385437, 1 } }
+		result.models[#result.models + 1] = { id = "industry/cargo/oil_small.mdl", transf = { -4.44055e-006, 1, 0, 0,   -1, -4.44055e-006, 0, 0,   0, 0, 1, 0,   -49.4359, -14.1777, -0.0385437, 1 } }
+		result.models[#result.models + 1] = { id = "industry/cargo/fuel_small.mdl", transf = { -4.44055e-006, 1, 0, 0,   -1, -4.44055e-006, 0, 0,   0, 0, 1, 0,   -52.9431, -5.36658, -0.0385437, 1 } }
+		result.models[#result.models + 1] = { id = "industry/cargo/fuel_small.mdl", transf = { -4.44055e-006, 1, 0, 0,   -1, -4.44055e-006, 0, 0,   0, 0, 1, 0,   -47.1205, -14.5029, -0.0385437, 1 } }
+		result.models[#result.models + 1] = { id = "industry/cargo/fuel_big.mdl", transf = { -4.44055e-006, 1, 0, 0,   -1, -4.44055e-006, 0, 0,   0, 0, 1, 0,   -56.3176, -8.71484, -0.0385437, 1 } }
+		result.models[#result.models + 1] = { id = "industry/cargo/fuel_big.mdl", transf = { -4.44055e-006, 1, 0, 0,   -1, -4.44055e-006, 0, 0,   0, 0, 1, 0,   -56.2137, -18.1151, -0.0385437, 1 } }
+		result.models[#result.models + 1] = { id = "industry/cargo/fuel_big.mdl", transf = { -4.44055e-006, 1, 0, 0,   -1, -4.44055e-006, 0, 0,   0, 0, 1, 0,   -31.9234, -11.181, -0.0385437, 1 } }
+		result.models[#result.models + 1] = { id = "asset/ground/barrel_steel.mdl", transf = { -4.44055e-006, 1, 0, 0,   -1, -4.44055e-006, 0, 0,   0, 0, 1, 0,   -29.3428, -6.8125, -0.0385437, 1 } }
+		result.models[#result.models + 1] = { id = "asset/ground/barrel_steel.mdl", transf = { -4.44055e-006, 1, 0, 0,   -1, -4.44055e-006, 0, 0,   0, 0, 1, 0,   -27.5073, -7.89417, -0.0385437, 1 } }
+		result.models[#result.models + 1] = { id = "asset/ground/barrel_steel.mdl", transf = { -4.44055e-006, 1, 0, 0,   -1, -4.44055e-006, 0, 0,   0, 0, 1, 0,   -28.7515, -7.8291, -0.0385437, 1 } }
+		result.models[#result.models + 1] = { id = "asset/ground/barrel_steel.mdl", transf = { -4.44055e-006, 1, 0, 0,   -1, -4.44055e-006, 0, 0,   0, 0, 1, 0,   -29.4077, -9.82715, -0.0385437, 1 } }
+		result.models[#result.models + 1] = { id = "asset/ground/barrel_wood.mdl", transf = { -4.44055e-006, 1, 0, 0,   -1, -4.44055e-006, 0, 0,   0, 0, 1, 0,   -28.0847, -10.389, -0.0385437, 1 } }
+		result.models[#result.models + 1] = { id = "asset/ground/container_hexagon.mdl", transf = { -4.44055e-006, 1, 0, 0,   -1, -4.44055e-006, 0, 0,   0, 0, 1, 0,   -48.4858, 1.62524, -0.0385437, 1 } }
+		result.models[#result.models + 1] = { id = "asset/ground/container_small_steel.mdl", transf = { -4.44055e-006, 1, 0, 0,   -1, -4.44055e-006, 0, 0,   0, 0, 1, 0,   -51.7772, 1.88477, -0.0385437, 1 } }
+		result.models[#result.models + 1] = { id = "asset/ground/container_small_steel.mdl", transf = { -4.44055e-006, 1, 0, 0,   -1, -4.44055e-006, 0, 0,   0, 0, 1, 0,   -53.8812, 1.83911, -0.0385437, 1 } }
+		result.models[#result.models + 1] = { id = "asset/ground/container_fluid.mdl", transf = { -4.44055e-006, 1, 0, 0,   -1, -4.44055e-006, 0, 0,   0, 0, 1, 0,   -55.923, 1.79724, -0.0385437, 1 } }
+		result.models[#result.models + 1] = { id = "asset/ground/container_big_steel.mdl", transf = { -1, -8.91089e-006, 0, 0,   8.91089e-006, -1, 0, 0,   0, 0, 1, 0,   -60.0776, 14.2317, -0.0385437, 1 } }
+		
+		if (level == 2) then
+		
+			result.models[#result.models + 1] = { id = "industry/cargo/crude_big.mdl", transf = { 1, 0, 0, 0,   0, 1, 0, 0,   0, 0, 1, 0,   -12.9113, -16.4835, 0, 1 } }
+			result.models[#result.models + 1] = { id = "industry/cargo/crude_small.mdl", transf = { 1, 0, 0, 0,   0, 1, 0, 0,   0, 0, 1, 0,   -14.3156, -13.4489, 0, 1 } }
+			result.models[#result.models + 1] = { id = "industry/cargo/crude_small.mdl", transf = { 1, 0, 0, 0,   0, 1, 0, 0,   0, 0, 1, 0,   -12.2577, -13.4154, 0, 1 } }
+			result.models[#result.models + 1] = { id = "industry/cargo/crude_small.mdl", transf = { 1, 0, 0, 0,   0, 1, 0, 0,   0, 0, 1, 0,   -9.91176, -13.2229, 0, 1 } }
+			result.models[#result.models + 1] = { id = "industry/cargo/crude_small.mdl", transf = { 1, 0, 0, 0,   0, 1, 0, 0,   0, 0, 1, 0,   -7.41734, -13.4316, 0, 1 } }
+			result.models[#result.models + 1] = { id = "industry/cargo/crude_small.mdl", transf = { 0.83147, -0.55557, 0, 0,   0.55557, 0.83147, 0, 0,   0, 0, 1, 0,   -7.14555, -16.5371, 0, 1 } }
+			result.models[#result.models + 1] = { id = "industry/cargo/tools_small.mdl", transf = { 7.54979e-008, -1, 0, 0,   1, 7.54979e-008, 0, 0,   0, 0, 1, 0,   -17.0588, -13.6973, 0, 1 } }
+			result.models[#result.models + 1] = { id = "industry/cargo/oil_small.mdl", transf = { 7.54979e-008, -1, 0, 0,   1, 7.54979e-008, 0, 0,   0, 0, 1, 0,   -18.7, -16.5463, 0, 1 } }
+			result.models[#result.models + 1] = { id = "asset/ground/barrel_steel.mdl", transf = { 7.54979e-008, -1, 0, 0,   1, 7.54979e-008, 0, 0,   0, 0, 1, 0,   -9.0266, 4.92804, 0, 1 } }
+			result.models[#result.models + 1] = { id = "asset/ground/barrel_steel.mdl", transf = { 7.54979e-008, -1, 0, 0,   1, 7.54979e-008, 0, 0,   0, 0, 1, 0,   -10.0952, 2.828, 0, 1 } }
+			result.models[#result.models + 1] = { id = "asset/ground/barrel_steel.mdl", transf = { 7.54979e-008, -1, 0, 0,   1, 7.54979e-008, 0, 0,   0, 0, 1, 0,   -9.34193, -0.532471, 0, 1 } }
+			result.models[#result.models + 1] = { id = "asset/ground/barrel_wood.mdl", transf = { 7.54979e-008, -1, 0, 0,   1, 7.54979e-008, 0, 0,   0, 0, 1, 0,   -9.79312, 1.13727, 0, 1 } }
+			result.models[#result.models + 1] = { id = "asset/ground/barrel_wood.mdl", transf = { 7.54979e-008, -1, 0, 0,   1, 7.54979e-008, 0, 0,   0, 0, 1, 0,   -8.59453, 2.89246, 0, 1 } }
+			result.models[#result.models + 1] = { id = "asset/barrel_water_wood.mdl", transf = { 7.54979e-008, -1, 0, 0,   1, 7.54979e-008, 0, 0,   0, 0, 1, 0,   -8.44363, 1.28711, 0, 1 } }
+			result.models[#result.models + 1] = { id = "industry/cargo/construction_materials_small.mdl", transf = { 7.54979e-008, -1, 0, 0,   1, 7.54979e-008, 0, 0,   0, 0, 1, 0,   -12.0886, -0.0161133, 0, 1 } }
+			result.models[#result.models + 1] = { id = "industry/cargo/construction_materials_small.mdl", transf = { 7.54979e-008, -1, 0, 0,   1, 7.54979e-008, 0, 0,   0, 0, 1, 0,   -11.9868, 2.87903, 0, 1 } }
+			result.models[#result.models + 1] = { id = "asset/ground/container_big_steel.mdl", transf = { 7.54979e-008, -1, 0, 0,   1, 7.54979e-008, 0, 0,   0, 0, 1, 0,   -10.2817, -4.73267, 0, 1 } }
+			result.models[#result.models + 1] = { id = "asset/ground/container_hexagon.mdl", transf = { 7.54979e-008, -1, 0, 0,   1, 7.54979e-008, 0, 0,   0, 0, 1, 0,   -9.91196, 31.8976, 0, 1 } }
+			result.models[#result.models + 1] = { id = "asset/ground/container_small_steel.mdl", transf = { 7.54979e-008, -1, 0, 0,   1, 7.54979e-008, 0, 0,   0, 0, 1, 0,   -8.60814, 29.4083, -0.0209885, 1 } }
+			result.models[#result.models + 1] = { id = "asset/ground/container_small_steel.mdl", transf = { 7.54979e-008, -1, 0, 0,   1, 7.54979e-008, 0, 0,   0, 0, 1, 0,   -10.7415, 29.2559, -0.0133743, 1 } }
+		
+		end
+		
+		if (level == 3 or level == 4) then
+		
+			result.models[#result.models + 1] = { id = "industry/cargo/fuel_small.mdl", transf = { 7.54979e-008, 1, 0, 0,   -1, 7.54979e-008, 0, 0,   0, 0, 1, 0,   -7.68484, -11.2695, 0, 1 } }
+			result.models[#result.models + 1] = { id = "asset/barrel_water_wood.mdl", transf = { 7.54979e-008, 1, 0, 0,   -1, 7.54979e-008, 0, 0,   0, 0, 1, 0,   -8.18011, -7.50092, 0, 1 } }
+			result.models[#result.models + 1] = { id = "asset/ground/metal_beam_01.mdl", transf = { 7.54979e-008, 1, 0, 0,   -1, 7.54979e-008, 0, 0,   0, 0, 1, 0,   -28.0734, 22.1938, 0, 1 } }
+			result.models[#result.models + 1] = { id = "asset/ground/metal_beam_01.mdl", transf = { 7.54979e-008, 1, 0, 0,   -1, 7.54979e-008, 0, 0,   0, 0, 1, 0,   -22.0409, 23.5267, -0.0500031, 1 } }
+			result.models[#result.models + 1] = { id = "asset/ground/container_big_steel.mdl", transf = { 7.54979e-008, 1, 0, 0,   -1, 7.54979e-008, 0, 0,   0, 0, 1, 0,   -13.343, 2.7688, 0, 1 } }
+			result.models[#result.models + 1] = { id = "asset/ground/container_fluid.mdl", transf = { 7.54979e-008, 1, 0, 0,   -1, 7.54979e-008, 0, 0,   0, 0, 1, 0,   -18.1797, 2.79437, 0, 1 } }
+			result.models[#result.models + 1] = { id = "asset/ground/container_hexagon.mdl", transf = { 7.54979e-008, 1, 0, 0,   -1, 7.54979e-008, 0, 0,   0, 0, 1, 0,   -15.9264, 37.9493, -0.0355377, 1 } }
+			result.models[#result.models + 1] = { id = "asset/ground/container_small_steel.mdl", transf = { 7.54979e-008, 1, 0, 0,   -1, 7.54979e-008, 0, 0,   0, 0, 1, 0,   -12.7589, 39.0076, -0.0500031, 1 } }
+			result.models[#result.models + 1] = { id = "asset/ground/container_small_steel.mdl", transf = { 1, -8.9407e-008, 0, 0,   8.9407e-008, 1, 0, 0,   0, 0, 1, 0,   -12.3154, 37.3994, -0.00804138, 1 } }
+			result.models[#result.models + 1] = { id = "industry/cargo/crude_big.mdl", transf = { 1, -8.9407e-008, 0, 0,   8.9407e-008, 1, 0, 0,   0, 0, 1, 0,   -10.7405, 31.916, 0, 1 } }
+			result.models[#result.models + 1] = { id = "industry/cargo/crude_small.mdl", transf = { 1, -8.9407e-008, 0, 0,   8.9407e-008, 1, 0, 0,   0, 0, 1, 0,   -7.96228, 35.2687, -0.0485001, 1 } }
+			result.models[#result.models + 1] = { id = "industry/cargo/crude_small.mdl", transf = { 1, -8.9407e-008, 0, 0,   8.9407e-008, 1, 0, 0,   0, 0, 1, 0,   -7.15637, 37.3914, -0.00764465, 1 } }
+			result.models[#result.models + 1] = { id = "industry/cargo/crude_small.mdl", transf = { 0.980785, 0.19509, 0, 0,   -0.19509, 0.980785, 0, 0,   0, 0, 1, 0,   -8.29004, 39.0631, -0.0500031, 1 } }
+			result.models[#result.models + 1] = { id = "industry/cargo/fuel_small.mdl", transf = { 0.980785, 0.19509, 0, 0,   -0.19509, 0.980785, 0, 0,   0, 0, 1, 0,   -8.20471, 28.5903, -0.0500031, 1 } }
+			result.models[#result.models + 1] = { id = "industry/cargo/fuel_small.mdl", transf = { 1, -8.9407e-008, 0, 0,   8.9407e-008, 1, 0, 0,   0, 0, 1, 0,   -11.533, 28.4003, -0.0500031, 1 } }
+			result.models[#result.models + 1] = { id = "industry/cargo/fuel_small.mdl", transf = { 1, -8.9407e-008, 0, 0,   8.9407e-008, 1, 0, 0,   0, 0, 1, 0,   -13.8538, 29.4082, -0.0500031, 1 } }
+			result.models[#result.models + 1] = { id = "asset/barrel_water_wood.mdl", transf = { 7.54979e-008, 1, 0, 0,   -1, 7.54979e-008, 0, 0,   0, 0, 1, 0,   -7.97528, -6.39001, 0, 1 } }
+			result.models[#result.models + 1] = { id = "asset/ground/barrel_waste.mdl", transf = { 7.54979e-008, 1, 0, 0,   -1, 7.54979e-008, 0, 0,   0, 0, 1, 0,   -8.08447, -1.69818, 0, 1 } }
+			result.models[#result.models + 1] = { id = "asset/ground/barrel_steel.mdl", transf = { 7.54979e-008, 1, 0, 0,   -1, 7.54979e-008, 0, 0,   0, 0, 1, 0,   -25.0085, 2.02905, 0, 1 } }
+			result.models[#result.models + 1] = { id = "asset/ground/barrel_steel.mdl", transf = { 7.54979e-008, 1, 0, 0,   -1, 7.54979e-008, 0, 0,   0, 0, 1, 0,   -23.6417, 2.82251, 0, 1 } }
+			result.models[#result.models + 1] = { id = "asset/ground/barrel_steel.mdl", transf = { 7.54979e-008, 1, 0, 0,   -1, 7.54979e-008, 0, 0,   0, 0, 1, 0,   -25.5829, 2.86267, 0, 1 } }
+			result.models[#result.models + 1] = { id = "asset/ground/barrel_steel.mdl", transf = { 7.54979e-008, 1, 0, 0,   -1, 7.54979e-008, 0, 0,   0, 0, 1, 0,   -29.8754, 2.09119, 0, 1 } }
+			result.models[#result.models + 1] = { id = "asset/ground/barrel_steel.mdl", transf = { 7.54979e-008, 1, 0, 0,   -1, 7.54979e-008, 0, 0,   0, 0, 1, 0,   -44.2497, 1.487, 0, 1 } }
+
+		end
+		
+		if (level == 4 or level == 5) then
+		
+			result.models[#result.models + 1] = { id = "industry/cargo/oil_small.mdl", transf = { 1, 0, 0, 0,   0, 1, 0, 0,   0, 0, 1, 0,   8.97968, 9.64026, -0.035347, 1 } }
+			result.models[#result.models + 1] = { id = "asset/ground/barrel_waste.mdl", transf = { -1.39091e-008, 1, 0, 0,   -1, -1.39091e-008, 0, 0,   0, 0, 1, 0,   -16.8177, 18.2141, -0.035347, 1 } }
+			result.models[#result.models + 1] = { id = "industry/cargo/construction_materials_small.mdl", transf = { -1.39091e-008, 1, 0, 0,   -1, -1.39091e-008, 0, 0,   0, 0, 1, 0,   -52.9502, -54.9387, -0.035347, 1 } }
+			result.models[#result.models + 1] = { id = "industry/cargo/tools_small.mdl", transf = { -1.39091e-008, 1, 0, 0,   -1, -1.39091e-008, 0, 0,   0, 0, 1, 0,   -51.0547, -55.1986, -0.035347, 1 } }
+			result.models[#result.models + 1] = { id = "asset/ground/container_hexagon.mdl", transf = { -1.39091e-008, 1, 0, 0,   -1, -1.39091e-008, 0, 0,   0, 0, 1, 0,   -58.9415, -59.8058, -0.035347, 1 } }
+			result.models[#result.models + 1] = { id = "industry/cargo/crude_small.mdl", transf = { -1.39091e-008, 1, 0, 0,   -1, -1.39091e-008, 0, 0,   0, 0, 1, 0,   -55.5584, -55.6429, -0.035347, 1 } }
+			result.models[#result.models + 1] = { id = "industry/cargo/crude_small.mdl", transf = { -0.19509, 0.980785, 0, 0,   -0.980785, -0.19509, 0, 0,   0, 0, 1, 0,   -54.5477, -57.8781, -0.035347, 1 } }
+			result.models[#result.models + 1] = { id = "industry/cargo/crude_small.mdl", transf = { -1.39091e-008, 1, 0, 0,   -1, -1.39091e-008, 0, 0,   0, 0, 1, 0,   -52.2228, -58.3437, -0.035347, 1 } }
+			result.models[#result.models + 1] = { id = "asset/ground/metal_beam_01.mdl", transf = { -1.39091e-008, 1, 0, 0,   -1, -1.39091e-008, 0, 0,   0, 0, 1, 0,   -52.5359, -60.4576, -0.035347, 1 } }
+			result.models[#result.models + 1] = { id = "asset/ground/metal_beam_01.mdl", transf = { -1.39091e-008, 1, 0, 0,   -1, -1.39091e-008, 0, 0,   0, 0, 1, 0,   -52.114, -61.8245, -0.035347, 1 } }
+			result.models[#result.models + 1] = { id = "industry/cargo/oil_big.mdl", transf = { 0.382683, 0.92388, 0, 0,   -0.92388, 0.382683, 0, 0,   0, 0, 1, 0,   -12.2546, -57.342, -0.035347, 1 } }
+			result.models[#result.models + 1] = { id = "industry/cargo/oil_big.mdl", transf = { 0.382683, 0.92388, 0, 0,   -0.92388, 0.382683, 0, 0,   0, 0, 1, 0,   -17.7358, -57.6451, -0.035347, 1 } }
+			result.models[#result.models + 1] = { id = "industry/cargo/oil_big.mdl", transf = { -0.382683, -0.92388, 0, 0,   0.92388, -0.382683, 0, 0,   0, 0, 1, 0,   -23.3101, -57.216, -0.035347, 1 } }
+			result.models[#result.models + 1] = { id = "industry/cargo/oil_small.mdl", transf = { 1.05501e-006, -1, 0, 0,   1, 1.05501e-006, 0, 0,   0, 0, 1, 0,   -11.8051, -51.3729, -0.035347, 1 } }
+			result.models[#result.models + 1] = { id = "industry/cargo/oil_small.mdl", transf = { -0.195089, -0.980785, 0, 0,   0.980785, -0.195089, 0, 0,   0, 0, 1, 0,   -15.3253, -51.1573, -0.035347, 1 } }
+			result.models[#result.models + 1] = { id = "asset/ground/barrel_waste.mdl", transf = { -1, -4.15248e-007, 0, 0,   4.15248e-007, -1, 0, 0,   0, 0, 1, 0,   -33.6598, -61.6678, -0.035347, 1 } }
+			result.models[#result.models + 1] = { id = "asset/barrel_water_blue.mdl", transf = { -1, -4.15248e-007, 0, 0,   4.15248e-007, -1, 0, 0,   0, 0, 1, 0,   -35.7034, -61.5608, -0.035347, 1 } }
+			result.models[#result.models + 1] = { id = "industry/cargo/oil_big.mdl", transf = { 1, 0, 0, 0,   0, 1, 0, 0,   0, 0, 1, 0,   11.5514, 6.85236, -0.035347, 1 } }
+			result.models[#result.models + 1] = { id = "industry/cargo/oil_small.mdl", transf = { 1, 0, 0, 0,   0, 1, 0, 0,   0, 0, 1, 0,   11.2588, 9.42169, -0.035347, 1 } }
+			result.models[#result.models + 1] = { id = "industry/cargo/planks_small.mdl", transf = { 1, 0, 0, 0,   0, 1, 0, 0,   0, 0, 1, 0,   14.0324, 9.52441, -0.035347, 1 } }
+			result.models[#result.models + 1] = { id = "asset/barrel_water_wood.mdl", transf = { -1.39091e-008, 1, 0, 0,   -1, -1.39091e-008, 0, 0,   0, 0, 1, 0,   12.1979, 11.6469, -0.035347, 1 } }
+			result.models[#result.models + 1] = { id = "asset/barrel_water_wood.mdl", transf = { -1.39091e-008, 1, 0, 0,   -1, -1.39091e-008, 0, 0,   0, 0, 1, 0,   13.5152, 11.3576, -0.035347, 1 } }
+			result.models[#result.models + 1] = { id = "industry/cargo/fuel_small.mdl", transf = { -1.39091e-008, 1, 0, 0,   -1, -1.39091e-008, 0, 0,   0, 0, 1, 0,   15.6014, 18.0353, -0.035347, 1 } }
+			result.models[#result.models + 1] = { id = "industry/cargo/fuel_small.mdl", transf = { -1.39091e-008, 1, 0, 0,   -1, -1.39091e-008, 0, 0,   0, 0, 1, 0,   13.827, 18.6551, -0.035347, 1 } }
+
+		end		
+		
+		if (level == 5) then
+
+			result.models[#result.models + 1] = { id = "asset/ground/container_big_steel.mdl", transf = { -6.39758e-007, 1, 0, 0,   -1, -6.39758e-007, 0, 0,   0, 0, 1, 0,   -47.5279, 22.0579, 0, 1 } }
+			result.models[#result.models + 1] = { id = "asset/barrel_water_blue.mdl", transf = { 1, 0, 0, 0,   0, 1, 0, 0,   0, 0, 1, 0,   44.3427, 8.77698, -0.0354767, 1 } }
+			result.models[#result.models + 1] = { id = "asset/barrel_water_blue.mdl", transf = { 1, 0, 0, 0,   0, 1, 0, 0,   0, 0, 1, 0,   44.2685, 7.46741, -0.0490341, 1 } }
+			result.models[#result.models + 1] = { id = "asset/ground/barrel_wood.mdl", transf = { 1, 0, 0, 0,   0, 1, 0, 0,   0, 0, 1, 0,   45.4076, 7.88904, -0.0499954, 1 } }
+			result.models[#result.models + 1] = { id = "industry/cargo/oil_small.mdl", transf = { 1, 0, 0, 0,   0, 1, 0, 0,   0, 0, 1, 0,   60.3315, -4.50891, -0.0497665, 1 } }
+			result.models[#result.models + 1] = { id = "industry/cargo/oil_small.mdl", transf = { 1, 0, 0, 0,   0, 1, 0, 0,   0, 0, 1, 0,   60.3459, -1.66852, -0.042244, 1 } }
+			result.models[#result.models + 1] = { id = "industry/cargo/oil_small.mdl", transf = { 1, 0, 0, 0,   0, 1, 0, 0,   0, 0, 1, 0,   58.1055, -4.61395, -0.0449753, 1 } }
+			result.models[#result.models + 1] = { id = "industry/cargo/oil_small.mdl", transf = { 1, 0, 0, 0,   0, 1, 0, 0,   0, 0, 1, 0,   55.7263, -3.51447, -4.57764e-005, 1 } }
+			result.models[#result.models + 1] = { id = "industry/cargo/oil_small.mdl", transf = { 0.980785, 0.19509, 0, 0,   -0.19509, 0.980785, 0, 0,   0, 0, 1, 0,   58.1293, -2.19855, -0.0157471, 1 } }
+			result.models[#result.models + 1] = { id = "industry/cargo/oil_big.mdl", transf = { 0.980785, 0.19509, 0, 0,   -0.19509, 0.980785, 0, 0,   0, 0, 1, 0,   57.568, 0.701965, -0.0107727, 1 } }
+			result.models[#result.models + 1] = { id = "industry/cargo/fuel_big.mdl", transf = { 0.980785, 0.19509, 0, 0,   -0.19509, 0.980785, 0, 0,   0, 0, 1, 0,   58.4258, 4.73871, 0, 1 } }
+			result.models[#result.models + 1] = { id = "industry/cargo/fuel_big.mdl", transf = { 0.980785, 0.19509, 0, 0,   -0.19509, 0.980785, 0, 0,   0, 0, 1, 0,   57.8677, 8.66138, -0.0412521, 1 } }
+			result.models[#result.models + 1] = { id = "industry/cargo/oil_big.mdl", transf = { -6.39758e-007, 1, 0, 0,   -1, -6.39758e-007, 0, 0,   0, 0, 1, 0,   59.8389, 40.2401, -0.037674, 1 } }
+			result.models[#result.models + 1] = { id = "industry/cargo/oil_big.mdl", transf = { -6.39758e-007, 1, 0, 0,   -1, -6.39758e-007, 0, 0,   0, 0, 1, 0,   59.9272, 31.1987, 0, 1 } }
+			result.models[#result.models + 1] = { id = "industry/cargo/oil_small.mdl", transf = { -6.39758e-007, 1, 0, 0,   -1, -6.39758e-007, 0, 0,   0, 0, 1, 0,   60.0325, 25.3526, -0.0499954, 1 } }
+			result.models[#result.models + 1] = { id = "industry/cargo/oil_small.mdl", transf = { -6.39758e-007, 1, 0, 0,   -1, -6.39758e-007, 0, 0,   0, 0, 1, 0,   60.1328, 22.4664, -0.0489883, 1 } }
+			result.models[#result.models + 1] = { id = "asset/ground/container_big_steel.mdl", transf = { -1, 2.53518e-006, 0, 0,   -2.53518e-006, -1, 0, 0,   0, 0, 1, 0,   59.8995, 15.8938, 0, 1 } }
+		
+		end
+		
+		constructionutil.makeFence(fenceFace, "station/airport/asset/fence_metal.mdl", 3, false, result.models)
+		
+		groundFace = { {63, -63}, { 63, 63}, {-63, 63}, {-63, -63} }
+		result.groundFaces[#result.groundFaces + 1] = { face = groundFace, modes = { { type = "FILL", key = "industry_floor" } } }
+		result.groundFaces[#result.groundFaces + 1] = { face = groundFace, modes = { { type = "STROKE_OUTER", key = "industry_floor_paving" } } }
+		
+		result.edgeLists = {
+			{
+				type = "STREET",
+				params = { type = "country_new_small.lua" },
+				edges = edges,
+				snapNodes = { 0 }
+			}
+		}
+		
+		result.terrainAlignmentLists = {
+			{
+				type = "EQUAL",
+				faces = terrainFaces,
+				slopeLow = .35
+			}
+		}
+
+		return result
+	end
+}
+
+end

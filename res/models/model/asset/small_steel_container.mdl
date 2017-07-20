@@ -1,0 +1,38 @@
+function data()
+return {
+	collider = { params = { }, type = "MESH", },
+	lods = {
+		{
+			animations = { },
+			children = {
+				{
+				id = "industry/cargo/lod_1_cargo_open_container.msh",
+				transf = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 },
+				type = "MESH",
+				},
+			},
+			events = { },
+			matConfigs = { { 0 } },
+			static = false,
+			visibleFrom = 110,
+			visibleTo = 600,
+		},
+		{
+			animations = { },
+			children = {
+				{
+				id = "industry/cargo/lod_0_cargo_open_container.msh",
+				transf = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 },
+				type = "MESH",
+				},
+			},
+			events = { },
+			matConfigs = { { 0 } },
+			static = false,
+			visibleFrom = 0,
+			visibleTo = 110,
+		}, 
+	},
+	metadata = { },
+}
+end

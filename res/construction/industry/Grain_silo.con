@@ -1,0 +1,494 @@
+local constructionutil = require "constructionutil"
+local paramsutil = require "paramsutil"
+local vec3 = require "vec3"
+local transf = require "transf"
+
+function data()
+
+return {
+	boundingInfo = {
+		bbMax = { 81, 112, 10 },
+		bbMin = { -141, -122, -0.2 },
+	},
+	type = "INDUSTRY",
+	categories = {_(Extractive_industry)},
+	order = 5,
+	description = {
+		name = _("Grain silo"),
+		description = _(Grain_desc),
+	},
+	availability = {
+
+	},
+	soundConfig = {
+		soundSet = { name = "farm" },
+		effects = {
+			select =  {
+				"selected_industry_farm1.wav",
+				"selected_industry_farm2.wav",
+				"selected_industry_farm3.wav"
+			}
+		}
+	},
+	params = paramsutil.makeIndustryParams(),
+	updateFn = function(params)
+		local result = { }
+		local level = (params.productionLevel or 0) + 1
+		local groundFace = { }
+		local terrainFaces = { }	
+		local edges = { }
+		
+		-- Дорога
+		edges[#edges + 1] = { { 0.0, -64.0 - 15.0,  0.0 },  { 00.0, 15.0, 0.00 } } -- Въезд (от края участка 63 высчитывается 15 за пределы участка)
+		edges[#edges + 1] = { { 0.0, -64.0,  0.0 },  { 00.0, 15.0, 0.00 } }
+				
+		edges[#edges + 1] = { { 0.0, -64.0,  0.0 },  { 00.0, 48.0, 0.00 } } -- Начало отрезка (x,y,z)(точка и направление выхода)
+		edges[#edges + 1] = { { 0.0, -16.0,  0.0 },  { 00.0, 48.0, 0.00 } } -- Конец отрезка (x,y,z)
+		
+		edges[#edges + 1] = { { 0.0, -16.0,  0.0 },  { 54.0, 0.0, 0.00 } }
+		edges[#edges + 1] = { { 38.0, -16.0,  0.0 },  { 54.0, 0.0, 0.00 } }
+		
+		edges[#edges + 1] = { { 38.0, -16.0,  0.0 },  { 0.0, 24.5, 0.00 } }
+		edges[#edges + 1] = { { 38.0, 8.5,  0.0 },  { 0.0, 24.5, 0.00 } }
+		
+		result.models = { }
+		result.groundFaces = { }
+		result.stocks = { }
+		result.stockRules = { }
+		result.cost = _G.GrainCost * (params.productionLevel + 1)
+		result.maintenanceCost = _G.GrainMaintenanceCost * (params.productionLevel + 1)
+		
+		-- Забор
+		fenceFace = { {4, -63, 0}, {65, -63, 0}, { 65, 9, 0}, {80, 35.5, 0}, {80, 92.5, 0}, {60, 111, 0}, {-80, 92, 0}, {-140, -19.2, 0}, {-113.3, -121, 0}, {-95.3, -121, 0}, {-28, -105, 0}, {-13, -72, 0}, {-13, -63, 0}, {-4,-63, 0} } 
+		
+		-- Заливка под забором (Убрана)
+		-- result.groundFaces[#result.groundFaces + 1] = { face = fenceFace, modes = { { type = "STROKE_OUTER", key = "industry_floor_paving" } } }
+		-- result.groundFaces[#result.groundFaces + 1] = { face = constructionutil.reverseFace(fenceFace), modes = { { type = "STROKE_OUTER", key = "industry_floor_paving" } } }		
+		
+		-- Выравнивание земли
+		terrainFaces[#terrainFaces + 1] = { {65, -63, 0}, { 65, 9, 0}, {80, 35.5, 0}, {80, 92.5, 0}, {60, 111, 0}, {-80, 92, 0}, {-140, -19.2, 0}, {-113.3, -121, 0}, {-95.3, -121, 0}, {-28, -105, 0}, {-13, -72, 0}, {-13, -63, 0} } 
+		
+		if (level >= 1) then
+		
+			-- Строим амбар и сило
+		
+			result.models[#result.models + 1] = {
+				id = "industry/farm/silo.mdl",
+				transf = transf.rotZYXTransl(transf.degToRad(0.0, 0.0, 0.0), vec3.new(10, -25 , 0))
+			}
+
+			result.models[#result.models + 1] = {
+				id = "industry/farm/barn_small.mdl",
+				transf = transf.rotZYXTransl(transf.degToRad(180.0, 0.0, 0.0), vec3.new(0, 0, 0))
+			}
+			
+			-- Делаем заливку под Амбаром и Сило
+			
+			groundFace = { {5, -30}, {15, -30}, {15, -20}, {5, -20} }	
+			result.groundFaces[#result.groundFaces + 1 ] = { face = groundFace, modes = { { type = "FILL", key = "industry_gravel_small_01" } } }
+			result.groundFaces[#result.groundFaces + 1 ] = { face = groundFace, modes = { { type = "STROKE_OUTER", key = "building_paving" } } }
+
+			groundFace = { {10, 5}, {-10, 5}, {-10, -5}, {10, -5} }	
+			result.groundFaces[#result.groundFaces + 1 ] = { face = groundFace, modes = { { type = "FILL", key = "industry_gravel_small_01" } } }
+			result.groundFaces[#result.groundFaces + 1 ] = { face = groundFace, modes = { { type = "STROKE_OUTER", key = "building_paving" } } }
+			
+		end
+		
+		if (level == 1) then
+		
+			result.personCapacity = { type = "INDUSTRIAL", capacity = _G.ManLeveledPerson[params.productionLevel + 1] }
+		
+			constructionutil.makeStocks({
+				stocks = {
+					{ cargoType = "FERTILIZERS",		type = "RECEIVING", x = 29, 	y = -1, 	sizex = 1,	sizey = 2 },
+					{ cargoType = "GRAIN",				type = "SENDING", 	x = 51, 	y = -1, 	sizex = 2,	sizey = 2 }
+				},
+				stockRules = {
+					{ input = { { 0, 0 }, { 1, 0 } }, output = { { 0, 1 }, { 0, 3 } }, capacity = math.random( _G.leveledCapacity1[1], _G.leveledCapacity1[2] ) }
+				}
+			}, result)
+			
+		end
+
+		if (level >= 2) then
+			
+			-- Добавляем Коровник 30х34
+			result.models[#result.models + 1] = {
+				id = "industry/farm/cow_barn.mdl",
+				transf = transf.rotZYXTransl(transf.degToRad(90.0, 0.0, 0.0), vec3.new(21, -48 , 0))
+			}
+
+		end
+
+		if (level == 2) then
+		
+			result.personCapacity = { type = "INDUSTRIAL", capacity = _G.ManLeveledPerson[params.productionLevel + 1] }
+			
+			constructionutil.makeStocks({
+				stocks = {
+					{ cargoType = "FERTILIZERS",		type = "RECEIVING", 	x = 29, 	y = -1, 	sizex = 1,	sizey = 2 },
+					{ cargoType = "GRAIN",				type = "SENDING", 		x = 51, 	y = -1, 	sizex = 2,	sizey = 2 }
+				},
+				stockRules = {
+					{ input = { { 0, 0 }, { 1, 0 } }, output = { { 0, 1 }, { 0, 3 } }, capacity = math.random( _G.leveledCapacity2[1], _G.leveledCapacity2[2] ) }
+				}
+			}, result)
+			
+		end
+
+		if (level >= 3) then
+
+			result.models[#result.models + 1] = {
+				id = "industry/farm/silo.mdl",
+				transf = transf.rotZYXTransl(transf.degToRad(0.0, 0.0, 0.0), vec3.new(21, -25 , 0))
+			}
+			
+			groundFace = { {16, -30},  {26, -30}, {26, -20}, {16, -20} }		
+			result.groundFaces[#result.groundFaces + 1] = { face = groundFace, modes = { { type = "FILL", key = "industry_gravel_small_01" } } }
+			result.groundFaces[#result.groundFaces + 1] = { face = groundFace, modes = { { type = "STROKE_OUTER", key = "building_paving" } } }
+
+						
+		end
+		
+		if (level == 3) then
+		
+			result.personCapacity = { type = "INDUSTRIAL", capacity = _G.ManLeveledPerson[params.productionLevel + 1] }
+				
+			constructionutil.makeStocks({
+				stocks = {
+					{ cargoType = "FERTILIZERS",		type = "RECEIVING", 	x = 25, 	y = -1, 	sizex = 2,	sizey = 2 },
+					{ cargoType = "GRAIN",				type = "SENDING", 		x = 51, 	y = -5,		sizex = 2,	sizey = 3 }
+				},
+				stockRules = {
+					{ input = { { 0, 0 }, { 1, 0 } }, output = { { 0, 1 }, { 0, 3 } }, capacity = math.random( _G.leveledCapacity3[1], _G.leveledCapacity3[2] ) }
+				}
+			}, result)
+		
+		end
+
+		if (level >= 4) then
+
+			result.models[#result.models + 1] = {
+				id = "industry/farm/cow_barn.mdl",
+				transf = transf.rotZYXTransl(transf.degToRad(90.0, 0.0, 0.0), vec3.new(45, -48 , 0))
+			}
+			
+		end
+
+		if (level == 4) then
+		
+			result.personCapacity = { type = "INDUSTRIAL", capacity = _G.ManLeveledPerson[params.productionLevel + 1] }
+		
+			constructionutil.makeStocks({
+				stocks = {
+					{ cargoType = "FERTILIZERS",		type = "RECEIVING", 	x = 21, 	y = -1, 	sizex = 3,	sizey = 2 },
+					{ cargoType = "GRAIN",				type = "SENDING", 		x = 51, 	y = -9, 	sizex = 2,	sizey = 4 }
+				},
+				stockRules = {
+					{ input = { { 0, 0 }, { 1, 0 } }, output = { { 0, 1 }, { 0, 3 } }, capacity = math.random( _G.leveledCapacity4[1], _G.leveledCapacity4[2] ) }
+				}
+			}, result)
+			
+		end
+
+		if (level >= 5) then
+			
+			result.models[#result.models + 1] = {
+				id = "industry/farm/silo.mdl",
+				transf = transf.rotZYXTransl(transf.degToRad(0.0, 0.0, 0.0), vec3.new(32, -25 , 0))
+			}
+			
+			groundFace = { {27, -30},  {37, -30}, {37, -20}, {27, -20} }		
+			result.groundFaces[#result.groundFaces + 1] = { face = groundFace, modes = { { type = "FILL", key = "industry_gravel_small_01" } } }
+			result.groundFaces[#result.groundFaces + 1] = { face = groundFace, modes = { { type = "STROKE_OUTER", key = "building_paving" } } }
+			
+		end
+
+		if (level == 5) then
+		
+			result.personCapacity = { type = "INDUSTRIAL", capacity = _G.ManLeveledPerson[params.productionLevel + 1] }
+				
+			constructionutil.makeStocks({
+				stocks = {
+					{ cargoType = "FERTILIZERS",		type = "RECEIVING", 	x = 21,		y = -1,		sizex = 3,	sizey = 2 },
+					-- Добавили уран
+					{ cargoType = "URAN",				type = "RECEIVING", 	x = 45,		y = -48,	sizex = 1,	sizey = 1 },
+					{ cargoType = "GRAIN",				type = "SENDING", 		x = 51,		y = -13,	sizex = 2,	sizey = 5 }
+				},
+				stockRules = {
+					{ input = { { 0, 0, 0 }, { 1, 0, 0 } }, output = { { 0, 0, 1 }, { 0, 0, 3 } }, capacity = math.random( _G.leveledCapacity5[1], _G.leveledCapacity5[2] ) },
+					-- Введение новой цепочки товара и производства, перенесена на новую строку в интерфейсе.
+					{ input = { { 0, 1, 0 } }, output = { { 0, 0, 10 } }, capacity = math.random( _G.leveledCapacity5[1], _G.leveledCapacity5[2] ) }
+				}
+			}, result)
+		
+		end
+		
+		-- decoration
+		
+		if (level == 1) then
+			result.models[#result.models + 1] = { id = "asset/ground/container_wood.mdl", transf = transf.rotZYXTransl(transf.degToRad(180.0, 0.0, 0.0), vec3.new(7, 6 , 0)) }
+			result.models[#result.models + 1] = { id = "asset/ground/barrel_wood.mdl", transf = { 0.980785, -0.19509, 0, 0,   0.19509, 0.980785, 0, 0,   0, 0, 1, 0,   9.95013, -33.0129, 0, 1 } }
+			result.models[#result.models + 1] = { id = "asset/ground/barrel_wood.mdl", transf = { 0.980785, -0.19509, 0, 0,   0.19509, 0.980785, 0, 0,   0, 0, 1, 0,   11.822, -32.2908, 0, 1 } }
+			result.models[#result.models + 1] = { id = "asset/ground/barrel_wood.mdl", transf = { 0.980785, -0.19509, 0, 0,   0.19509, 0.980785, 0, 0,   0, 0, 1, 0,   8.65247, -31.8503, 0, 1 } }
+			result.models[#result.models + 1] = { id = "asset/ground/construction_shack.mdl", transf = transf.rotZYXTransl(transf.degToRad(180.0, 0.0, 0.0), vec3.new(-9, -30 , 0)) }
+			result.models[#result.models + 1] = { id = "tree/fraserfir_rt_2.mdl", transf = { 0.19241, -0.981315, 0, 0,   0.981315, 0.19241, 0, 0,   0, 0, 1, 0,   57.0301, -36.3276, -0.0163803, 1 } }
+			result.models[#result.models + 1] = { id = "tree/shingleoak_rt_1.mdl", transf = { 0.501682, -0.865052, 0, 0,   0.865052, 0.501682, 0, 0,   0, 0, 1, 0,   50.0301, -37.3276, -0.0163803, 1 } }
+			result.models[#result.models + 1] = { id = "tree/commonhazel_rt_4.mdl", transf = { -0.829915, -0.55789, 0, 0,   0.55789, -0.829915, 0, 0,   0, 0, 1, 0,   52.0301, -42.3276, -0.0163803, 1 } }
+			result.models[#result.models + 1] = { id = "tree/europeanlinden_rt_3.mdl", transf = { -0.924719, -0.380651, 0, 0,   0.380651, -0.924719, 0, 0,   0, 0, 1, 0,   52.0301, -33.3276, -0.0163803, 1 } }
+			result.models[#result.models + 1] = { id = "tree/fraserfir_rt_1.mdl", transf = { 0.570446, 0.821335, 0, 0,   -0.821335, 0.570446, 0, 0,   0, 0, 1, 0,   48.0301, -29.3276, -0.0163803, 1 } }
+			result.models[#result.models + 1] = { id = "tree/whitebirch_rt_1.mdl", transf = { -0.71845, 0.695579, 0, 0,   -0.695579, -0.71845, 0, 0,   0, 0, 1, 0,   46.0301, -24.3276, -0.0163803, 1 } }
+			result.models[#result.models + 1] = { id = "tree/europeanlinden_rt_1.mdl", transf = { -0.67629, -0.736635, 0, 0,   0.736635, -0.67629, 0, 0,   0, 0, 1, 0,   44.0301, -30.3276, -0.0163803, 1 } }
+			result.models[#result.models + 1] = { id = "tree/easternwhitepine_rt_3.mdl", transf = { -0.274157, -0.961685, 0, 0,   0.961685, -0.274157, 0, 0,   0, 0, 1, 0,   54.0301, -27.3276, -0.0163803, 1 } }
+			result.models[#result.models + 1] = { id = "tree/commonhazel_rt_1.mdl", transf = { 0.415869, -0.909424, 0, 0,   0.909424, 0.415869, 0, 0,   0, 0, 1, 0,   54.0301, -21.3276, -0.0163803, 1 } }
+			result.models[#result.models + 1] = { id = "tree/mapleshrub_rt_7.mdl", transf = { 0.269821, 0.962911, 0, 0,   -0.962911, 0.269821, 0, 0,   0, 0, 1, 0,   55.0301, -15.3276, -0.0163803, 1 } }
+			result.models[#result.models + 1] = { id = "tree/mapleshrub_rt_1.mdl", transf = { -0.982662, 0.185407, 0, 0,   -0.185407, -0.982662, 0, 0,   0, 0, 1, 0,   57.0301, -23.3276, -0.0163803, 1 } }
+			result.models[#result.models + 1] = { id = "tree/mapleshrub_rt_7.mdl", transf = { -0.0437597, -0.999042, 0, 0,   0.999042, -0.0437597, 0, 0,   0, 0, 1, 0,   40.0301, -31.3276, -0.0163803, 1 } }
+			result.models[#result.models + 1] = { id = "tree/commonhazel_rt_2.mdl", transf = { 0.994782, 0.102021, 0, 0,   -0.102021, 0.994782, 0, 0,   0, 0, 1, 0,   39.0301, -36.3276, -0.0163803, 1 } }
+			result.models[#result.models + 1] = { id = "tree/mapleshrub_rt_1.mdl", transf = { 0.743117, -0.669161, 0, 0,   0.669161, 0.743117, 0, 0,   0, 0, 1, 0,   45.0301, -38.3276, -0.0163803, 1 } }
+			result.models[#result.models + 1] = { id = "asset/rock1_6.mdl", transf = { -0.980316, 0.197436, 0, 0,   -0.197436, -0.980316, 0, 0,   0, 0, 1, 0,   50.9501, -52.0129, 0, 1 } }
+			result.models[#result.models + 1] = { id = "asset/rock1_7.mdl", transf = { 0.668828, 0.743417, 0, 0,   -0.743417, 0.668828, 0, 0,   0, 0, 1, 0,   44.2576, -53.1, 0, 1 } }
+			result.models[#result.models + 1] = { id = "tree/orangetree_1_rt_2.mdl", transf = { 0.490198, -0.871611, 0, 0,   0.871611, 0.490198, 0, 0,   0, 0, 1, 0,   45.8159, -54.8572, -0.00921631, 1 } }
+			result.models[#result.models + 1] = { id = "tree/commonhazel_rt_1.mdl", transf = { 0.90242, -0.430858, 0, 0,   0.430858, 0.90242, 0, 0,   0, 0, 1, 0,   45.8159, -45.8572, -0.00921631, 1 } }
+			result.models[#result.models + 1] = { id = "tree/commonhazel_rt_4.mdl", transf = { -0.908402, -0.418097, 0, 0,   0.418097, -0.908402, 0, 0,   0, 0, 1, 0,   41.8159, -45.8572, -0.00921631, 1 } }
+			result.models[#result.models + 1] = { id = "tree/azalea_rt_2.mdl", transf = { -0.99398, -0.109558, 0, 0,   0.109558, -0.99398, 0, 0,   0, 0, 1, 0,   37.8159, -50.8572, -0.00921631, 1 } }
+			result.models[#result.models + 1] = { id = "tree/europeanlinden_rt_2.mdl", transf = { -0.652209, -0.758039, 0, 0,   0.758039, -0.652209, 0, 0,   0, 0, 1, 0,   53.8159, -44.8572, -0.00921631, 1 } }
+			result.models[#result.models + 1] = { id = "tree/azalea_rt_2.mdl", transf = { -0.940795, -0.338975, 0, 0,   0.338975, -0.940795, 0, 0,   0, 0, 1, 0,   48.8159, -56.8572, -0.00921631, 1 } }
+			result.models[#result.models + 1] = { id = "tree/commonhazel_rt_3.mdl", transf = { 0.745299, 0.666731, 0, 0,   -0.666731, 0.745299, 0, 0,   0, 0, 1, 0,   49.8159, -41.8572, -0.00921631, 1 } }
+			result.models[#result.models + 1] = { id = "tree/mapleshrub_rt_7.mdl", transf = { -0.427091, 0.904209, 0, 0,   -0.904209, -0.427091, 0, 0,   0, 0, 1, 0,   57.8159, -50.8572, -0.00921631, 1 } }
+			-- Вдоль дороги
+			result.models[#result.models + 1] = { id = "tree/mapleshrub_rt_1.mdl", transf = { -0.427091, 0.904209, 0, 0,   -0.904209, -0.427091, 0, 0,   0, 0, 1, 0,   -7.3, -37, -0.00921631, 1 } }
+			result.models[#result.models + 1] = { id = "tree/mapleshrub_rt_3.mdl", transf = { -0.427091, 0.904209, 0, 0,   -0.904209, -0.427091, 0, 0,   0, 0, 1, 0,   -7.01, -47, -0.00921631, 1 } }
+			result.models[#result.models + 1] = { id = "tree/mapleshrub_rt_5.mdl", transf = { -0.427091, 0.904209, 0, 0,   -0.904209, -0.427091, 0, 0,   0, 0, 1, 0,   -7.2, -57, -0.00921631, 1 } }
+			result.models[#result.models + 1] = { id = "asset/water_tank_res_01.mdl", transf = transf.rotZYXTransl(transf.degToRad(180.0, 0.0, 0.0), vec3.new(-10, -36.5 , 0)) }
+			-- Огород, куча, тачка
+			result.models[#result.models + 1] = { id = "asset/ground/wheelbarrow.mdl", transf = { 0.19509, -0.980785, 0, 0,   0.980785, 0.19509, 0, 0,   0, 0, 1, 0,   19, -42.5, -0.0141068, 1 } }
+				-- Нарисовали огород по координатам
+				groundFace = { {23, -45}, {33, -45}, {33, -25}, {23, -25} }	
+				-- Залили в координаты текстуру огорода
+				result.groundFaces[#result.groundFaces + 1 ] = { face = groundFace, modes = { { type = "FILL", key = "farmland_3" } } }
+			result.models[#result.models + 1] = { id = "asset/ground/heap_small.mdl", transf = { 0.92388, -0.382683, 0, 0,   0.382683, 0.92388, 0, 0,   0, 0, 1, 0,   13.0499, -48.0129, 0, 1 } }
+			result.models[#result.models + 1] = { id = "asset/ground/heap_small.mdl", transf = { 0.980785, 0.19509, 0, 0,   -0.19509, 0.980785, 0, 0,   0, 0, 1, 0,   15.0499, -46.0129, 0, 1 } }
+			result.models[#result.models + 1] = { id = "asset/ground/heap_small.mdl", transf = { 0.980785, -0.19509, 0, 0,   0.19509, 0.980785, 0, 0,   0, 0, 1, 0,   15.0499, -47.0129, -0.5, 1 } }
+		end
+		
+		if level == 2 then
+		-- Деревья, камни
+			result.models[#result.models + 1] = { id = "tree/fraserfir_rt_2.mdl", transf = { 0.19241, -0.981315, 0, 0,   0.981315, 0.19241, 0, 0,   0, 0, 1, 0,   57.0301, -36.3276, -0.0163803, 1 } }
+			result.models[#result.models + 1] = { id = "tree/shingleoak_rt_1.mdl", transf = { 0.501682, -0.865052, 0, 0,   0.865052, 0.501682, 0, 0,   0, 0, 1, 0,   50.0301, -37.3276, -0.0163803, 1 } }
+			result.models[#result.models + 1] = { id = "tree/commonhazel_rt_4.mdl", transf = { -0.829915, -0.55789, 0, 0,   0.55789, -0.829915, 0, 0,   0, 0, 1, 0,   52.0301, -42.3276, -0.0163803, 1 } }
+			result.models[#result.models + 1] = { id = "tree/europeanlinden_rt_3.mdl", transf = { -0.924719, -0.380651, 0, 0,   0.380651, -0.924719, 0, 0,   0, 0, 1, 0,   52.0301, -33.3276, -0.0163803, 1 } }
+			result.models[#result.models + 1] = { id = "tree/fraserfir_rt_1.mdl", transf = { 0.570446, 0.821335, 0, 0,   -0.821335, 0.570446, 0, 0,   0, 0, 1, 0,   48.0301, -29.3276, -0.0163803, 1 } }
+			result.models[#result.models + 1] = { id = "tree/whitebirch_rt_1.mdl", transf = { -0.71845, 0.695579, 0, 0,   -0.695579, -0.71845, 0, 0,   0, 0, 1, 0,   46.0301, -24.3276, -0.0163803, 1 } }
+			result.models[#result.models + 1] = { id = "tree/europeanlinden_rt_1.mdl", transf = { -0.67629, -0.736635, 0, 0,   0.736635, -0.67629, 0, 0,   0, 0, 1, 0,   44.0301, -30.3276, -0.0163803, 1 } }
+			result.models[#result.models + 1] = { id = "tree/easternwhitepine_rt_3.mdl", transf = { -0.274157, -0.961685, 0, 0,   0.961685, -0.274157, 0, 0,   0, 0, 1, 0,   54.0301, -27.3276, -0.0163803, 1 } }
+			result.models[#result.models + 1] = { id = "tree/commonhazel_rt_1.mdl", transf = { 0.415869, -0.909424, 0, 0,   0.909424, 0.415869, 0, 0,   0, 0, 1, 0,   54.0301, -21.3276, -0.0163803, 1 } }
+			result.models[#result.models + 1] = { id = "tree/mapleshrub_rt_7.mdl", transf = { 0.269821, 0.962911, 0, 0,   -0.962911, 0.269821, 0, 0,   0, 0, 1, 0,   55.0301, -15.3276, -0.0163803, 1 } }
+			result.models[#result.models + 1] = { id = "tree/mapleshrub_rt_1.mdl", transf = { -0.982662, 0.185407, 0, 0,   -0.185407, -0.982662, 0, 0,   0, 0, 1, 0,   57.0301, -23.3276, -0.0163803, 1 } }
+			result.models[#result.models + 1] = { id = "tree/mapleshrub_rt_7.mdl", transf = { -0.0437597, -0.999042, 0, 0,   0.999042, -0.0437597, 0, 0,   0, 0, 1, 0,   40.0301, -31.3276, -0.0163803, 1 } }
+			result.models[#result.models + 1] = { id = "tree/commonhazel_rt_2.mdl", transf = { 0.994782, 0.102021, 0, 0,   -0.102021, 0.994782, 0, 0,   0, 0, 1, 0,   39.0301, -36.3276, -0.0163803, 1 } }
+			result.models[#result.models + 1] = { id = "tree/mapleshrub_rt_1.mdl", transf = { 0.743117, -0.669161, 0, 0,   0.669161, 0.743117, 0, 0,   0, 0, 1, 0,   45.0301, -38.3276, -0.0163803, 1 } }
+			result.models[#result.models + 1] = { id = "asset/rock1_6.mdl", transf = { -0.980316, 0.197436, 0, 0,   -0.197436, -0.980316, 0, 0,   0, 0, 1, 0,   50.9501, -52.0129, 0, 1 } }
+			result.models[#result.models + 1] = { id = "asset/rock1_7.mdl", transf = { 0.668828, 0.743417, 0, 0,   -0.743417, 0.668828, 0, 0,   0, 0, 1, 0,   44.2576, -53.1, 0, 1 } }
+			result.models[#result.models + 1] = { id = "tree/orangetree_1_rt_2.mdl", transf = { 0.490198, -0.871611, 0, 0,   0.871611, 0.490198, 0, 0,   0, 0, 1, 0,   45.8159, -54.8572, -0.00921631, 1 } }
+			result.models[#result.models + 1] = { id = "tree/commonhazel_rt_1.mdl", transf = { 0.90242, -0.430858, 0, 0,   0.430858, 0.90242, 0, 0,   0, 0, 1, 0,   45.8159, -45.8572, -0.00921631, 1 } }
+			result.models[#result.models + 1] = { id = "tree/commonhazel_rt_4.mdl", transf = { -0.908402, -0.418097, 0, 0,   0.418097, -0.908402, 0, 0,   0, 0, 1, 0,   41.8159, -45.8572, -0.00921631, 1 } }
+			result.models[#result.models + 1] = { id = "tree/azalea_rt_2.mdl", transf = { -0.99398, -0.109558, 0, 0,   0.109558, -0.99398, 0, 0,   0, 0, 1, 0,   37.8159, -50.8572, -0.00921631, 1 } }
+			result.models[#result.models + 1] = { id = "tree/europeanlinden_rt_2.mdl", transf = { -0.652209, -0.758039, 0, 0,   0.758039, -0.652209, 0, 0,   0, 0, 1, 0,   53.8159, -44.8572, -0.00921631, 1 } }
+			result.models[#result.models + 1] = { id = "tree/azalea_rt_2.mdl", transf = { -0.940795, -0.338975, 0, 0,   0.338975, -0.940795, 0, 0,   0, 0, 1, 0,   48.8159, -56.8572, -0.00921631, 1 } }
+			result.models[#result.models + 1] = { id = "tree/commonhazel_rt_3.mdl", transf = { 0.745299, 0.666731, 0, 0,   -0.666731, 0.745299, 0, 0,   0, 0, 1, 0,   49.8159, -41.8572, -0.00921631, 1 } }
+			result.models[#result.models + 1] = { id = "tree/mapleshrub_rt_7.mdl", transf = { -0.427091, 0.904209, 0, 0,   -0.904209, -0.427091, 0, 0,   0, 0, 1, 0,   57.8159, -50.8572, -0.00921631, 1 } }
+		-- Бочки/коробки
+			result.models[#result.models + 1] = { id = "asset/ground/barrel_wood.mdl", transf = transf.rotZYXTransl(transf.degToRad(270.0, 0.0, 0.0), vec3.new(7, -11 , 0)) }
+			result.models[#result.models + 1] = { id = "asset/ground/barrel_wood.mdl", transf = transf.rotZYXTransl(transf.degToRad(270.0, 0.0, 0.0), vec3.new(6.5, -9 , 0)) }
+			result.models[#result.models + 1] = { id = "asset/ground/wooden_box_02.mdl", transf = { 0.923879, -0.382684, 0, 0,   0.382684, 0.923879, 0, 0,   0, 0, 1, 0,   5.88242, -7.68281, -0.0163803, 1 } }
+			result.models[#result.models + 1] = { id = "asset/ground/wooden_box_02.mdl", transf = { 0.923879, -0.382684, 0, 0,   0.382684, 0.923879, 0, 0,   0, 0, 1, 0,   5.30524, -10.387, -0.0163803, 1 } }
+			result.models[#result.models + 1] = { id = "asset/ground/barrel_wood.mdl", transf = { 0.980785, 0.19509, 0, 0,   -0.19509, 0.980785, 0, 0,   0, 0, 1, 0,   -9.4244, -11.0657, -0.0163803, 1 } }
+			result.models[#result.models + 1] = { id = "asset/ground/barrel_wood.mdl", transf = { 0.980785, 0.19509, 0, 0,   -0.19509, 0.980785, 0, 0,   0, 0, 1, 0,   -9.1439, -9.2306, -0.0163803, 1 } }
+			result.models[#result.models + 1] = { id = "asset/barrel_water_wood.mdl", transf = { 0.980785, 0.19509, 0, 0,   -0.19509, 0.980785, 0, 0,   0, 0, 1, 0,   -10.706, -20.1792, -0.0163803, 1 } }
+			result.models[#result.models + 1] = { id = "asset/barrel_water_wood.mdl", transf = { 0.980785, 0.19509, 0, 0,   -0.19509, 0.980785, 0, 0,   0, 0, 1, 0,   -8.1178, -11.2378, -0.0163803, 1 } }
+			result.models[#result.models + 1] = { id = "asset/barrel_water_wood.mdl", transf = { 0.980785, 0.19509, 0, 0,   -0.19509, 0.980785, 0, 0,   0, 0, 1, 0,   -6.9756, -11.5145, -0.0163803, 1 } }
+			result.models[#result.models + 1] = { id = "asset/barrel_water_wood.mdl", transf = { 0.980785, 0.19509, 0, 0,   -0.19509, 0.980785, 0, 0,   0, 0, 1, 0,   -1.63306, 6.76538, -0.0163803, 1 } }
+			result.models[#result.models + 1] = { id = "asset/ground/barrel_wood.mdl", transf = { 0.980785, 0.19509, 0, 0,   -0.19509, 0.980785, 0, 0,   0, 0, 1, 0,   -0.171234, 6.32285, -0.0163803, 1 } }
+			result.models[#result.models + 1] = { id = "asset/ground/barrel_steel.mdl", transf = { 0.980785, 0.19509, 0, 0,   -0.19509, 0.980785, 0, 0,   0, 0, 1, 0,   -10.1973, -17.7661, -0.0163803, 1 } }
+			result.models[#result.models + 1] = { id = "asset/ground/barrel_steel.mdl", transf = { 0.980785, 0.19509, 0, 0,   -0.19509, 0.980785, 0, 0,   0, 0, 1, 0,   -11.1359, -18.3487, -0.0163803, 1 } }
+			result.models[#result.models + 1] = { id = "asset/ground/wooden_box_01.mdl", transf = { 1, 0, 0, 0,   0, 1, 0, 0,   0, 0, 1, 0,   8.58414, -9.69344, -0.0163803, 1 } }
+			result.models[#result.models + 1] = { id = "asset/ground/wooden_box_01.mdl", transf = { 1, 0, 0, 0,   0, 1, 0, 0,   0, 0, 1, 0,   11.4671, -33.1068, -0.0163803, 1 } }
+			result.models[#result.models + 1] = { id = "asset/ground/wooden_box_02.mdl", transf = { 1, 0, 0, 0,   0, 1, 0, 0,   0, 0, 1, 0,   12.7699, -32.7457, -0.0163803, 1 } }
+			result.models[#result.models + 1] = { id = "asset/ground/wooden_box_02.mdl", transf = { 0.923879, -0.382684, 0, 0,   0.382684, 0.923879, 0, 0,   0, 0, 1, 0,   9.83664, -32.7094, -0.0163803, 1 } }
+			result.models[#result.models + 1] = { id = "asset/barrel_water_wood.mdl", transf = { 0.980785, 0.19509, 0, 0,   -0.19509, 0.980785, 0, 0,   0, 0, 1, 0,   10.9673, -2.25667, -0.0163803, 1 } }
+		-- Куча мусора, тачка
+			result.models[#result.models + 1] = { id = "asset/ground/heap_small.mdl", transf = { 0.92388, -0.382683, 0, 0,   0.382683, 0.92388, 0, 0,   0, 0, 1, 0,   24.0499, -28.0129, 0, 1 } }
+			result.models[#result.models + 1] = { id = "asset/ground/heap_small.mdl", transf = { 0.980785, 0.19509, 0, 0,   -0.19509, 0.980785, 0, 0,   0, 0, 1, 0,   26.0499, -26.0129, 0, 1 } }
+			result.models[#result.models + 1] = { id = "asset/ground/heap_small.mdl", transf = { 0.980785, -0.19509, 0, 0,   0.19509, 0.980785, 0, 0,   0, 0, 1, 0,   26.0499, -27.0129, -0.5, 1 } }
+			result.models[#result.models + 1] = { id = "asset/ground/wheelbarrow.mdl", transf = { 0.19509, -0.980785, 0, 0,   0.980785, 0.19509, 0, 0,   0, 0, 1, 0,   22, -23.5, -0.0141068, 1 } }
+		-- Вдоль дороги
+			result.models[#result.models + 1] = { id = "asset/ground/construction_shack.mdl", transf = transf.rotZYXTransl(transf.degToRad(180.0, 0.0, 0.0), vec3.new(-9, -30 , 0)) }
+			result.models[#result.models + 1] = { id = "tree/mapleshrub_rt_1.mdl", transf = { -0.427091, 0.904209, 0, 0,   -0.904209, -0.427091, 0, 0,   0, 0, 1, 0,   -7.3, -37, -0.00921631, 1 } }
+			result.models[#result.models + 1] = { id = "tree/mapleshrub_rt_3.mdl", transf = { -0.427091, 0.904209, 0, 0,   -0.904209, -0.427091, 0, 0,   0, 0, 1, 0,   -7.01, -47, -0.00921631, 1 } }
+			result.models[#result.models + 1] = { id = "tree/mapleshrub_rt_5.mdl", transf = { -0.427091, 0.904209, 0, 0,   -0.904209, -0.427091, 0, 0,   0, 0, 1, 0,   -7.2, -57, -0.00921631, 1 } }
+			result.models[#result.models + 1] = { id = "asset/water_tank_res_01.mdl", transf = transf.rotZYXTransl(transf.degToRad(180.0, 0.0, 0.0), vec3.new(-10, -36.5 , 0)) }
+		end
+		
+		if level == 3 then
+			result.models[#result.models + 1] = { id = "asset/ground/container_wood.mdl", transf = transf.rotZYXTransl(transf.degToRad(270.0, 0.0, 0.0), vec3.new(7, -34 , 0)) }
+			result.models[#result.models + 1] = { id = "asset/bench_new.mdl", transf = transf.rotZYXTransl(transf.degToRad(90.0, 0.0, 0.0), vec3.new(7, -26, 0)) }			
+			result.models[#result.models + 1] = { id = "asset/ground/barrel_wood.mdl", transf = { 7.54979e-008, -1, 0, 0,   1, 7.54979e-008, 0, 0,   0, 0, 1, 0,   -11.2, -39.8132, -0.0141068, 1 } }
+			result.models[#result.models + 1] = { id = "asset/ground/barrel_wood.mdl", transf = { 7.54979e-008, -1, 0, 0,   1, 7.54979e-008, 0, 0,   0, 0, 1, 0,   -10, -39.7892, -0.0141068, 1 } }
+			result.models[#result.models + 1] = { id = "asset/barrel_water_blue.mdl", transf = { 7.54979e-008, -1, 0, 0,   1, 7.54979e-008, 0, 0,   0, 0, 1, 0,   -9.9769, -11.337, -0.0141068, 1 } }
+			result.models[#result.models + 1] = { id = "asset/barrel_water_wood.mdl", transf = { 7.54979e-008, -1, 0, 0,   1, 7.54979e-008, 0, 0,   0, 0, 1, 0,   -10.8771, -11.0106, -0.0141068, 1 } }
+			result.models[#result.models + 1] = { id = "asset/ground/barrel_wood.mdl", transf = { 7.54979e-008, -1, 0, 0,   1, 7.54979e-008, 0, 0,   0, 0, 1, 0,   -0.28215, -7.82874, -0.0141068, 1 } }
+			result.models[#result.models + 1] = { id = "asset/ground/barrel_wood.mdl", transf = { 7.54979e-008, -1, 0, 0,   1, 7.54979e-008, 0, 0,   0, 0, 1, 0,   1.11885, -8.33887, -0.0141068, 1 } }
+			result.models[#result.models + 1] = { id = "asset/ground/barrel_wood.mdl", transf = { 7.54979e-008, -1, 0, 0,   1, 7.54979e-008, 0, 0,   0, 0, 1, 0,   -10, -17.7946, -0.0141068, 1 } }
+			result.models[#result.models + 1] = { id = "asset/ground/barrel_wood.mdl", transf = { 7.54979e-008, -1, 0, 0,   1, 7.54979e-008, 0, 0,   0, 0, 1, 0,   -10.8, -19.0919, -0.0141068, 1 } }
+			result.models[#result.models + 1] = { id = "asset/barrel_water_blue.mdl", transf = { 7.54979e-008, -1, 0, 0,   1, 7.54979e-008, 0, 0,   0, 0, 1, 0,   11.391, -2.30014, -0.0141068, 1 } }
+			result.models[#result.models + 1] = { id = "asset/barrel_water_blue.mdl", transf = { 7.54979e-008, -1, 0, 0,   1, 7.54979e-008, 0, 0,   0, 0, 1, 0,   12.7698, -2.31729, -0.0141068, 1 } }
+			result.models[#result.models + 1] = { id = "asset/barrel_water_wood.mdl", transf = { 7.54979e-008, -1, 0, 0,   1, 7.54979e-008, 0, 0,   0, 0, 1, 0,   -11.3402, -17.4406, -0.0141068, 1 } }
+			result.models[#result.models + 1] = { id = "asset/barrel_water_wood.mdl", transf = { 7.54979e-008, -1, 0, 0,   1, 7.54979e-008, 0, 0,   0, 0, 1, 0,   11.9338, -1.67978, -0.0141068, 1 } }
+			result.models[#result.models + 1] = { id = "asset/barrel_water_wood.mdl", transf = { 7.54979e-008, -1, 0, 0,   1, 7.54979e-008, 0, 0,   0, 0, 1, 0,   -10.6121, 0.941956, -0.0141068, 1 } }
+			result.models[#result.models + 1] = { id = "asset/ground/pallet_01.mdl", transf = { 0.19509, -0.980785, 0, 0,   0.980785, 0.19509, 0, 0,   0, 0, 1, 0,   15, -10.0689, -0.0141068, 1 } }
+			result.models[#result.models + 1] = { id = "asset/ground/pallet_01.mdl", transf = { -0.92388, -0.382683, 0, 0,   0.382683, -0.92388, 0, 0,   0, 0, 1, 0,   16.6138, -10.6191, -0.0141068, 1 } }
+			result.models[#result.models + 1] = { id = "asset/ground/wooden_box_03.mdl", transf = { -1, 3.25841e-007, 0, 0,   -3.25841e-007, -1, 0, 0,   0, 0, 1, 0,   7.02579, -31.9244, -0.0141068, 1 } }
+		-- Деревья, камни
+			result.models[#result.models + 1] = { id = "tree/fraserfir_rt_2.mdl", transf = { 0.19241, -0.981315, 0, 0,   0.981315, 0.19241, 0, 0,   0, 0, 1, 0,   57.0301, -36.3276, -0.0163803, 1 } }
+			result.models[#result.models + 1] = { id = "tree/shingleoak_rt_1.mdl", transf = { 0.501682, -0.865052, 0, 0,   0.865052, 0.501682, 0, 0,   0, 0, 1, 0,   50.0301, -37.3276, -0.0163803, 1 } }
+			result.models[#result.models + 1] = { id = "tree/commonhazel_rt_4.mdl", transf = { -0.829915, -0.55789, 0, 0,   0.55789, -0.829915, 0, 0,   0, 0, 1, 0,   52.0301, -42.3276, -0.0163803, 1 } }
+			result.models[#result.models + 1] = { id = "tree/europeanlinden_rt_3.mdl", transf = { -0.924719, -0.380651, 0, 0,   0.380651, -0.924719, 0, 0,   0, 0, 1, 0,   52.0301, -33.3276, -0.0163803, 1 } }
+			result.models[#result.models + 1] = { id = "tree/fraserfir_rt_1.mdl", transf = { 0.570446, 0.821335, 0, 0,   -0.821335, 0.570446, 0, 0,   0, 0, 1, 0,   48.0301, -29.3276, -0.0163803, 1 } }
+			result.models[#result.models + 1] = { id = "tree/whitebirch_rt_1.mdl", transf = { -0.71845, 0.695579, 0, 0,   -0.695579, -0.71845, 0, 0,   0, 0, 1, 0,   46.0301, -24.3276, -0.0163803, 1 } }
+			result.models[#result.models + 1] = { id = "tree/europeanlinden_rt_1.mdl", transf = { -0.67629, -0.736635, 0, 0,   0.736635, -0.67629, 0, 0,   0, 0, 1, 0,   44.0301, -30.3276, -0.0163803, 1 } }
+			result.models[#result.models + 1] = { id = "tree/easternwhitepine_rt_3.mdl", transf = { -0.274157, -0.961685, 0, 0,   0.961685, -0.274157, 0, 0,   0, 0, 1, 0,   54.0301, -27.3276, -0.0163803, 1 } }
+			result.models[#result.models + 1] = { id = "tree/commonhazel_rt_1.mdl", transf = { 0.415869, -0.909424, 0, 0,   0.909424, 0.415869, 0, 0,   0, 0, 1, 0,   54.0301, -21.3276, -0.0163803, 1 } }
+			result.models[#result.models + 1] = { id = "tree/mapleshrub_rt_1.mdl", transf = { -0.982662, 0.185407, 0, 0,   -0.185407, -0.982662, 0, 0,   0, 0, 1, 0,   57.0301, -23.3276, -0.0163803, 1 } }
+			result.models[#result.models + 1] = { id = "tree/mapleshrub_rt_7.mdl", transf = { -0.0437597, -0.999042, 0, 0,   0.999042, -0.0437597, 0, 0,   0, 0, 1, 0,   40.0301, -31.3276, -0.0163803, 1 } }
+			result.models[#result.models + 1] = { id = "tree/commonhazel_rt_2.mdl", transf = { 0.994782, 0.102021, 0, 0,   -0.102021, 0.994782, 0, 0,   0, 0, 1, 0,   39.0301, -36.3276, -0.0163803, 1 } }
+			result.models[#result.models + 1] = { id = "tree/mapleshrub_rt_1.mdl", transf = { 0.743117, -0.669161, 0, 0,   0.669161, 0.743117, 0, 0,   0, 0, 1, 0,   45.0301, -38.3276, -0.0163803, 1 } }
+			result.models[#result.models + 1] = { id = "asset/rock1_6.mdl", transf = { -0.980316, 0.197436, 0, 0,   -0.197436, -0.980316, 0, 0,   0, 0, 1, 0,   50.9501, -52.0129, 0, 1 } }
+			result.models[#result.models + 1] = { id = "asset/rock1_7.mdl", transf = { 0.668828, 0.743417, 0, 0,   -0.743417, 0.668828, 0, 0,   0, 0, 1, 0,   44.2576, -53.1, 0, 1 } }
+			result.models[#result.models + 1] = { id = "tree/orangetree_1_rt_2.mdl", transf = { 0.490198, -0.871611, 0, 0,   0.871611, 0.490198, 0, 0,   0, 0, 1, 0,   45.8159, -54.8572, -0.00921631, 1 } }
+			result.models[#result.models + 1] = { id = "tree/commonhazel_rt_1.mdl", transf = { 0.90242, -0.430858, 0, 0,   0.430858, 0.90242, 0, 0,   0, 0, 1, 0,   45.8159, -45.8572, -0.00921631, 1 } }
+			result.models[#result.models + 1] = { id = "tree/commonhazel_rt_4.mdl", transf = { -0.908402, -0.418097, 0, 0,   0.418097, -0.908402, 0, 0,   0, 0, 1, 0,   41.8159, -45.8572, -0.00921631, 1 } }
+			result.models[#result.models + 1] = { id = "tree/azalea_rt_2.mdl", transf = { -0.99398, -0.109558, 0, 0,   0.109558, -0.99398, 0, 0,   0, 0, 1, 0,   37.8159, -50.8572, -0.00921631, 1 } }
+			result.models[#result.models + 1] = { id = "tree/europeanlinden_rt_2.mdl", transf = { -0.652209, -0.758039, 0, 0,   0.758039, -0.652209, 0, 0,   0, 0, 1, 0,   53.8159, -44.8572, -0.00921631, 1 } }
+			result.models[#result.models + 1] = { id = "tree/azalea_rt_2.mdl", transf = { -0.940795, -0.338975, 0, 0,   0.338975, -0.940795, 0, 0,   0, 0, 1, 0,   48.8159, -56.8572, -0.00921631, 1 } }
+			result.models[#result.models + 1] = { id = "tree/commonhazel_rt_3.mdl", transf = { 0.745299, 0.666731, 0, 0,   -0.666731, 0.745299, 0, 0,   0, 0, 1, 0,   49.8159, -41.8572, -0.00921631, 1 } }
+			result.models[#result.models + 1] = { id = "tree/mapleshrub_rt_7.mdl", transf = { -0.427091, 0.904209, 0, 0,   -0.904209, -0.427091, 0, 0,   0, 0, 1, 0,   57.8159, -50.8572, -0.00921631, 1 } }
+		-- Вдоль дороги
+			result.models[#result.models + 1] = { id = "asset/ground/construction_shack.mdl", transf = transf.rotZYXTransl(transf.degToRad(180.0, 0.0, 0.0), vec3.new(-9, -30 , 0)) }
+			result.models[#result.models + 1] = { id = "tree/mapleshrub_rt_1.mdl", transf = { -0.427091, 0.904209, 0, 0,   -0.904209, -0.427091, 0, 0,   0, 0, 1, 0,   -7.3, -37, -0.00921631, 1 } }
+			result.models[#result.models + 1] = { id = "tree/mapleshrub_rt_3.mdl", transf = { -0.427091, 0.904209, 0, 0,   -0.904209, -0.427091, 0, 0,   0, 0, 1, 0,   -7.01, -47, -0.00921631, 1 } }
+			result.models[#result.models + 1] = { id = "tree/mapleshrub_rt_5.mdl", transf = { -0.427091, 0.904209, 0, 0,   -0.904209, -0.427091, 0, 0,   0, 0, 1, 0,   -7.2, -57, -0.00921631, 1 } }
+			result.models[#result.models + 1] = { id = "asset/water_tank_res_01.mdl", transf = transf.rotZYXTransl(transf.degToRad(180.0, 0.0, 0.0), vec3.new(-10, -36.5 , 0)) }
+		-- Куча мусора, тачка
+			result.models[#result.models + 1] = { id = "asset/ground/heap_small.mdl", transf = { 0.92388, -0.382683, 0, 0,   0.382683, 0.92388, 0, 0,   0, 0, 1, 0,   34.0499, -28.0129, 0, 1 } }
+			result.models[#result.models + 1] = { id = "asset/ground/heap_small.mdl", transf = { 0.980785, 0.19509, 0, 0,   -0.19509, 0.980785, 0, 0,   0, 0, 1, 0,   36.0499, -26.0129, 0, 1 } }
+			result.models[#result.models + 1] = { id = "asset/ground/heap_small.mdl", transf = { 0.980785, -0.19509, 0, 0,   0.19509, 0.980785, 0, 0,   0, 0, 1, 0,   36.0499, -27.0129, -0.5, 1 } }
+			result.models[#result.models + 1] = { id = "asset/ground/wheelbarrow.mdl", transf = { 0.19509, -0.980785, 0, 0,   0.980785, 0.19509, 0, 0,   0, 0, 1, 0,   32, -23.5, -0.0141068, 1 } }
+		end
+		
+		if level == 4 then
+			result.models[#result.models + 1] = { id = "asset/ground/container_wood.mdl", transf = transf.rotZYXTransl(transf.degToRad(270.0, 0.0, 0.0), vec3.new(7, -34 , 0)) }
+			result.models[#result.models + 1] = { id = "asset/bench_new.mdl", transf = transf.rotZYXTransl(transf.degToRad(90.0, 0.0, 0.0), vec3.new(7, -26, 0)) }			
+			result.models[#result.models + 1] = { id = "asset/ground/barrel_wood.mdl", transf = { 7.54979e-008, -1, 0, 0,   1, 7.54979e-008, 0, 0,   0, 0, 1, 0,   4.5, -39.8132, -0.0141068, 1 } }
+			result.models[#result.models + 1] = { id = "asset/ground/barrel_wood.mdl", transf = { 7.54979e-008, -1, 0, 0,   1, 7.54979e-008, 0, 0,   0, 0, 1, 0,   4.4, -40.7892, -0.0141068, 1 } }
+			result.models[#result.models + 1] = { id = "asset/barrel_water_blue.mdl", transf = { 7.54979e-008, -1, 0, 0,   1, 7.54979e-008, 0, 0,   0, 0, 1, 0,   62.9769, -11.337, -0.0141068, 1 } }
+			result.models[#result.models + 1] = { id = "asset/barrel_water_wood.mdl", transf = { 7.54979e-008, -1, 0, 0,   1, 7.54979e-008, 0, 0,   0, 0, 1, 0,   61.8771, -11.0106, -0.0141068, 1 } }
+			result.models[#result.models + 1] = { id = "asset/ground/barrel_wood.mdl", transf = { 7.54979e-008, -1, 0, 0,   1, 7.54979e-008, 0, 0,   0, 0, 1, 0,   -0.28215, -7.82874, -0.0141068, 1 } }
+			result.models[#result.models + 1] = { id = "asset/ground/barrel_wood.mdl", transf = { 7.54979e-008, -1, 0, 0,   1, 7.54979e-008, 0, 0,   0, 0, 1, 0,   1.11885, -8.33887, -0.0141068, 1 } }
+			result.models[#result.models + 1] = { id = "asset/ground/barrel_wood.mdl", transf = { 7.54979e-008, -1, 0, 0,   1, 7.54979e-008, 0, 0,   0, 0, 1, 0,   61.5, -19.7946, -0.0141068, 1 } }
+			result.models[#result.models + 1] = { id = "asset/ground/barrel_wood.mdl", transf = { 7.54979e-008, -1, 0, 0,   1, 7.54979e-008, 0, 0,   0, 0, 1, 0,   61.659, -21.0919, -0.0141068, 1 } }
+			result.models[#result.models + 1] = { id = "asset/barrel_water_blue.mdl", transf = { 7.54979e-008, -1, 0, 0,   1, 7.54979e-008, 0, 0,   0, 0, 1, 0,   11.391, -11.30014, -0.0141068, 1 } }
+			result.models[#result.models + 1] = { id = "asset/barrel_water_blue.mdl", transf = { 7.54979e-008, -1, 0, 0,   1, 7.54979e-008, 0, 0,   0, 0, 1, 0,   12.7698, -10.31729, -0.0141068, 1 } }
+			result.models[#result.models + 1] = { id = "asset/barrel_water_wood.mdl", transf = { 7.54979e-008, -1, 0, 0,   1, 7.54979e-008, 0, 0,   0, 0, 1, 0,   60.3402, -19.4406, -0.0141068, 1 } }
+			result.models[#result.models + 1] = { id = "asset/barrel_water_wood.mdl", transf = { 7.54979e-008, -1, 0, 0,   1, 7.54979e-008, 0, 0,   0, 0, 1, 0,   16.9338, -11.67978, -0.0141068, 1 } }
+			result.models[#result.models + 1] = { id = "asset/barrel_water_wood.mdl", transf = { 7.54979e-008, -1, 0, 0,   1, 7.54979e-008, 0, 0,   0, 0, 1, 0,   -10.6121, 0.941956, -0.0141068, 1 } }
+			result.models[#result.models + 1] = { id = "asset/ground/pallet_01.mdl", transf = { 0.19509, -0.980785, 0, 0,   0.980785, 0.19509, 0, 0,   0, 0, 1, 0,   15, -10.0689, -0.0141068, 1 } }
+			result.models[#result.models + 1] = { id = "asset/ground/pallet_01.mdl", transf = { -0.92388, -0.382683, 0, 0,   0.382683, -0.92388, 0, 0,   0, 0, 1, 0,   16.6138, -10.6191, -0.0141068, 1 } }
+			result.models[#result.models + 1] = { id = "asset/ground/wooden_box_03.mdl", transf = { -1, 3.25841e-007, 0, 0,   -3.25841e-007, -1, 0, 0,   0, 0, 1, 0,   7.02579, -31.9244, -0.0141068, 1 } }
+			result.models[#result.models + 1] = { id = "asset/ground/barrel_wood.mdl", transf = transf.rotZYXTransl(transf.degToRad(20.0, 0.0, 0.0), vec3.new(10, -11 , 0)) }
+			result.models[#result.models + 1] = { id = "asset/ground/barrel_wood.mdl", transf = transf.rotZYXTransl(transf.degToRad(15.0, 0.0, 0.0), vec3.new(12.5, -11.9 , 0)) }
+		-- Вдоль дороги
+			result.models[#result.models + 1] = { id = "asset/ground/construction_shack.mdl", transf = transf.rotZYXTransl(transf.degToRad(180.0, 0.0, 0.0), vec3.new(-9, -30 , 0)) }
+			result.models[#result.models + 1] = { id = "tree/mapleshrub_rt_1.mdl", transf = { -0.427091, 0.904209, 0, 0,   -0.904209, -0.427091, 0, 0,   0, 0, 1, 0,   -7.3, -37, -0.00921631, 1 } }
+			result.models[#result.models + 1] = { id = "tree/mapleshrub_rt_3.mdl", transf = { -0.427091, 0.904209, 0, 0,   -0.904209, -0.427091, 0, 0,   0, 0, 1, 0,   -7.01, -47, -0.00921631, 1 } }
+			result.models[#result.models + 1] = { id = "tree/mapleshrub_rt_5.mdl", transf = { -0.427091, 0.904209, 0, 0,   -0.904209, -0.427091, 0, 0,   0, 0, 1, 0,   -7.2, -57, -0.00921631, 1 } }
+			result.models[#result.models + 1] = { id = "asset/water_tank_res_01.mdl", transf = transf.rotZYXTransl(transf.degToRad(180.0, 0.0, 0.0), vec3.new(-10, -36.5 , 0)) }
+		-- Деревья, камни
+			result.models[#result.models + 1] = { id = "tree/europeanlinden_rt_3.mdl", transf = { -0.924719, -0.380651, 0, 0,   0.380651, -0.924719, 0, 0,   0, 0, 1, 0,   52.0301, -33.3276, -0.0163803, 1 } }
+			result.models[#result.models + 1] = { id = "tree/fraserfir_rt_1.mdl", transf = { 0.570446, 0.821335, 0, 0,   -0.821335, 0.570446, 0, 0,   0, 0, 1, 0,   48.0301, -29.3276, -0.0163803, 1 } }
+			result.models[#result.models + 1] = { id = "tree/europeanlinden_rt_1.mdl", transf = { -0.67629, -0.736635, 0, 0,   0.736635, -0.67629, 0, 0,   0, 0, 1, 0,   44.0301, -30.3276, -0.0163803, 1 } }
+			result.models[#result.models + 1] = { id = "tree/mapleshrub_rt_7.mdl", transf = { -0.0437597, -0.999042, 0, 0,   0.999042, -0.0437597, 0, 0,   0, 0, 1, 0,   40.0301, -31.3276, -0.0163803, 1 } }
+			result.models[#result.models + 1] = { id = "tree/commonhazel_rt_2.mdl", transf = { 0.994782, 0.102021, 0, 0,   -0.102021, 0.994782, 0, 0,   0, 0, 1, 0,   39.0301, -33.8276, -0.0163803, 1 } }
+		-- Куча мусора, тачка
+			result.models[#result.models + 1] = { id = "asset/ground/heap_small.mdl", transf = { 0.92388, -0.382683, 0, 0,   0.382683, 0.92388, 0, 0,   0, 0, 1, 0,   34.0499, -28.0129, 0, 1 } }
+			result.models[#result.models + 1] = { id = "asset/ground/heap_small.mdl", transf = { 0.980785, 0.19509, 0, 0,   -0.19509, 0.980785, 0, 0,   0, 0, 1, 0,   36.0499, -26.0129, 0, 1 } }
+			result.models[#result.models + 1] = { id = "asset/ground/heap_small.mdl", transf = { 0.980785, -0.19509, 0, 0,   0.19509, 0.980785, 0, 0,   0, 0, 1, 0,   36.0499, -27.0129, -0.5, 1 } }
+			result.models[#result.models + 1] = { id = "asset/ground/wheelbarrow.mdl", transf = { 0.19509, -0.980785, 0, 0,   0.980785, 0.19509, 0, 0,   0, 0, 1, 0,   32, -23.5, -0.0141068, 1 } }
+		end
+		
+		if level == 5 then
+			result.models[#result.models + 1] = { id = "asset/ground/container_wood.mdl", transf = transf.rotZYXTransl(transf.degToRad(270.0, 0.0, 0.0), vec3.new(7, -34 , 0)) }
+			result.models[#result.models + 1] = { id = "asset/bench_new.mdl", transf = transf.rotZYXTransl(transf.degToRad(90.0, 0.0, 0.0), vec3.new(7, -26, 0)) }			
+			result.models[#result.models + 1] = { id = "asset/ground/barrel_wood.mdl", transf = { 7.54979e-008, -1, 0, 0,   1, 7.54979e-008, 0, 0,   0, 0, 1, 0,   4.5, -39.8132, -0.0141068, 1 } }
+			result.models[#result.models + 1] = { id = "asset/ground/barrel_wood.mdl", transf = { 7.54979e-008, -1, 0, 0,   1, 7.54979e-008, 0, 0,   0, 0, 1, 0,   4.4, -40.7892, -0.0141068, 1 } }
+			result.models[#result.models + 1] = { id = "asset/barrel_water_blue.mdl", transf = { 7.54979e-008, -1, 0, 0,   1, 7.54979e-008, 0, 0,   0, 0, 1, 0,   62.9769, -11.337, -0.0141068, 1 } }
+			result.models[#result.models + 1] = { id = "asset/barrel_water_wood.mdl", transf = { 7.54979e-008, -1, 0, 0,   1, 7.54979e-008, 0, 0,   0, 0, 1, 0,   61.8771, -11.0106, -0.0141068, 1 } }
+			result.models[#result.models + 1] = { id = "asset/ground/barrel_wood.mdl", transf = { 7.54979e-008, -1, 0, 0,   1, 7.54979e-008, 0, 0,   0, 0, 1, 0,   -0.28215, -7.82874, -0.0141068, 1 } }
+			result.models[#result.models + 1] = { id = "asset/ground/barrel_wood.mdl", transf = { 7.54979e-008, -1, 0, 0,   1, 7.54979e-008, 0, 0,   0, 0, 1, 0,   1.11885, -8.33887, -0.0141068, 1 } }
+			result.models[#result.models + 1] = { id = "asset/ground/barrel_wood.mdl", transf = { 7.54979e-008, -1, 0, 0,   1, 7.54979e-008, 0, 0,   0, 0, 1, 0,   61.5, -19.7946, -0.0141068, 1 } }
+			result.models[#result.models + 1] = { id = "asset/ground/barrel_wood.mdl", transf = { 7.54979e-008, -1, 0, 0,   1, 7.54979e-008, 0, 0,   0, 0, 1, 0,   61.659, -21.0919, -0.0141068, 1 } }
+			result.models[#result.models + 1] = { id = "asset/barrel_water_blue.mdl", transf = { 7.54979e-008, -1, 0, 0,   1, 7.54979e-008, 0, 0,   0, 0, 1, 0,   11.391, -11.30014, -0.0141068, 1 } }
+			result.models[#result.models + 1] = { id = "asset/barrel_water_blue.mdl", transf = { 7.54979e-008, -1, 0, 0,   1, 7.54979e-008, 0, 0,   0, 0, 1, 0,   12.7698, -10.31729, -0.0141068, 1 } }
+			result.models[#result.models + 1] = { id = "asset/barrel_water_wood.mdl", transf = { 7.54979e-008, -1, 0, 0,   1, 7.54979e-008, 0, 0,   0, 0, 1, 0,   60.3402, -19.4406, -0.0141068, 1 } }
+			result.models[#result.models + 1] = { id = "asset/barrel_water_wood.mdl", transf = { 7.54979e-008, -1, 0, 0,   1, 7.54979e-008, 0, 0,   0, 0, 1, 0,   16.9338, -11.67978, -0.0141068, 1 } }
+			result.models[#result.models + 1] = { id = "asset/barrel_water_wood.mdl", transf = { 7.54979e-008, -1, 0, 0,   1, 7.54979e-008, 0, 0,   0, 0, 1, 0,   -10.6121, 0.941956, -0.0141068, 1 } }
+			result.models[#result.models + 1] = { id = "asset/ground/pallet_01.mdl", transf = { 0.19509, -0.980785, 0, 0,   0.980785, 0.19509, 0, 0,   0, 0, 1, 0,   15, -10.0689, -0.0141068, 1 } }
+			result.models[#result.models + 1] = { id = "asset/ground/pallet_01.mdl", transf = { -0.92388, -0.382683, 0, 0,   0.382683, -0.92388, 0, 0,   0, 0, 1, 0,   16.6138, -10.6191, -0.0141068, 1 } }
+			result.models[#result.models + 1] = { id = "asset/ground/wooden_box_03.mdl", transf = { -1, 3.25841e-007, 0, 0,   -3.25841e-007, -1, 0, 0,   0, 0, 1, 0,   7.02579, -31.9244, -0.0141068, 1 } }
+			result.models[#result.models + 1] = { id = "asset/ground/barrel_wood.mdl", transf = transf.rotZYXTransl(transf.degToRad(20.0, 0.0, 0.0), vec3.new(10, -11 , 0)) }
+			result.models[#result.models + 1] = { id = "asset/ground/barrel_wood.mdl", transf = transf.rotZYXTransl(transf.degToRad(15.0, 0.0, 0.0), vec3.new(12.5, -11.9 , 0)) }
+		-- Вдоль дороги
+			result.models[#result.models + 1] = { id = "asset/ground/construction_shack.mdl", transf = transf.rotZYXTransl(transf.degToRad(180.0, 0.0, 0.0), vec3.new(-9, -30 , 0)) }
+			result.models[#result.models + 1] = { id = "asset/ground/construction_shack.mdl", transf = transf.rotZYXTransl(transf.degToRad(5.0, 0.0, 0.0), vec3.new(-8.6, -44 , 0)) }
+			result.models[#result.models + 1] = { id = "tree/mapleshrub_rt_1.mdl", transf = { -0.427091, 0.904209, 0, 0,   -0.904209, -0.427091, 0, 0,   0, 0, 1, 0,   -7.3, -37, -0.00921631, 1 } }
+			result.models[#result.models + 1] = { id = "tree/mapleshrub_rt_5.mdl", transf = { -0.427091, 0.904209, 0, 0,   -0.904209, -0.427091, 0, 0,   0, 0, 1, 0,   -7.2, -57, -0.00921631, 1 } }
+			result.models[#result.models + 1] = { id = "asset/water_tank_res_01.mdl", transf = transf.rotZYXTransl(transf.degToRad(180.0, 0.0, 0.0), vec3.new(-10, -36.5 , 0)) }
+		-- Деревья, камни
+			result.models[#result.models + 1] = { id = "tree/europeanlinden_rt_3.mdl", transf = { -0.924719, -0.380651, 0, 0,   0.380651, -0.924719, 0, 0,   0, 0, 1, 0,   52.0301, -33.3276, -0.0163803, 1 } }
+			result.models[#result.models + 1] = { id = "tree/commonhazel_rt_2.mdl", transf = { 0.994782, 0.102021, 0, 0,   -0.102021, 0.994782, 0, 0,   0, 0, 1, 0,   39.0301, -33.8276, -0.0163803, 1 } }
+		end
+		
+		-- тип забора
+		constructionutil.makeFence(constructionutil.reverseFace(fenceFace), "asset/fence_wood.mdl", 3, false, result.models)
+
+		-- Координаты базовой заливки
+		groundFace = { {-13, -72}, {-13, 9}, { 65, 9}, {80, 35.5}, {80, 92.5}, {60, 111}, {-80, 92}, {-140, -19.2}, {-113.3, -121}, {-95.3, -121}, {-28, -105} }
+		-- Текстура базовой заливки
+		result.groundFaces[#result.groundFaces + 1] = { face = groundFace, modes = { { type = "FILL", key = "farmland_6" } } }
+		-- Кант Заливки
+		result.groundFaces[#result.groundFaces + 1] = { face = groundFace, modes = { { type = "STROKE_OUTER", key = "industry_floor_paving_m" } } }
+		result.groundFaces[#result.groundFaces + 1] = { face = constructionutil.reverseFace(groundFace), modes = { { type = "STROKE_OUTER", key = "industry_floor_paving_m" } } }		
+
+			
+		result.edgeLists = {
+			{
+				type = "STREET",
+				params = { type = "country_old_small.lua" },
+				edges = edges,
+				snapNodes = { 0 }
+			}
+		}
+		
+		result.terrainAlignmentLists = {
+			{
+				type = "EQUAL",
+				faces = terrainFaces,
+				slopeLow = .20
+			}
+		}
+
+		return result
+	end
+}
+
+end

@@ -1,0 +1,102 @@
+function data()
+return {
+	animations = {
+	
+			spin = {
+				type = "KEYFRAME",
+				params = {
+					origin = {
+						0, 0, 0, 
+					},
+					keyframes = {
+						{
+							time = 0,
+							rot = { 0, 0, 0 },
+							transl = { 0, 0, 0 }
+						}, {
+							time = 2000,
+							rot = { 0, 0, -90 },
+							transl = { 0, 0 ,0 }
+						}, {
+							time = 7000,
+							rot = { 0, 0, -90 },
+							transl = { 0, 0 ,0 }
+						}, {
+							time = 9000,
+							rot = { 0, 0, 0 },
+							transl = { 0, 0 ,0 }
+						}, {
+							time = 14000,
+							rot = { 0, 0, 0 },
+							transl = { 0, 0 ,0 }
+						}
+					}
+				}
+			},
+		},
+	matConfigs = {
+		{
+			0, 
+		}, 
+	},
+	subMeshes = {
+		{
+			indices = {
+				normal = {
+					count = 6144,
+					offset = 48400,
+					
+				},
+				position = {
+					count = 6144,
+					offset = 36112,
+					
+				},
+				tangent = {
+					count = 6144,
+					offset = 54544,
+					
+				},
+				uv0 = {
+					count = 6144,
+					offset = 42256,
+					
+				},
+				
+			},
+			materials = {
+				"industry/iron_ore_mine/excavator_1.mtl", 
+			},
+			
+		}, 
+	},
+	vertexAttr = {
+		normal = {
+			count = 18432,
+			numComp = 3,
+			offset = 7376,
+			
+		},
+		position = {
+			count = 2736,
+			numComp = 3,
+			offset = 0,
+			
+		},
+		tangent = {
+			count = 10304,
+			numComp = 4,
+			offset = 25808,
+			
+		},
+		uv0 = {
+			count = 4640,
+			numComp = 2,
+			offset = 2736,
+			
+		},
+		
+	},
+	
+}
+end

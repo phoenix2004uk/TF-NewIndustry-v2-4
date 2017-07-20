@@ -1,0 +1,108 @@
+local vec3 = require "vec3"
+local transf = require "transf"
+
+function data()
+return {
+	children = {
+		-- fertilizers (32, 33)
+		{
+		id = "asset/ground/lod_0_fluid_container1.msh",
+		transf = { 0.9, 0, 0, 0, 0, 0.9, 0, 0, 0, 0, 0.9, 0, -0.49, 0, 0, 1 },
+		type = "MESH",
+		},
+		{
+		id = "asset/ground/lod_0_fluid_container1.msh",
+		transf = { 0.9, 0, 0, 0, 0, 0.9, 0, 0, 0, 0, 0.9, 0, -2.29, 0, 0, 1 },
+		type = "MESH",
+		},
+		-- cotton (34, 35, 36, 37, 38, 39, 40, 41)
+		{
+		id = "industry/cargo/cargo_cotton_small.msh",
+		transf = transf.rotZYXTransl(transf.degToRad(0.0, 0.0, 0.0), vec3.new(0.05, 0.0 , 0)),
+		type = "MESH",
+		},
+		{
+		id = "industry/cargo/cargo_cotton_small.msh",
+		transf = transf.rotZYXTransl(transf.degToRad(0.0, 0.0, 0.0), vec3.new(-0.9, 0.0 , 0)),
+		type = "MESH",
+		},
+		{
+		id = "industry/cargo/cargo_cotton_small.msh",
+		transf = transf.rotZYXTransl(transf.degToRad(0.0, 0.0, 0.0), vec3.new(-1.85, 0.0 , 0)),
+		type = "MESH",
+		},
+		{
+		id = "industry/cargo/cargo_cotton_small.msh",
+		transf = transf.rotZYXTransl(transf.degToRad(0.0, 0.0, 0.0), vec3.new(-2.8, 0.0 , 0)),
+		type = "MESH",
+		},
+		{
+		id = "industry/cargo/cargo_cotton_small.msh",
+		transf = transf.rotZYXTransl(transf.degToRad(0.0, 0.0, 0.0), vec3.new(0.05, 0.0 , 0.7)),
+		type = "MESH",
+		},
+		{
+		id = "industry/cargo/cargo_cotton_small.msh",
+		transf = transf.rotZYXTransl(transf.degToRad(0.0, 0.0, 0.0), vec3.new(-0.85, 0.0 , 0.7)),
+		type = "MESH",
+		},
+		{
+		id = "industry/cargo/cargo_cotton_small.msh",
+		transf = transf.rotZYXTransl(transf.degToRad(0.0, 0.0, 0.0), vec3.new(-1.75, 0.0 , 0.7)),
+		type = "MESH",
+		},
+		{
+		id = "industry/cargo/cargo_cotton_small.msh",
+		transf = transf.rotZYXTransl(transf.degToRad(0.0, 0.0, 0.0), vec3.new(-2.65, 0.0 , 0.7)),
+		type = "MESH",
+		},
+		-- clothes (42, 43)
+		{
+		id = "asset/industry/lod_0_wooden_box_04.msh",
+		transf = transf.rotZYXTransl(transf.degToRad(0.0, 0.0, 0.0), vec3.new(-0.4, 0, 0)),
+		type = "MESH",
+		},
+		{
+		id = "asset/industry/lod_0_wooden_box_04.msh",
+		transf = transf.rotZYXTransl(transf.degToRad(0.0, 0.0, 0.0), vec3.new(-2.3, 0, 0)),
+		type = "MESH",
+		},
+		-- cement (44, 45)
+		{
+		id = "industry/cargo/cement_small_lod_0.msh",
+		transf = { 0.9, 0, 0, 0, 0, 0.9, 0, 0, 0, 0, 0.9, 0, -0.49, 0, 0, 1 },
+		type = "MESH",
+		},
+		{
+		id = "industry/cargo/cement_small_lod_0.msh",
+		transf = { 0.9, 0, 0, 0, 0, 0.9, 0, 0, 0, 0, 0.9, 0, -2.29, 0, 0, 1 },
+		type = "MESH",
+		},
+		-- cement (46, 47, 48)
+		{
+		id = "industry/cargo/paper_cargo_small_lod_0.msh",
+		transf = transf.scaleRotZYXTransl(vec3.new( 0.9, 0.9, 0.9 ),transf.degToRad( 357, 0, 0 ), vec3.new( -0.29, 0, 0 )),
+		type = "MESH",
+		},
+		{
+		id = "industry/cargo/paper_cargo_small_lod_0.msh",
+		transf = transf.scaleRotZYXTransl(vec3.new( 0.9, 0.9, 0.9 ),transf.degToRad( 175, 0, 0 ), vec3.new( -1.39, 0.0, 0 )),
+		type = "MESH",
+		},
+		{
+		id = "industry/cargo/paper_cargo_small_lod_0.msh",
+		transf = transf.scaleRotZYXTransl(vec3.new( 0.9, 0.9, 0.9 ),transf.degToRad( 357, 0, 0 ), vec3.new( -2.39, 0, 0 )),
+		type = "MESH",
+		},
+		
+	},
+	matConfigs = {
+		{
+		0, 0,
+		0, 0, 0, 0, 0, 0, 0, 0,
+		0, 0,
+		0, 0, 0,
+		}
+	},
+}
+end

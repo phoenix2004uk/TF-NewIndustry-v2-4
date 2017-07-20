@@ -1,0 +1,73 @@
+function data()
+return {
+	boundingInfo = {
+		
+	},
+	collider = {
+		params = {
+			
+		},
+		type = "MESH",
+		
+	},
+	lods = {
+		{
+			animations = {
+				
+			},
+			children = {
+				{
+					id = "asset/ground/lod_1_fluid_container1.msh",
+					transf = {
+						1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 
+					},
+					type = "MESH",
+					
+				}
+			},
+			events = {
+				
+			},
+			matConfigs = {
+				{
+					0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+				}, 
+			},
+			static = false,
+			visibleFrom = 90,
+			visibleTo = 420,
+			
+		}, {
+			animations = {
+				
+			},
+			children = {
+				{
+					id = "asset/ground/lod_0_fluid_container1.msh",
+					transf = {
+						1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 
+					},
+					type = "MESH",
+					
+				}
+			},
+			events = {
+				
+			},
+			matConfigs = {
+				{
+					0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+				}, 
+			},
+			static = false,
+			visibleFrom = 0,
+			visibleTo = 90,
+			
+		}, 
+	},
+	metadata = {
+		
+	},
+	
+}
+end
